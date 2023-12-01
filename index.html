@@ -6,14 +6,13 @@
     <link href="https://releases.transloadit.com/uppy/v3.1.1/uppy.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Mike's Sandbox</h1>
-    <input type="text" id="properties_personal_word_1" name="properties[personal-word-1]" placeholder="Personal Word 1" required>
     <div id="drag-drop-area"></div>
+    <script src="mercury.bundle.js"></script>
+    
     <script type="module">
         import { Uppy, Dashboard, Tus } from "https://releases.transloadit.com/uppy/v3.1.1/uppy.min.mjs";
-        import { CountPersonalWord, ConvertEntriesToMessageObjects, FormatIOSChats, RemoveEncryptionAndSubjectMessage, FormatFile, GenerateChatComposition, GenerateTopWords, ParseProductBuilder, PopulateProductBuilder, SendChatChartRequest } from "https://deno.land/x/mercury/index.js";
         import { BlobReader, BlobWriter, TextWriter, ZipReader, ZipWriter } from "https://deno.land/x/zipjs/index.js";
-
+        
         var uppy = new Uppy()
             .use(Dashboard, {
                 inline: true,
@@ -29,7 +28,8 @@
             console.log(2);
             let chatMaster = await FormatFile(uploadedFile);
             console.log(3);
-            let productBuilder = await PopulateProductBuilder(chatMaster, "squish");
+            let productBuilder = await PopulateProductBuilder(chatMaster, "love");
+            console.log(productBuilder.ChatComposition.Chatters);
             console.log(4);
             let httpReq = await ParseProductBuilder(productBuilder);
             console.log(5);
