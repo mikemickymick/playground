@@ -10499,35 +10499,28 @@
     return parsedData;
   }
   async function FormatFile(uploadedFile) {
-    let lowerCaseChat;
+    let lowerCaseChat, linesArray, chatObjArr, data;
+
     if (uploadedFile.type === "application/zip" || uploadedFile.type === "application/x-zip-compressed") {
-      const zipFileReader = new BlobReader(uploadedFile);
-      const zipReader = new ZipReader(zipFileReader);
-      const entries = await zipReader.getEntries();
-      const data = await entries[0].getData(new TextWriter());
-      await zipReader.close();
-      lowerCaseChat = data.toLowerCase();
+      data = await GetZippedFileData(uploadedFile);
+      lowerCaseChat = RemoveEncryptionAndSubjectMessage(data.toLowerCase());
+      linesArray = FormatChat(lowerCaseChat);
+      chatObjArr = ConvertEntriesToMessageObjects(linesArray);
     } else if (uploadedFile.type === "text/plain") {
-      const zipFileWriter = new BlobWriter();
-      const helloWorldReader = new BlobReader(uploadedFile);
-      const zipWriter = new ZipWriter(zipFileWriter);
-      await zipWriter.add("chat-thing.txt", helloWorldReader);
-      await zipWriter.close();
-      const zipFileBlob = await zipFileWriter.getData();
-      const zipFileReader = new BlobReader(zipFileBlob);
-      const zipReader = new ZipReader(zipFileReader);
-      const entries = await zipReader.getEntries();
-      const data = await entries[0].getData(new TextWriter());
-      await zipReader.close();
-      lowerCaseChat = data.toLowerCase();
-    } else if (uploadedFile.type === "application/json") {
-      return;
+      data = await GetUnzippedFileData(uploadedFile);
+      lowerCaseChat = RemoveEncryptionAndSubjectMessage(data.toLowerCase());
+      linesArray = FormatChat(lowerCaseChat);
+      chatObjArr = ConvertEntriesToMessageObjects(linesArray);
+    } else if(uploadedFile.type === "application/json"){
+      data = await GetUnzippedFileData(uploadedFile);
+      chatObjArr = ConvertJsonToMessageObjects(data.toLowerCase());
+      lowerCaseChat = data.toLowerCase().replace(/[\n\r]+/g, '')
+      .replace('\n', '').replace('{\n', '').replace('},\n', '').replace('[\n', '').replace('}\n', '').replace('],\n', '').replace(/[{}]/g, "").replace(/['"]+/g, '').replace(/generic/g, '');
     } else {
-      lowerCaseChat = "Oops! Sorry, we only accept .zip, .txt, or .json files";
+      alert("Oops! Sorry, we only accept .zip, .txt, or .json files");
+      return;
     }
-    lowerCaseChat = RemoveEncryptionAndSubjectMessage(lowerCaseChat);
-    const linesArray = FormatChat(lowerCaseChat);
-    const chatObjArr = ConvertEntriesToMessageObjects(linesArray);
+    
     const chatters = /* @__PURE__ */ new Set();
     for (const element of chatObjArr) {
       chatters.add(element.Author);
@@ -10539,6 +10532,65 @@
       Chatters: chattersArray
     };
   }
+
+  function ConvertJsonToMessageObjects(jsonString){
+    const parsedData = [];
+    var jsObj = JSON.parse(jsonString);
+    for(let i = 0; i < jsObj.messages.length; i++){
+      let currentMessage = jsObj.messages[i];
+      let convertedDate = GetDateFromUnix(currentMessage.timestamp_ms);
+      let convertedTime = GetTimeFromUnix(currentMessage.timestamp_ms);
+      const messageModel = {
+        Date: convertedDate,
+        Time: convertedTime,
+        Author: currentMessage.sender_name,
+        MessageBody: currentMessage.content
+      };
+      parsedData.push(messageModel);
+    }
+    return parsedData;
+  }
+
+  function GetDateFromUnix(UNIX_timestamp){
+    var a = new Date(UNIX_timestamp);
+    var months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    return date + '/' + month + '/' + year;
+  }
+
+  function GetTimeFromUnix(UNIX_timestamp){
+    var a = new Date(UNIX_timestamp);
+    var hour = a.getHours() < 10 ? '0' + a.getHours() : a.getHours();
+    var min = a.getMinutes() < 10 ? '0' + a.getMinutes() : a.getMinutes();
+    return hour + ':' + min;
+  }
+
+  async function GetZippedFileData(uploadedFile){
+      const zipFileReader = new BlobReader(uploadedFile);
+      const zipReader = new ZipReader(zipFileReader);
+      const entries = await zipReader.getEntries();
+      const data = await entries[0].getData(new TextWriter());
+      await zipReader.close();
+      return data;
+  }
+
+  async function GetUnzippedFileData(uploadedFile){
+    const zipFileWriter = new BlobWriter();
+    const helloWorldReader = new BlobReader(uploadedFile);
+    const zipWriter = new ZipWriter(zipFileWriter);
+    await zipWriter.add("chat-thing.txt", helloWorldReader);
+    await zipWriter.close();
+    const zipFileBlob = await zipFileWriter.getData();
+    const zipFileReader = new BlobReader(zipFileBlob);
+    const zipReader = new ZipReader(zipFileReader);
+    const entries = await zipReader.getEntries();
+    const data = await entries[0].getData(new TextWriter());
+    await zipReader.close();
+    return data;
+  }
+
   function FormatChat(chatString) {
     let linesArray = new Array();
     linesArray = chatString.split("\n");
@@ -10565,7 +10617,7 @@
       if (currentLine[0] == String.fromCharCode(8206)) {
         currentLine = currentLine.substr(1);
       }
-      const beginningOfLine = currentLine.substr(0, 30);
+      let beginningOfLine = currentLine.substr(0, 30);
       if (beginningOfLine.includes("[") && beginningOfLine.includes("]")) {
         const numberOfBrackets = currentLine.replace(/[^\[\]]/g, "").length;
         if (numberOfBrackets == 4) {
@@ -10576,7 +10628,15 @@
           }
           i += 9;
         } else {
-          currentLine = currentLine.replace(/-/g, "/").replace(/[\[]/gm, "").replace(/[\]]/gm, " -");
+          beginningOfLine = beginningOfLine.replace(/[\[]/gm, "");
+          let veryBeginningOfLine = beginningOfLine.substr(0, 5);
+          if (veryBeginningOfLine.includes(".")) {
+            beginningOfLine = beginningOfLine.replace(/\./g, "/").replace(/[\]]/gm, " -");
+          } else {
+            beginningOfLine = beginningOfLine.replace(/-/g, "/").replace(/[\]]/gm, " -");
+          }
+          let endOfLine = currentLine.substr(30);
+          currentLine = beginningOfLine + endOfLine;
           const secondSlashIndex = GetNthIndex(currentLine, "/", 2);
           const commaFromSecondSlashIndex = currentLine.substring(secondSlashIndex).indexOf(",");
           if (commaFromSecondSlashIndex != 5 && commaFromSecondSlashIndex != 3) {
@@ -10598,18 +10658,24 @@
       let currentLine = linesArray[i];
       let beginningOfLine = currentLine.substr(0, 30);
       try {
-        if (beginningOfLine.length > 0 && beginningOfLine.includes(":") && beginningOfLine.includes(",") && beginningOfLine.includes("-") && (beginningOfLine.indexOf("/") == 1 || beginningOfLine.indexOf("/") == 2)) {
+        if (beginningOfLine.length > 0 && beginningOfLine.includes(":") && beginningOfLine.includes(",") && beginningOfLine.includes("-") && (beginningOfLine.indexOf("/") == 1 || beginningOfLine.indexOf("/") == 2 || beginningOfLine.indexOf("/") == 4)) {
           const dateString = currentLine.split(",")[0];
           let dayString = "";
           let monthString = "";
+          let yearString = "";
           if (dateFormat == "ENG") {
             dayString = dateString.split("/")[0].length == 2 ? dateString.split("/")[0] : "0" + dateString.split("/")[0];
             monthString = dateString.split("/")[1].length == 2 ? dateString.split("/")[1] : "0" + dateString.split("/")[1];
-          } else {
+            yearString = dateString.split("/")[2].length == 4 ? dateString.split("/")[2] : "20" + dateString.split("/")[2];
+          } else if (dateFormat == "USA") {
             dayString = dateString.split("/")[1].length == 2 ? dateString.split("/")[1] : "0" + dateString.split("/")[1];
             monthString = dateString.split("/")[0].length == 2 ? dateString.split("/")[0] : "0" + dateString.split("/")[0];
+            yearString = dateString.split("/")[2].length == 4 ? dateString.split("/")[2] : "20" + dateString.split("/")[2];
+          } else {
+            dayString = dateString.split("/")[2].length == 2 ? dateString.split("/")[2] : "0" + dateString.split("/")[2];
+            monthString = dateString.split("/")[1].length == 2 ? dateString.split("/")[1] : "0" + dateString.split("/")[0];
+            yearString = dateString.split("/")[0].length == 4 ? dateString.split("/")[0] : "20" + dateString.split("/")[0];
           }
-          const yearString = dateString.split("/")[2].length == 4 ? dateString.split("/")[2] : "20" + dateString.split("/")[2];
           const dateFormatted = `${dayString}/${monthString}/${yearString}`;
           const newLine = currentLine.replace(dateString, dateFormatted);
           linesArray[i] = newLine;
@@ -10646,7 +10712,7 @@
         let hourString = currentLine.substring(commaIndex + 2, colonIndex);
         let minuteString = currentLine.substring(colonIndex + 1, colonIndex + 3);
         if (clockFormat == "12") {
-          if (currentLine.toLowerCase().includes("am -")) {
+          if (currentLine.toLowerCase().includes("am -") || currentLine.toLowerCase().includes("a.m. -")) {
             if (hourString.length == 1) {
               hourString = "0" + hourString;
             } else if (hourString == "12") {
@@ -10673,6 +10739,9 @@
         const dateSlashSplit = lineString.split("/");
         const firstDateSection = dateSlashSplit[0];
         const secondDateSection = dateSlashSplit[1];
+        if (parseInt(firstDateSection) > 2e3) {
+          return "YEARFIRST";
+        }
         if (parseInt(firstDateSection) > 12) {
           return "ENG";
         }
@@ -10691,7 +10760,7 @@
         if (lineString[0] == String.fromCharCode(8206)) {
           lineString = lineString.substr(1);
         }
-        if (lineString.toLowerCase().includes("am -") || lineString.toLowerCase().includes("pm -")) {
+        if (lineString.toLowerCase().includes("am -") || lineString.toLowerCase().includes("pm -") || lineString.toLowerCase().includes("p.m. -") || lineString.toLowerCase().includes("a.m. -")) {
           return "12";
         } else {
           return "24";
