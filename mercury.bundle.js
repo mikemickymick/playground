@@ -10500,7 +10500,6 @@
   }
   async function FormatFile(uploadedFile) {
     let lowerCaseChat, linesArray, chatObjArr, data;
-
     if (uploadedFile.type === "application/zip" || uploadedFile.type === "application/x-zip-compressed") {
       data = await GetZippedFileData(uploadedFile);
       lowerCaseChat = RemoveEncryptionAndSubjectMessage(data.toLowerCase());
@@ -10511,16 +10510,14 @@
       lowerCaseChat = RemoveEncryptionAndSubjectMessage(data.toLowerCase());
       linesArray = FormatChat(lowerCaseChat);
       chatObjArr = ConvertEntriesToMessageObjects(linesArray);
-    } else if(uploadedFile.type === "application/json"){
+    } else if (uploadedFile.type === "application/json") {
       data = await GetUnzippedFileData(uploadedFile);
       chatObjArr = ConvertJsonToMessageObjects(data.toLowerCase());
-      lowerCaseChat = data.toLowerCase().replace(/[\n\r]+/g, '')
-      .replace('\n', '').replace('{\n', '').replace('},\n', '').replace('[\n', '').replace('}\n', '').replace('],\n', '').replace(/[{}]/g, "").replace(/['"]+/g, '').replace(/generic/g, '');
+      lowerCaseChat = data.toLowerCase().replace(/[\n\r]+/g, "").replace("\n", "").replace("{\n", "").replace("},\n", "").replace("[\n", "").replace("}\n", "").replace("],\n", "").replace(/[{}]/g, "").replace(/['"]+/g, "").replace(/generic/g, "");
     } else {
       alert("Oops! Sorry, we only accept .zip, .txt, or .json files");
       return;
     }
-    
     const chatters = /* @__PURE__ */ new Set();
     for (const element of chatObjArr) {
       chatters.add(element.Author);
@@ -10532,51 +10529,64 @@
       Chatters: chattersArray
     };
   }
-
-  function ConvertJsonToMessageObjects(jsonString){
+  function ConvertJsonToMessageObjects(jsonString) {
     const parsedData = [];
     var jsObj = JSON.parse(jsonString);
-    for(let i = 0; i < jsObj.messages.length; i++){
+    for (let i = 0; i < jsObj.messages.length; i++) {
+
       let currentMessage = jsObj.messages[i];
       let convertedDate = GetDateFromUnix(currentMessage.timestamp_ms);
       let convertedTime = GetTimeFromUnix(currentMessage.timestamp_ms);
-      const messageModel = {
+      let messageModel = {
         Date: convertedDate,
         Time: convertedTime,
         Author: currentMessage.sender_name,
         MessageBody: currentMessage.content
       };
-      parsedData.push(messageModel);
+
+      if(currentMessage.share != undefined){
+        messageModel.MessageBody = "Shared a link";
+      }else if(currentMessage.photos != undefined){
+        messageModel.MessageBody = "Sent a photo";
+      }else if(currentMessage.gifs != undefined){
+        messageModel.MessageBody = "Sent a GIF";
+      }else if(currentMessage.videos != undefined){
+        messageModel.MessageBody = "Sent a video";
+      }else if(currentMessage.audio_files != undefined){
+        messageModel.MessageBody = "Sent an audio file";
+      }else if(currentMessage.sticker != undefined){
+        messageModel.MessageBody = "Sent a sticker";
+      }
+
+      if(!currentMessage.is_unsent){
+        parsedData.push(messageModel);
+      }
     }
     return parsedData;
   }
-
-  function GetDateFromUnix(UNIX_timestamp){
+  function GetDateFromUnix(UNIX_timestamp) {
     var a = new Date(UNIX_timestamp);
-    var months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+    var months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
     var year = a.getFullYear();
     var month = months[a.getMonth()];
     var date = a.getDate();
-    return date + '/' + month + '/' + year;
+    return date + "/" + month + "/" + year;
   }
-
-  function GetTimeFromUnix(UNIX_timestamp){
+  function GetTimeFromUnix(UNIX_timestamp) {
     var a = new Date(UNIX_timestamp);
-    var hour = a.getHours() < 10 ? '0' + a.getHours() : a.getHours();
-    var min = a.getMinutes() < 10 ? '0' + a.getMinutes() : a.getMinutes();
-    return hour + ':' + min;
+    var hour = a.getHours() < 10 ? "0" + a.getHours() : a.getHours();
+    var min = a.getMinutes() < 10 ? "0" + a.getMinutes() : a.getMinutes();
+    return hour + ":" + min;
   }
-
-  async function GetZippedFileData(uploadedFile){
-      const zipFileReader = new BlobReader(uploadedFile);
-      const zipReader = new ZipReader(zipFileReader);
-      const entries = await zipReader.getEntries();
-      const data = await entries[0].getData(new TextWriter());
-      await zipReader.close();
-      return data;
+  async function GetZippedFileData(uploadedFile) {
+    const zipFileReader = new BlobReader(uploadedFile);
+    const zipReader = new ZipReader(zipFileReader);
+    const entries = await zipReader.getEntries();
+    const data = await entries[0].getData(new TextWriter());
+    await zipReader.close();
+    return data;
   }
-
-  async function GetUnzippedFileData(uploadedFile){
+  async function GetUnzippedFileData(uploadedFile) {
     const zipFileWriter = new BlobWriter();
     const helloWorldReader = new BlobReader(uploadedFile);
     const zipWriter = new ZipWriter(zipFileWriter);
@@ -10590,7 +10600,6 @@
     await zipReader.close();
     return data;
   }
-
   function FormatChat(chatString) {
     let linesArray = new Array();
     linesArray = chatString.split("\n");
