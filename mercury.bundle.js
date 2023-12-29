@@ -10459,7 +10459,9 @@
 
   // helpers/searchhelper.js
   var LaughArray = ["haha", "lol", "lmao", "lmfao", "hehe", "\u{1F606}", "\u{1F605}", "\u{1F602}", "\u{1F923}"];
-  var SkipWords = ["\u200Egif", "gif", "\u200Eaudio", "audio omitted", "image", "the", "i", "to", "a", "you", "and", "then", "in", "of", "for", "my", "it", "on", "so", "is", "me", "i\u2019m", "this", "that", "be", "was", "have", "we", "with", "but", "just", "get", "not", "your", "with", "if", "at", "up", "can", "out", "what", "got", "are", "do", "like", "about", "all", "do", "i'm", "as", "now", "i've", "going", "it\u2019s", "how", "when", "from", "one", "time", "i\u2019ve", "i\u2019ll", "go", "work", "or", "yh", "been", "think", "day", "gonna", "off", "had", "need", "see", "know", "an", "really", "will", "back", "too", "did", "some", "no", "don\u2019t", "some", "it's", "make", "would", "they", "there", "any", "after", "has", "", "omitted", "x", "xx", "xxx", "xxxx", "xxxxx", "xxxxxx", "xxxxxxx", "xxxxxxxx", "xxxxxxxxx", "xxxxxxxxxx", "xxxxxxxxxxx", "xxxxxxxxxxxx", "xxxxxxxxxxxxx", "xxxxxxxxxxxxxx", "xxxxxxxxxxxxxxx", "-", "[", "[", "/", "PM", "AM", "<", ">", "media", "<media", "<media omitted>", "\u200Eimage"];
+  var SkipWordsEnglish = ["\u200Eimage", "\u200Eaudio", "audio omitted", "image", "the", "i", "to", "a", "you", "and", "then", "in", "of", "for", "my", "it", "on", "so", "is", "me", "i\u2019m", "this", "that", "be", "was", "have", "we", "with", "but", "just", "get", "not", "your", "with", "if", "at", "up", "can", "out", "what", "got", "are", "do", "like", "about", "all", "do", "i'm", "as", "now", "i've", "going", "it\u2019s", "how", "when", "from", "one", "time", "i\u2019ve", "i\u2019ll", "go", "work", "or", "yh", "been", "think", "day", "gonna", "off", "had", "need", "see", "know", "an", "really", "he", "she", "him", "her", "will", "back", "too", "did", "some", "no", "don\u2019t", "some", "it's", "make", "would", "they", "there", "any", "after", "has", "omitted", "media", "<media", "<media omitted>"];
+  var SkipWordsGerman = ["\u200Ebild", "\u200Eaudio", "audio weggelassen", "bild", "die", "ich", "zu", "du", "und", "dann", "von", "f\xFCr", "mein", "es", "an", "ist", "mich", "ich bin", "das", "sei", "war", "haben", "wir", "mit", "aber", "nur", "erhalten", "nicht", "dein", "with", "wenn", "bei", "hoch", "d\xFCrfen", "aus", "bekommen", "sind", "tun", "wie", "um", "alle", "do", "i'm", "as", "now", "i've", "going", "it\u2019s", "how", "when", "from", "one", "time", "i\u2019ve", "i\u2019ll", "go", "work", "or", "yh", "been", "think", "day", "gonna", "off", "had", "brauchen", "sehen", "wissen", "ein", "wirklich", "er", "sie", "ihn", "ihr", "wille", "zur\xFCck", "zu", "tat", "manche", "nein", "es ist", "machen", "w\xFCrde", "sie", "dort", "beliebig", "nach", "hat", "weggelassen", "medien", "<medien", "<medien weggelassen>"];
+  var SkipWordsSymbols = ["\u200Egif", "gif", "x", "xx", "xxx", "xxxx", "xxxxx", "xxxxxx", "xxxxxxx", "xxxxxxxx", "xxxxxxxxx", "xxxxxxxxxx", "xxxxxxxxxxx", "xxxxxxxxxxxx", "xxxxxxxxxxxxx", "xxxxxxxxxxxxxx", "xxxxxxxxxxxxxxx", "-", "[", "[", "/", "PM", "AM", "<", ">", ""];
   var PunctuationRegEx = /[!?,.:;_)]$/g;
   var ReturnCarriageRegEx = /[\r\n]+|\.|[\r\n]+$/g;
   var StartsWithDateRegEx = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)(\d{2}|\d{4}), ([0-9][0-9]):([0-9][0-9]) -/g;
@@ -10533,32 +10535,29 @@
     const parsedData = [];
     var jsObj = JSON.parse(jsonString);
     for (let i = 0; i < jsObj.messages.length; i++) {
-
       let currentMessage = jsObj.messages[i];
       let convertedDate = GetDateFromUnix(currentMessage.timestamp_ms);
       let convertedTime = GetTimeFromUnix(currentMessage.timestamp_ms);
-      let messageModel = {
+      const messageModel = {
         Date: convertedDate,
         Time: convertedTime,
         Author: currentMessage.sender_name,
         MessageBody: currentMessage.content
       };
-
-      if(currentMessage.share != undefined){
+      if (currentMessage.share != void 0) {
         messageModel.MessageBody = "Shared a link";
-      }else if(currentMessage.photos != undefined){
+      } else if (currentMessage.photos != void 0) {
         messageModel.MessageBody = "Sent a photo";
-      }else if(currentMessage.gifs != undefined){
+      } else if (currentMessage.gifs != void 0) {
         messageModel.MessageBody = "Sent a GIF";
-      }else if(currentMessage.videos != undefined){
+      } else if (currentMessage.videos != void 0) {
         messageModel.MessageBody = "Sent a video";
-      }else if(currentMessage.audio_files != undefined){
+      } else if (currentMessage.audio_files != void 0) {
         messageModel.MessageBody = "Sent an audio file";
-      }else if(currentMessage.sticker != undefined){
+      } else if (currentMessage.sticker != void 0) {
         messageModel.MessageBody = "Sent a sticker";
       }
-
-      if(!currentMessage.is_unsent){
+      if (!currentMessage.is_unsent) {
         parsedData.push(messageModel);
       }
     }
@@ -10621,12 +10620,16 @@
     return -1;
   }
   function StandardiseCharacters(linesArray) {
+    let doubleColonLines = [];
+    let isEuropean = false;
     for (var i = 0; i < linesArray.length; i++) {
       let currentLine = linesArray[i];
       if (currentLine[0] == String.fromCharCode(8206)) {
         currentLine = currentLine.substr(1);
       }
       let beginningOfLine = currentLine.substr(0, 30);
+      const numberOfColons = beginningOfLine.replace(/[^:]/g, "").length;
+      const numberOfCommas = beginningOfLine.replace(/[^,]/g, "").length;
       if (beginningOfLine.includes("[") && beginningOfLine.includes("]")) {
         const numberOfBrackets = currentLine.replace(/[^\[\]]/g, "").length;
         if (numberOfBrackets == 4) {
@@ -10656,6 +10659,30 @@
           }
           linesArray[i] = currentLine;
         }
+      } else if (numberOfColons > 1 && numberOfCommas == 0) {
+        if (i == 100 && doubleColonLines.length > 50) {
+          isEuropean = true;
+          break;
+        } else {
+          doubleColonLines.push(beginningOfLine);
+        }
+      }
+    }
+    if (isEuropean) {
+      for (var i = 0; i < linesArray.length; i++) {
+        let currentLine = linesArray[i];
+        if (currentLine[0] == String.fromCharCode(8206)) {
+          currentLine = currentLine.substr(1);
+        }
+        const secondSlashIndex = GetNthIndex(currentLine, "/", 2);
+        const commaFromSecondSlashIndex = currentLine.substring(secondSlashIndex).indexOf(",");
+        if (commaFromSecondSlashIndex != 5 && commaFromSecondSlashIndex != 3) {
+          const firstSpaceIndex = currentLine.substring(secondSlashIndex).indexOf(" ");
+          const firstHalf = currentLine.substring(0, secondSlashIndex + firstSpaceIndex);
+          const secondHalf = currentLine.substring(10);
+          currentLine = firstHalf + "," + secondHalf;
+        }
+        linesArray[i] = currentLine;
       }
     }
     return linesArray;
@@ -11001,7 +11028,7 @@
     });
     const wordsArray = wholeChatString.replace(/(’s)/g, "").replace(/('s)/g, "").split(" ");
     wordsArray.forEach((word) => {
-      if (word.length < 10 && !SkipWords.includes(word) && !EmojiArray.includes(word) && !word.match(punctuationRegEx) && !word.match(numberRegEx) && !newNameSet.has(word)) {
+      if (word.length < 10 && !SkipWordsSymbols.includes(word) && !SkipWordsGerman.includes(word) && !SkipWordsEnglish.includes(word) && !EmojiArray.includes(word) && !word.match(punctuationRegEx) && !word.match(numberRegEx) && !newNameSet.has(word)) {
         filteredArray.push(word);
       }
     });
