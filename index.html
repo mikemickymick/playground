@@ -30,6 +30,7 @@
             let chatMaster = await FormatFile(uploadedFile);
             console.log(3);
             let productBuilder = await PopulateProductBuilder(chatMaster, "love");
+            console.log(productBuilder.FirstEncounter);
             console.log(productBuilder.ChatComposition.Chatters);
             console.log(4);
             let httpReq = await ParseProductBuilder(productBuilder);

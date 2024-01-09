@@ -10762,7 +10762,7 @@ function ConvertJsonToMessageObjects(jsonString) {
       parsedData.push(messageModel);
     }
   }
-  return parsedData;
+  return parsedData.reverse();
 }
 function GetDateFromUnix(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp);
