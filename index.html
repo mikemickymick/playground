@@ -29,9 +29,9 @@
             console.log(2);
             let chatMaster = await FormatFile(uploadedFile);
             console.log(3);
-            let productBuilder = await PopulateProductBuilder(chatMaster, "love");
-            console.log(productBuilder.FirstEncounter);
-            console.log(productBuilder.ChatComposition.Chatters);
+            let productBuilder = await PopulateProductBuilder(chatMaster, "dat");
+            console.log(productBuilder.SearchRecordArray[2].TotalCount);
+            console.log(productBuilder.TopWords.TopWordsTable);
             console.log(4);
             let httpReq = await ParseProductBuilder(productBuilder);
             console.log(5);
