@@ -11280,22 +11280,20 @@ async function PopulateProductBuilder(chatMaster, personalWord) {
   const dayArray = GenerateMessageDays(ArrayOfMessageObjs);
   const firstEncounter = GenerateFirstEncounter(ArrayOfMessageObjs);
   const personalWordSearchRecord = GenerateSearchRecord(ArrayOfMessageObjs, "personal", false, 2, 1, [personalWord]);
+  const emojiSearchRecord = GenerateSearchRecord(ArrayOfMessageObjs, "emoji", false, 2, 1, null);
+  const laughSearchRecord = GenerateSearchRecord(ArrayOfMessageObjs, "laugh", false, 2, 1, null);
   const fromDateStr = firstEncounter.FirstMessageDate;
   const toDateStr = ArrayOfMessageObjs[ArrayOfMessageObjs.length - 1].Date;
-  const searchRecordArr = [];
-  const searchRecordNames = ["laugh", "emoji"];
-  searchRecordNames.forEach((name) => {
-    const record = GenerateSearchRecord(ArrayOfMessageObjs, name, false, 2, 1, null);
-    if (record) {
-      searchRecordArr.push(record);
-    }
-  });
-  searchRecordArr.push(personalWordSearchRecord);
   const authors = chatComposition.Chatters.map((x) => x.Name);
   const tWtable = GenerateTopWords(WholeChatString, authors);
   tWtable.TopWordsTable.forEach((x) => {
     if (x.Word === personalWord) {
       x.Count = personalWordSearchRecord.TotalCount;
+    }
+  });
+  tWtable.TopWordsTable.forEach((x) => {
+    if (LaughArray.includes(x.Word)) {
+      laughSearchRecord.TotalCount = x.Count * 3.5;
     }
   });
   tWtable.TopWordsTable.sort((a, b) => b.Count - a.Count);
@@ -11304,6 +11302,9 @@ async function PopulateProductBuilder(chatMaster, personalWord) {
   const [toDay, toMonth, toYear] = toDateStr.split("/");
   const toDate = new Date(toYear, toMonth - 1, toDay);
   const daysDifference = Math.round((toDate - fromDate) / 1e3 / 60 / 60 / 24);
+  searchRecordArr.push(laughSearchRecord);
+  searchRecordArr.push(emojiSearchRecord);
+  searchRecordArr.push(personalWordSearchRecord);
   return new ProductBuilder(
     chatComposition,
     fromDateStr,
