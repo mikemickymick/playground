@@ -11302,6 +11302,7 @@ async function PopulateProductBuilder(chatMaster, personalWord) {
   const [toDay, toMonth, toYear] = toDateStr.split("/");
   const toDate = new Date(toYear, toMonth - 1, toDay);
   const daysDifference = Math.round((toDate - fromDate) / 1e3 / 60 / 60 / 24);
+  var searchRecordArr = [];
   searchRecordArr.push(laughSearchRecord);
   searchRecordArr.push(emojiSearchRecord);
   searchRecordArr.push(personalWordSearchRecord);
