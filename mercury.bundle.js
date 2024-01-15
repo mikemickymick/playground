@@ -10732,9 +10732,9 @@ function ConvertJsonToMessageObjects(jsonString) {
     let convertedTime = GetTimeFromUnix(currentMessage.timestamp_ms);
     if (currentMessage.content != null && currentMessage.content != void 0) {
       try {
-        currentMessage.content = import_utf8.utf8.decode(currentMessage.content);
+        currentMessage.content = import_utf8.decode(currentMessage.content);
       } catch {
-        currentMessage.content = import_utf8.utf8.decode(import_utf8.utf8.encode(currentMessage.content));
+        currentMessage.content = import_utf8.decode(import_utf8.encode(currentMessage.content));
       }
     }
     const messageModel = {
@@ -11164,7 +11164,7 @@ function GenerateSearchRecord(chatObjArr, searchRecordName, required, width, hei
   if (searchRecordName == "laugh" && counter < 100) {
     const min = Math.ceil(100);
     const max = Math.floor(200);
-    counter = Math.floor(Math.random() * (max - min) + min);
+    counter = Math.round(Math.floor(Math.random() * (max - min) + min));
   }
   return new SearchRecord(searchRecordName, required, width, height, orderedSearchLogs, counter);
 }
@@ -11293,7 +11293,7 @@ async function PopulateProductBuilder(chatMaster, personalWord) {
   });
   tWtable.TopWordsTable.forEach((x) => {
     if (LaughArray.includes(x.Word)) {
-      laughSearchRecord.TotalCount = x.Count * 3.5;
+      laughSearchRecord.TotalCount = Math.round(x.Count * 3.5);
     }
   });
   tWtable.TopWordsTable.sort((a, b) => b.Count - a.Count);
