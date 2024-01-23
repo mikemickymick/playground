@@ -10649,9 +10649,11 @@ configure({
 
 // helpers/searchhelper.js
 var LaughArray = ["haha", "hahaha", "hahahaha", "hahah", "lol", "lmao", "lmfao", "hehe", "\u{1F606}", "\u{1F605}", "\u{1F602}", "\u{1F923}"];
-var SkipWordsEnglish = ["\u200Eimage", "\u200Eaudio", "audio omitted", "image", "the", "i", "to", "a", "you", "and", "then", "in", "of", "for", "my", "it", "on", "so", "is", "me", "i\u2019m", "this", "that", "be", "was", "have", "we", "with", "but", "just", "get", "not", "your", "if", "at", "up", "can", "out", "what", "got", "are", "do", "like", "about", "all", "i'm", "as", "now", "i've", "going", "it\u2019s", "how", "when", "from", "one", "time", "i\u2019ve", "i\u2019ll", "go", "or", "yh", "been", "think", "day", "gonna", "off", "had", "need", "see", "know", "an", "really", "he", "she", "him", "her", "will", "back", "too", "did", "some", "no", "don\u2019t", "some", "it's", "make", "would", "they", "there", "any", "after", "has", "omitted", "media", "<media", "<media omitted>", "there", "because", "we're", "i'll", "oh", "said", "ok", "yeah", "okay", "don't", "them", "u", "ur", "dont", "message", "ah", "at", "that", "you", "your", "in", "go", "do", "also", "why", "his", "even", "can't", "can\u2019t", "isn't", "isn\u2019t", "though", "you're", "you\u2019re", "didn't", "didn\u2019t", "i've", "im", "its", "?sticker", "?missed"];
+var SkipWordsEnglish = ["\u200Eimage", "\u200Eaudio", "audio omitted", "image", "the", "i", "to", "a", "you", "and", "then", "in", "of", "for", "my", "it", "on", "so", "is", "me", "i\u2019m", "this", "that", "be", "was", "have", "we", "with", "but", "just", "get", "not", "your", "if", "at", "up", "can", "out", "what", "got", "are", "do", "like", "about", "all", "i'm", "as", "now", "i've", "going", "it\u2019s", "how", "when", "from", "one", "time", "i\u2019ve", "i\u2019ll", "go", "or", "yh", "been", "think", "day", "gonna", "off", "had", "need", "see", "know", "an", "really", "he", "she", "him", "her", "will", "back", "too", "did", "no", "don\u2019t", "some", "it's", "make", "would", "they", "there", "any", "after", "has", "omitted", "media", "<media", "<media omitted>", "because", "we're", "i'll", "oh", "said", "ok", "yeah", "okay", "don't", "them", "u", "ur", "dont", "message", "ah", "at", "go", "also", "why", "his", "even", "can't", "can\u2019t", "isn't", "isn\u2019t", "though", "you're", "you\u2019re", "didn't", "didn\u2019t", "i've", "im", "its", "?sticker", "?missed"];
 var SkipWordsGerman = ["\u200Ebild", "\u200Eaudio", "audio weggelassen", "bild", "die", "ich", "zu", "du", "und", "dann", "von", "f\xFCr", "mein", "es", "an", "ist", "mich", "ich bin", "das", "sei", "war", "haben", "wir", "mit", "aber", "nur", "erhalten", "nicht", "dein", "with", "wenn", "bei", "hoch", "d\xFCrfen", "aus", "bekommen", "sind", "tun", "wie", "um", "alle", "tun", "als", "jetzt", "ich habe", "gehen", "es ist", "wie", "wann", "aus", "eins", "zeit", "gehen", "oder", "arbeiten", "jh", "gewesen", "denken", "hatte", "brauchen", "sehen", "wissen", "ein", "wirklich", "er", "sie", "ihn", "ihr", "wille", "zur\xFCck", "zu", "tat", "manche", "nein", "es ist", "machen", "w\xFCrde", "sie", "dort", "beliebig", "nach", "hat", "weggelassen", "medien", "<medien", "<medien weggelassen>", "da", "er", "sie", "weil", "sagte", "ja", "ihnen", "dein", "gehen", "auch", "warum", "sein", "sogar", "kippen", "obwohl", "?aufkleber", "?verpasst"];
 var SkipWordsFrench = ["\u200El'audio", "audio omis", "la", "le", "je", "\xE0", "une", "un", "toi", "et", "alors", "dans", "de", "pour", "ma", "mon", "il", "sur", "donc", "est", "moi", "suis", "ce", "cette", "\xEAtre", "\xE9tait", "avoir", "nous", "avec", "mais", "juste", "obtenir", "pas", "ton", "si", "peut", "dehors", "dehors", "sont", "faire", "comme", "tout", "toute", "maintenant", "j'ai", "c'est", "comment", "quand", "depuis", "une", "un", "temps", "j\u2019ai", "aller", "ou", "ouais", "pense", "jour", "d\xE9sactiv\xE9", "avait", "besoin", "voir", "savoir", "un", "vraiment", "il", "elle", "lui", "son", "volont\xE9", "dos", "aussi", "quelques", "non", "quelques", "c\u2019est", "faire", "serait", "ils", "elles", "l\xE0", "apr\xE8s", "omis", "m\xE9dias", "<m\xE9dias", "<m\xE9dias omis>", "l\xE0", "dit", "dite", "eux", "que", "tu", "votre", "en", "les", "des", "va", "cest", "au", "te", "vous", "oui", "fait", "aussi", "pourquoi", "son", "m\xEAme", "cependant", "?autocollant", "?manqu\xE9e", "?manqu\xE9"];
+var SkipWordsDutch = ["\u200Eafbeelding", "\u200Egeluid", "audio weggelaten", "afbeelding", "de", "naar", "jij", "en", "dan", "van", "voor", "mijn", "het", "op", "dus", "mij", "dit", "dat", "zijn", "hebben", "wij", "met", "maar", "zojuist", "krijgen", "niet", "jouw", "als", "bij", "omhoog", "kan", "uit", "wat", "gekregen", "zijn", "doen", "over", "alle", "als", "nu", "gaan", "hoe", "wanneer", "van", "een", "tijd", "gaan", "of", "geweest", "denken", "dag", "ga", "uit", "behoefte", "zien", "weten", "een", "echt", "hij", "zij", "hem", "haar", "zullen", "rug", "te", "deed", "sommige", "nee", "maken", "zou", "zij", "daar", "elk", "na", "heeft", "overgeslagen", "<media overgeslagen>", "daar", "omdat", "gezegd", "ja", "ok\xE9", "hen", "bericht", "bij", "gaan", "doen", "ook", "waarom", "zijn", "zelfs", "hoewel", "?gemist"];
+var SkipWordsSpanish = ["\u200Eimagen", "\u200Eaudio", "audio omitido", "imagen", "el", "a", "t\xFA", "y", "entonces", "en", "de", "para", "mi", "\xE9l", "en", "entonces", "es", "soy", "este", "eso", "ser", "era", "tener", "nosotros", "con", "pero", "justo", "conseguir", "no", "su", "si", "en", "arriba", "poder", "afuera", "qu\xE9", "consigui\xF3", "son", "hacer", "como", "todo", "ahora", "tengo", "yendo", "es", "c\xF3mo", "cuando", "de", "uno", "tiempo", "ir", "o", "estado", "pensar", "d\xEDa", "apagado", "ten\xEDa", "necesidad", "ver", "saber", "un", "realidad", "\xE9l", "ella", "su", "voluntad", "atr\xE1s", "tambi\xE9n", "hizo", "alguno", "hacer", "har\xEDa", "ellos", "cualquier", "despu\xE9s", "tiene", "omitido", "somos", "vaya", "dicho", "s\xED", "mensaje", "en", "ir", "tambi\xE9n", "su", "incluso", "aunque", "eres", "?pegatina", "?omitido"];
 var SkipWordsSymbols = ["\u200Egif", "gif", "x", "xx", "xxx", "xxxx", "xxxxx", "xxxxxx", "xxxxxxx", "xxxxxxxx", "xxxxxxxxx", "xxxxxxxxxx", "xxxxxxxxxxx", "xxxxxxxxxxxx", "xxxxxxxxxxxxx", "xxxxxxxxxxxxxx", "xxxxxxxxxxxxxxx", "-", "[", "[", "/", "PM", "AM", "am", "pm", "am]", "pm]", "AM]", "PM]", "<", ">", "", "false", "true"];
 var PunctuationRegEx = /[!?,.:;_)]$/g;
 var ReturnCarriageRegEx = /[\r\n]+|\.|[\r\n]+$/g;
@@ -10732,9 +10734,9 @@ function ConvertJsonToMessageObjects(jsonString) {
     let convertedTime = GetTimeFromUnix(currentMessage.timestamp_ms);
     if (currentMessage.content != null && currentMessage.content != void 0) {
       try {
-        currentMessage.content = import_utf8.decode(currentMessage.content);
+        currentMessage.content = import_utf8.utf8.decode(currentMessage.content);
       } catch {
-        currentMessage.content = import_utf8.decode(import_utf8.encode(currentMessage.content));
+        currentMessage.content = import_utf8.utf8.decode(import_utf8.utf8.encode(currentMessage.content));
       }
     }
     const messageModel = {
@@ -11164,7 +11166,7 @@ function GenerateSearchRecord(chatObjArr, searchRecordName, required, width, hei
   if (searchRecordName == "laugh" && counter < 100) {
     const min = Math.ceil(100);
     const max = Math.floor(200);
-    counter = Math.round(Math.floor(Math.random() * (max - min) + min));
+    counter = Math.round(Math.random() * (max - min) + min);
   }
   return new SearchRecord(searchRecordName, required, width, height, orderedSearchLogs, counter);
 }
@@ -11226,7 +11228,7 @@ function GenerateTopWords(wholeChatString, namesArray) {
   });
   const wordsArray = wholeChatString.replace(/(’s)/g, "").replace(/('s)/g, "").split(" ");
   wordsArray.forEach((word) => {
-    if (word.length < 10 && !SkipWordsSymbols.includes(word) && !SkipWordsGerman.includes(word) && !SkipWordsEnglish.includes(word) && !SkipWordsFrench.includes(word) && !EmojiArray.includes(word) && !word.match(punctuationRegEx) && !word.match(numberRegEx) && !newNameSet.has(word)) {
+    if (word.length < 10 && !SkipWordsSymbols.includes(word) && !SkipWordsGerman.includes(word) && !SkipWordsEnglish.includes(word) && !SkipWordsFrench.includes(word) && !SkipWordsDutch.includes(word) && !SkipWordsSpanish.includes(word) && !EmojiArray.includes(word) && !word.match(punctuationRegEx) && !word.match(numberRegEx) && !newNameSet.has(word)) {
       filteredArray.push(word);
     }
   });
