@@ -10694,6 +10694,55 @@ function ConvertEntriesToMessageObjects(array) {
   }
   return parsedData;
 }
+function ConvertJsonToMessageObjects(jsonString) {
+  const parsedData = [];
+  var jsObj = JSON.parse(jsonString);
+  for (let i = 0; i < jsObj.messages.length; i++) {
+    let currentMessage = jsObj.messages[i];
+    let convertedDate = GetDateFromUnix(currentMessage.timestamp_ms);
+    let convertedTime = GetTimeFromUnix(currentMessage.timestamp_ms);
+    if (currentMessage.content != null && currentMessage.content != void 0) {
+      try {
+        currentMessage.content = import_utf8.decode(currentMessage.content);
+      } catch {
+        currentMessage.content = import_utf8.decode(import_utf8.encode(currentMessage.content));
+      }
+    }
+    const messageModel = {
+      Date: convertedDate,
+      Time: convertedTime,
+      Author: currentMessage.sender_name,
+      MessageBody: currentMessage.content
+    };
+    if (currentMessage.share != void 0) {
+      messageModel.MessageBody = "Shared a link";
+    } else if (currentMessage.photos != void 0) {
+      messageModel.MessageBody = "Sent a photo";
+    } else if (currentMessage.gifs != void 0) {
+      messageModel.MessageBody = "Sent a GIF";
+    } else if (currentMessage.videos != void 0) {
+      messageModel.MessageBody = "Sent a video";
+    } else if (currentMessage.audio_files != void 0) {
+      messageModel.MessageBody = "Sent an audio file";
+    } else if (currentMessage.sticker != void 0) {
+      messageModel.MessageBody = "Sent a sticker";
+    } else if (currentMessage.files != void 0) {
+      messageModel.MessageBody = "Sent a file";
+    }
+    if (!currentMessage.is_unsent && messageModel.MessageBody != void 0) {
+      parsedData.push(messageModel);
+    }
+  }
+  return parsedData.reverse();
+}
+function FormatChat(chatString) {
+  let linesArray = new Array();
+  linesArray = chatString.split("\n");
+  linesArray = StandardiseCharacters(linesArray);
+  linesArray = StandardiseDateFormat(linesArray);
+  linesArray = StandardiseClockFormat(linesArray);
+  return linesArray;
+}
 async function FormatFile(uploadedFile) {
   let lowerCaseChat, linesArray, chatObjArr, data;
   if (uploadedFile.type === "application/zip" || uploadedFile.type === "application/x-zip-compressed") {
@@ -10725,46 +10774,43 @@ async function FormatFile(uploadedFile) {
     Chatters: chattersArray
   };
 }
-function ConvertJsonToMessageObjects(jsonString) {
-  const parsedData = [];
-  var jsObj = JSON.parse(jsonString);
-  for (let i = 0; i < jsObj.messages.length; i++) {
-    let currentMessage = jsObj.messages[i];
-    let convertedDate = GetDateFromUnix(currentMessage.timestamp_ms);
-    let convertedTime = GetTimeFromUnix(currentMessage.timestamp_ms);
-    if (currentMessage.content != null && currentMessage.content != void 0) {
-      try {
-        currentMessage.content = import_utf8.utf8.decode(currentMessage.content);
-      } catch {
-        currentMessage.content = import_utf8.utf8.decode(import_utf8.utf8.encode(currentMessage.content));
+function GetClockFormat(linesArray) {
+  let i = 0;
+  while (i < linesArray.length) {
+    let lineString = linesArray[i];
+    if (lineString.length > 0 && lineString.includes(":")) {
+      if (lineString[0] == String.fromCharCode(8206)) {
+        lineString = lineString.substr(1);
+      }
+      if (lineString.toLowerCase().includes("am -") || lineString.toLowerCase().includes("pm -") || lineString.toLowerCase().includes("p.m. -") || lineString.toLowerCase().includes("a.m. -")) {
+        return "12";
+      } else {
+        return "24";
       }
     }
-    const messageModel = {
-      Date: convertedDate,
-      Time: convertedTime,
-      Author: currentMessage.sender_name,
-      MessageBody: currentMessage.content
-    };
-    if (currentMessage.share != void 0) {
-      messageModel.MessageBody = "Shared a link";
-    } else if (currentMessage.photos != void 0) {
-      messageModel.MessageBody = "Sent a photo";
-    } else if (currentMessage.gifs != void 0) {
-      messageModel.MessageBody = "Sent a GIF";
-    } else if (currentMessage.videos != void 0) {
-      messageModel.MessageBody = "Sent a video";
-    } else if (currentMessage.audio_files != void 0) {
-      messageModel.MessageBody = "Sent an audio file";
-    } else if (currentMessage.sticker != void 0) {
-      messageModel.MessageBody = "Sent a sticker";
-    } else if (currentMessage.files != void 0) {
-      messageModel.MessageBody = "Sent a file";
-    }
-    if (!currentMessage.is_unsent && messageModel.MessageBody != void 0) {
-      parsedData.push(messageModel);
-    }
+    i++;
   }
-  return parsedData.reverse();
+}
+function GetDateFormat(linesArray) {
+  let i = 0;
+  while (i < linesArray.length) {
+    let lineString = linesArray[i];
+    if (lineString.length > 0 && IsProperLine(lineString)) {
+      const dateSlashSplit = lineString.split("/");
+      const firstDateSection = dateSlashSplit[0];
+      const secondDateSection = dateSlashSplit[1];
+      if (parseInt(firstDateSection) > 2e3) {
+        return "YEARFIRST";
+      }
+      if (parseInt(firstDateSection) > 12) {
+        return "ENG";
+      }
+      if (parseInt(secondDateSection) > 12) {
+        return "USA";
+      }
+    }
+    i++;
+  }
 }
 function GetDateFromUnix(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp);
@@ -10774,19 +10820,23 @@ function GetDateFromUnix(UNIX_timestamp) {
   var date = a.getDate();
   return date + "/" + month + "/" + year;
 }
+function GetNthIndex(s, t, n) {
+  let count = 0;
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] == t) {
+      count++;
+      if (count == n) {
+        return i;
+      }
+    }
+  }
+  return -1;
+}
 function GetTimeFromUnix(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp);
   var hour = a.getHours() < 10 ? "0" + a.getHours() : a.getHours();
   var min = a.getMinutes() < 10 ? "0" + a.getMinutes() : a.getMinutes();
   return hour + ":" + min;
-}
-async function GetZippedFileData(uploadedFile) {
-  const zipFileReader = new BlobReader(uploadedFile);
-  const zipReader = new ZipReader(zipFileReader);
-  const entries = await zipReader.getEntries();
-  const data = await entries[0].getData(new TextWriter());
-  await zipReader.close();
-  return data;
 }
 async function GetUnzippedFileData(uploadedFile) {
   const zipFileWriter = new BlobWriter();
@@ -10802,25 +10852,43 @@ async function GetUnzippedFileData(uploadedFile) {
   await zipReader.close();
   return data;
 }
-function FormatChat(chatString) {
-  let linesArray = new Array();
-  linesArray = chatString.split("\n");
-  linesArray = StandardiseCharacters(linesArray);
-  linesArray = StandardiseDateFormat(linesArray);
-  linesArray = StandardiseClockFormat(linesArray);
-  return linesArray;
+async function GetZippedFileData(uploadedFile) {
+  const zipFileReader = new BlobReader(uploadedFile);
+  const zipReader = new ZipReader(zipFileReader);
+  const entries = await zipReader.getEntries();
+  const data = await entries[0].getData(new TextWriter());
+  await zipReader.close();
+  return data;
 }
-function GetNthIndex(s, t, n) {
-  let count = 0;
-  for (let i = 0; i < s.length; i++) {
-    if (s[i] == t) {
-      count++;
-      if (count == n) {
-        return i;
-      }
+function IsProperLine(lineString) {
+  let hyphenCount = (lineString.match(/\//gm) || []).length;
+  let dashCount = (lineString.match(/-/gm) || []).length;
+  return hyphenCount >= 2 || dashCount >= 2;
+}
+function RemoveEncryptionAndSubjectMessage(chatString) {
+  const whatsappEncryptionMessage = "messages and calls are end-to-end encrypted";
+  const subjectChangeMessage = " changed the subject to ";
+  const numberChangeMessage = "changed their phone number";
+  let chatSplitArr = chatString.split("\n");
+  for (var x = 0; x < 5; x++) {
+    let currentLine = chatSplitArr[x];
+    if (currentLine.includes(whatsappEncryptionMessage) || currentLine.includes(subjectChangeMessage) || currentLine.includes(numberChangeMessage)) {
+      chatSplitArr[x] = "";
     }
   }
-  return -1;
+  return chatSplitArr.join("\n");
+}
+function ReplaceHyphensInDate(line) {
+  if (line.length > 9) {
+    const dateStr = line.substr(0, 10);
+    const restOfLine = line.substr(10);
+    line = dateStr.replaceAll("-", "/") + restOfLine;
+  }
+  return line;
+}
+async function SendChatChartRequest(httpRequest) {
+  const url = "https://prod-14.uksouth.logic.azure.com:443/workflows/6f40b458f6d447cf931ad42dc778db92/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Xxz51scEThNC4v_zdGkWd0EB2FWl0OOUO5FtUlOpDe8";
+  return await fetch(url, httpRequest);
 }
 function StandardiseCharacters(linesArray) {
   let doubleColonLines = [];
@@ -10877,6 +10945,7 @@ function StandardiseCharacters(linesArray) {
       if (currentLine[0] == String.fromCharCode(8206)) {
         currentLine = currentLine.substr(1);
       }
+      currentLine = ReplaceHyphensInDate(currentLine);
       const secondSlashIndex = GetNthIndex(currentLine, "/", 2);
       const commaFromSecondSlashIndex = currentLine.substring(secondSlashIndex).indexOf(",");
       if (commaFromSecondSlashIndex != 5 && commaFromSecondSlashIndex != 3) {
@@ -10969,66 +11038,6 @@ function StandardiseClockFormat(linesArray) {
     i++;
   }
   return linesArray;
-}
-function GetDateFormat(linesArray) {
-  let i = 0;
-  while (i < linesArray.length) {
-    let lineString = linesArray[i];
-    if (lineString.length > 0 && IsProperLine(lineString)) {
-      const dateSlashSplit = lineString.split("/");
-      const firstDateSection = dateSlashSplit[0];
-      const secondDateSection = dateSlashSplit[1];
-      if (parseInt(firstDateSection) > 2e3) {
-        return "YEARFIRST";
-      }
-      if (parseInt(firstDateSection) > 12) {
-        return "ENG";
-      }
-      if (parseInt(secondDateSection) > 12) {
-        return "USA";
-      }
-    }
-    i++;
-  }
-}
-function GetClockFormat(linesArray) {
-  let i = 0;
-  while (i < linesArray.length) {
-    let lineString = linesArray[i];
-    if (lineString.length > 0 && lineString.includes(":")) {
-      if (lineString[0] == String.fromCharCode(8206)) {
-        lineString = lineString.substr(1);
-      }
-      if (lineString.toLowerCase().includes("am -") || lineString.toLowerCase().includes("pm -") || lineString.toLowerCase().includes("p.m. -") || lineString.toLowerCase().includes("a.m. -")) {
-        return "12";
-      } else {
-        return "24";
-      }
-    }
-    i++;
-  }
-}
-function IsProperLine(lineString) {
-  let hyphenCount = (lineString.match(/\//gm) || []).length;
-  let dashCount = (lineString.match(/-/gm) || []).length;
-  return hyphenCount >= 2 || dashCount >= 2;
-}
-function RemoveEncryptionAndSubjectMessage(chatString) {
-  const whatsappEncryptionMessage = "messages and calls are end-to-end encrypted";
-  const subjectChangeMessage = " changed the subject to ";
-  const numberChangeMessage = "changed their phone number";
-  let chatSplitArr = chatString.split("\n");
-  for (var x = 0; x < 5; x++) {
-    let currentLine = chatSplitArr[x];
-    if (currentLine.includes(whatsappEncryptionMessage) || currentLine.includes(subjectChangeMessage) || currentLine.includes(numberChangeMessage)) {
-      chatSplitArr[x] = "";
-    }
-  }
-  return chatSplitArr.join("\n");
-}
-async function SendChatChartRequest(httpRequest) {
-  const url = "https://prod-14.uksouth.logic.azure.com:443/workflows/6f40b458f6d447cf931ad42dc778db92/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Xxz51scEThNC4v_zdGkWd0EB2FWl0OOUO5FtUlOpDe8";
-  return await fetch(url, httpRequest);
 }
 
 // models/searchlog.js
