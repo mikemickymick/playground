@@ -10703,9 +10703,9 @@ function ConvertJsonToMessageObjects(jsonString) {
     let convertedTime = GetTimeFromUnix(currentMessage.timestamp_ms);
     if (currentMessage.content != null && currentMessage.content != void 0) {
       try {
-        currentMessage.content = import_utf8.utf8.decode(currentMessage.content);
+        currentMessage.content = import_utf8.decode(currentMessage.content);
       } catch {
-        currentMessage.content = import_utf8.utf8.decode(import_utf8.utf8.encode(currentMessage.content));
+        currentMessage.content = import_utf8.decode(import_utf8.encode(currentMessage.content));
       }
     }
     const messageModel = {
