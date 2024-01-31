@@ -10703,9 +10703,9 @@ function ConvertJsonToMessageObjects(jsonString) {
     let convertedTime = GetTimeFromUnix(currentMessage.timestamp_ms);
     if (currentMessage.content != null && currentMessage.content != void 0) {
       try {
-        currentMessage.content = import_utf8.decode(currentMessage.content);
+        currentMessage.content = import_utf8.utf8.decode(currentMessage.content);
       } catch {
-        currentMessage.content = import_utf8.decode(import_utf8.encode(currentMessage.content));
+        currentMessage.content = import_utf8.utf8.decode(import_utf8.utf8.encode(currentMessage.content));
       }
     }
     const messageModel = {
@@ -10820,17 +10820,20 @@ function GetDateFromUnix(UNIX_timestamp) {
   var date = a.getDate();
   return date + "/" + month + "/" + year;
 }
-function GetNthIndex(s, t, n) {
-  let count = 0;
-  for (let i = 0; i < s.length; i++) {
-    if (s[i] == t) {
-      count++;
-      if (count == n) {
-        return i;
-      }
+function GetDateSeparator(input) {
+  let maxCount = 0;
+  let separator = "";
+  const numberOfFullStops = input.replace(/[^.]/g, "").length;
+  const numberOfSlashes = input.replace(/[^/]/g, "").length;
+  const numberOfHyphens = input.replace(/[^-]/g, "").length;
+  const counts = [{ key: ".", value: numberOfFullStops }, { key: "/", value: numberOfSlashes }, { key: "-", value: numberOfHyphens }];
+  counts.forEach((x) => {
+    if (x.value > maxCount) {
+      maxCount = x.value;
+      separator = x.key;
     }
-  }
-  return -1;
+  });
+  return separator;
 }
 function GetTimeFromUnix(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp);
@@ -10878,120 +10881,30 @@ function RemoveEncryptionAndSubjectMessage(chatString) {
   }
   return chatSplitArr.join("\n");
 }
-function ReplaceHyphensInDate(line) {
-  if (line.length > 9) {
-    const dateStr = line.substr(0, 10);
-    const restOfLine = line.substr(10);
-    line = dateStr.replaceAll("-", "/") + restOfLine;
-  }
-  return line;
-}
 async function SendChatChartRequest(httpRequest) {
   const url = "https://prod-14.uksouth.logic.azure.com:443/workflows/6f40b458f6d447cf931ad42dc778db92/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Xxz51scEThNC4v_zdGkWd0EB2FWl0OOUO5FtUlOpDe8";
   return await fetch(url, httpRequest);
 }
 function StandardiseCharacters(linesArray) {
-  let doubleColonLines = [];
-  let isEuropean = false;
   for (var i = 0; i < linesArray.length; i++) {
-    let currentLine = linesArray[i];
-    if (currentLine[0] == String.fromCharCode(8206)) {
-      currentLine = currentLine.substr(1);
+    let currentLine = StripInvisibleChar(linesArray[i]);
+    if (currentLine.length == 0) {
+      linesArray[i] = "";
+      continue;
     }
-    let beginningOfLine = currentLine.substr(0, 30);
-    const numberOfColons = beginningOfLine.replace(/[^:]/g, "").length;
-    const numberOfCommas = beginningOfLine.replace(/[^,]/g, "").length;
-    if (beginningOfLine.includes("[") && beginningOfLine.includes("]")) {
-      const numberOfBrackets = currentLine.replace(/[^\[\]]/g, "").length;
-      if (numberOfBrackets == 4) {
-        linesArray[i] = "";
-        for (var j = 1; j < 9; j++) {
-          linesArray[i + j] = "";
-          j++;
-        }
-        i += 9;
-      } else {
-        beginningOfLine = beginningOfLine.replace(/[\[]/gm, "");
-        let veryBeginningOfLine = beginningOfLine.substr(0, 5);
-        if (veryBeginningOfLine.includes(".")) {
-          beginningOfLine = beginningOfLine.replace(/\./g, "/").replace(/[\]]/gm, " -");
-        } else {
-          beginningOfLine = beginningOfLine.replace(/-/g, "/").replace(/[\]]/gm, " -");
-        }
-        let endOfLine = currentLine.substr(30);
-        currentLine = beginningOfLine + endOfLine;
-        const secondSlashIndex = GetNthIndex(currentLine, "/", 2);
-        const commaFromSecondSlashIndex = currentLine.substring(secondSlashIndex).indexOf(",");
-        if (commaFromSecondSlashIndex != 5 && commaFromSecondSlashIndex != 3) {
-          const firstSpaceIndex = currentLine.substring(secondSlashIndex).indexOf(" ");
-          const firstHalf = currentLine.substring(0, secondSlashIndex + firstSpaceIndex);
-          const secondHalf = currentLine.substring(10);
-          currentLine = firstHalf + "," + secondHalf;
-        }
-        linesArray[i] = currentLine;
+    if (currentLine.replace(/[^\[\]]/g, "").length == 4) {
+      linesArray[i] = "";
+      for (var j = 1; j < 9; j++) {
+        linesArray[i + j] = "";
+        j++;
       }
-    } else if (numberOfColons > 1 && numberOfCommas == 0) {
-      if (i == 100 && doubleColonLines.length > 50) {
-        isEuropean = true;
-        break;
-      } else {
-        doubleColonLines.push(beginningOfLine);
-      }
+      i += 9;
+      continue;
     }
-  }
-  if (isEuropean) {
-    for (var i = 0; i < linesArray.length; i++) {
-      let currentLine = linesArray[i];
-      if (currentLine[0] == String.fromCharCode(8206)) {
-        currentLine = currentLine.substr(1);
-      }
-      currentLine = ReplaceHyphensInDate(currentLine);
-      const secondSlashIndex = GetNthIndex(currentLine, "/", 2);
-      const commaFromSecondSlashIndex = currentLine.substring(secondSlashIndex).indexOf(",");
-      if (commaFromSecondSlashIndex != 5 && commaFromSecondSlashIndex != 3) {
-        const firstSpaceIndex = currentLine.substring(secondSlashIndex).indexOf(" ");
-        const firstHalf = currentLine.substring(0, secondSlashIndex + firstSpaceIndex);
-        const secondHalf = currentLine.substring(10);
-        currentLine = firstHalf + "," + secondHalf;
-      }
-      linesArray[i] = currentLine;
-    }
-  }
-  return linesArray;
-}
-function StandardiseDateFormat(linesArray) {
-  const dateFormat = GetDateFormat(linesArray);
-  let i = 0;
-  while (i < linesArray.length) {
-    let currentLine = linesArray[i];
-    let beginningOfLine = currentLine.substr(0, 30);
-    try {
-      if (beginningOfLine.length > 0 && beginningOfLine.includes(":") && beginningOfLine.includes(",") && beginningOfLine.includes("-") && (beginningOfLine.indexOf("/") == 1 || beginningOfLine.indexOf("/") == 2 || beginningOfLine.indexOf("/") == 4)) {
-        const dateString = currentLine.split(",")[0];
-        let dayString = "";
-        let monthString = "";
-        let yearString = "";
-        if (dateFormat == "ENG") {
-          dayString = dateString.split("/")[0].length == 2 ? dateString.split("/")[0] : "0" + dateString.split("/")[0];
-          monthString = dateString.split("/")[1].length == 2 ? dateString.split("/")[1] : "0" + dateString.split("/")[1];
-          yearString = dateString.split("/")[2].length == 4 ? dateString.split("/")[2] : "20" + dateString.split("/")[2];
-        } else if (dateFormat == "USA") {
-          dayString = dateString.split("/")[1].length == 2 ? dateString.split("/")[1] : "0" + dateString.split("/")[1];
-          monthString = dateString.split("/")[0].length == 2 ? dateString.split("/")[0] : "0" + dateString.split("/")[0];
-          yearString = dateString.split("/")[2].length == 4 ? dateString.split("/")[2] : "20" + dateString.split("/")[2];
-        } else {
-          dayString = dateString.split("/")[2].length == 2 ? dateString.split("/")[2] : "0" + dateString.split("/")[2];
-          monthString = dateString.split("/")[1].length == 2 ? dateString.split("/")[1] : "0" + dateString.split("/")[0];
-          yearString = dateString.split("/")[0].length == 4 ? dateString.split("/")[0] : "20" + dateString.split("/")[0];
-        }
-        const dateFormatted = `${dayString}/${monthString}/${yearString}`;
-        const newLine = currentLine.replace(dateString, dateFormatted);
-        linesArray[i] = newLine;
-      }
-      i++;
-    } catch {
-      i++;
-    }
+    currentLine = StandardiseDateSeparator(currentLine);
+    currentLine = StandardiseDateTimeSeparator(currentLine);
+    currentLine = StandardiseDateTimeMessageSeparator(currentLine);
+    linesArray[i] = currentLine;
   }
   return linesArray;
 }
@@ -11038,6 +10951,77 @@ function StandardiseClockFormat(linesArray) {
     i++;
   }
   return linesArray;
+}
+function StandardiseDateFormat(linesArray) {
+  const dateFormat = GetDateFormat(linesArray);
+  let i = 0;
+  while (i < linesArray.length) {
+    let currentLine = linesArray[i];
+    let beginningOfLine = currentLine.substr(0, 30);
+    try {
+      if (beginningOfLine.length > 0 && beginningOfLine.includes(":") && beginningOfLine.includes(",") && beginningOfLine.includes("-") && (beginningOfLine.indexOf("/") == 1 || beginningOfLine.indexOf("/") == 2 || beginningOfLine.indexOf("/") == 4)) {
+        const dateString = currentLine.split(",")[0];
+        let dayString = "";
+        let monthString = "";
+        let yearString = "";
+        if (dateFormat == "ENG") {
+          dayString = dateString.split("/")[0].length == 2 ? dateString.split("/")[0] : "0" + dateString.split("/")[0];
+          monthString = dateString.split("/")[1].length == 2 ? dateString.split("/")[1] : "0" + dateString.split("/")[1];
+          yearString = dateString.split("/")[2].length == 4 ? dateString.split("/")[2] : "20" + dateString.split("/")[2];
+        } else if (dateFormat == "USA") {
+          dayString = dateString.split("/")[1].length == 2 ? dateString.split("/")[1] : "0" + dateString.split("/")[1];
+          monthString = dateString.split("/")[0].length == 2 ? dateString.split("/")[0] : "0" + dateString.split("/")[0];
+          yearString = dateString.split("/")[2].length == 4 ? dateString.split("/")[2] : "20" + dateString.split("/")[2];
+        } else {
+          dayString = dateString.split("/")[2].length == 2 ? dateString.split("/")[2] : "0" + dateString.split("/")[2];
+          monthString = dateString.split("/")[1].length == 2 ? dateString.split("/")[1] : "0" + dateString.split("/")[0];
+          yearString = dateString.split("/")[0].length == 4 ? dateString.split("/")[0] : "20" + dateString.split("/")[0];
+        }
+        const dateFormatted = `${dayString}/${monthString}/${yearString}`;
+        const newLine = currentLine.replace(dateString, dateFormatted);
+        linesArray[i] = newLine;
+      }
+      i++;
+    } catch {
+      i++;
+    }
+  }
+  return linesArray;
+}
+function StandardiseDateSeparator(input) {
+  let dateLine = input.substr(0, 11);
+  let restOfLine = input.substr(11);
+  const dateSeparator = GetDateSeparator(dateLine);
+  if (dateSeparator == "-") {
+    return dateLine.replaceAll("-", "/") + restOfLine;
+  } else if (dateSeparator == ".") {
+    return dateLine.replaceAll(".", "/") + restOfLine;
+  } else {
+    return input;
+  }
+}
+function StandardiseDateTimeMessageSeparator(input) {
+  let dateLine = input.substr(0, 11);
+  if (dateLine.includes("[")) {
+    return input.replace("[", "").replace("]", " -");
+  } else {
+    return input;
+  }
+}
+function StandardiseDateTimeSeparator(input) {
+  let dateTime = input.substr(0, 18);
+  if (!dateTime.includes(", ")) {
+    return input.replace(" ", ", ");
+  } else {
+    return input;
+  }
+}
+function StripInvisibleChar(input) {
+  if (input[0] == String.fromCharCode(8206)) {
+    return input.substr(1);
+  } else {
+    return input;
+  }
 }
 
 // models/searchlog.js
