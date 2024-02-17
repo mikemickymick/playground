@@ -4040,7 +4040,7 @@ function InfTree() {
   let c;
   let r;
   let u;
-  let x;
+  let x2;
   function huft_build(b, bindex, n, s, d, e2, t, m, hp, hn2, v2) {
     let a;
     let f;
@@ -4095,11 +4095,11 @@ function InfTree() {
       return Z_DATA_ERROR1;
     }
     c[i] += y;
-    x[1] = j = 0;
+    x2[1] = j = 0;
     p = 1;
     xp = 2;
     while (--i !== 0) {
-      x[xp] = j += c[p];
+      x2[xp] = j += c[p];
       xp++;
       p++;
     }
@@ -4107,12 +4107,12 @@ function InfTree() {
     p = 0;
     do {
       if ((j = b[bindex + p]) !== 0) {
-        v2[x[j]++] = i;
+        v2[x2[j]++] = i;
       }
       p++;
     } while (++i < n);
-    n = x[g];
-    x[0] = i = 0;
+    n = x2[g];
+    x2[0] = i = 0;
     p = 0;
     h = -1;
     w = -l;
@@ -4145,7 +4145,7 @@ function InfTree() {
           u[h] = q = hn2[0];
           hn2[0] += z;
           if (h !== 0) {
-            x[h] = i;
+            x2[h] = i;
             r[0] = j;
             r[1] = l;
             j = i >>> w - l;
@@ -4174,7 +4174,7 @@ function InfTree() {
         }
         i ^= j;
         mask = (1 << w) - 1;
-        while ((i & mask) != x[h]) {
+        while ((i & mask) != x2[h]) {
           h--;
           w -= l;
           mask = (1 << w) - 1;
@@ -4191,7 +4191,7 @@ function InfTree() {
       c = new Int32Array(BMAX + 1);
       r = [];
       u = new Int32Array(BMAX);
-      x = new Int32Array(BMAX + 1);
+      x2 = new Int32Array(BMAX + 1);
     }
     if (v.length < vsize) {
       v = [];
@@ -4206,7 +4206,7 @@ function InfTree() {
       r[i] = 0;
     }
     u.set(c.subarray(0, 15), 0);
-    x.set(c.subarray(0, 15 + 1), 0);
+    x2.set(c.subarray(0, 15 + 1), 0);
   }
   that.inflate_trees_bits = function(c2, bb, tb, hp, z) {
     let result;
@@ -7437,8 +7437,8 @@ var bitArray = {
     if (l === 0) {
       return 0;
     }
-    const x = a[l - 1];
-    return (l - 1) * 32 + bitArray.getPartial(x);
+    const x2 = a[l - 1];
+    return (l - 1) * 32 + bitArray.getPartial(x2);
   },
   clamp(a, len) {
     if (a.length * 32 < len) {
@@ -7452,14 +7452,14 @@ var bitArray = {
     }
     return a;
   },
-  partial(len, x, _end) {
+  partial(len, x2, _end) {
     if (len === 32) {
-      return x;
+      return x2;
     }
-    return (_end ? x | 0 : x << 32 - len) + len * 1099511627776;
+    return (_end ? x2 | 0 : x2 << 32 - len) + len * 1099511627776;
   },
-  getPartial(x) {
-    return Math.round(x / 1099511627776) || 32;
+  getPartial(x2) {
+    return Math.round(x2 / 1099511627776) || 32;
   },
   _shiftRight(a, shift, carry, out) {
     if (out === void 0) {
@@ -7598,8 +7598,8 @@ hash.sha1 = class {
       return b ^ c ^ d;
     }
   }
-  _S(n, x) {
-    return x << n | x >>> 32 - n;
+  _S(n, x2) {
+    return x2 << n | x2 >>> 32 - n;
   }
   _block(words) {
     const sha1 = this;
@@ -7702,16 +7702,16 @@ cipher.aes = class {
     for (let i = 0; i < 256; i++) {
       th[(d[i] = i << 1 ^ (i >> 7) * 283) ^ i] = i;
     }
-    for (let x = xInv = 0; !sbox[x]; x ^= x2 || 1, xInv = th[xInv] || 1) {
+    for (let x3 = xInv = 0; !sbox[x3]; x3 ^= x2 || 1, xInv = th[xInv] || 1) {
       let s = xInv ^ xInv << 1 ^ xInv << 2 ^ xInv << 3 ^ xInv << 4;
       s = s >> 8 ^ s & 255 ^ 99;
-      sbox[x] = s;
-      sboxInv[s] = x;
-      x8 = d[x4 = d[x2 = d[x]]];
-      let tDec = x8 * 16843009 ^ x4 * 65537 ^ x2 * 257 ^ x * 16843008;
+      sbox[x3] = s;
+      sboxInv[s] = x3;
+      x8 = d[x4 = d[x2 = d[x3]]];
+      let tDec = x8 * 16843009 ^ x4 * 65537 ^ x2 * 257 ^ x3 * 16843008;
       let tEnc = d[s] * 257 ^ s * 16843008;
       for (let i = 0; i < 4; i++) {
-        encTable[i][x] = tEnc = tEnc << 24 ^ tEnc >>> 8;
+        encTable[i][x3] = tEnc = tEnc << 24 ^ tEnc >>> 8;
         decTable[i][s] = tDec = tDec << 24 ^ tDec >>> 8;
       }
     }
@@ -10729,7 +10729,7 @@ function ConvertJsonToMessageObjects(jsonString) {
     } else if (currentMessage.files != void 0) {
       messageModel.MessageBody = "Sent a file";
     }
-    if (!currentMessage.is_unsent && messageModel.MessageBody != void 0) {
+    if (!currentMessage.is_unsent && messageModel.MessageBody != void 0 && !messageModel.MessageBody.includes("connected on messenger")) {
       parsedData.push(messageModel);
     }
   }
@@ -10743,25 +10743,16 @@ function FormatChat(chatString) {
   linesArray = StandardiseClockFormat(linesArray);
   return linesArray;
 }
-async function FormatFile(uploadedFile) {
-  let lowerCaseChat, linesArray, chatObjArr, data;
-  if (uploadedFile.type === "application/zip" || uploadedFile.type === "application/x-zip-compressed") {
-    data = await GetZippedFileData(uploadedFile);
-    lowerCaseChat = RemoveEncryptionAndSubjectMessage(data.toLowerCase());
-    linesArray = FormatChat(lowerCaseChat);
-    chatObjArr = ConvertEntriesToMessageObjects(linesArray);
-  } else if (uploadedFile.type === "text/plain") {
-    data = await GetUnzippedFileData(uploadedFile);
+async function GenerateChatObjectFromSingleFile(uploadedFile) {
+  let lowerCaseChat, linesArray, chatObjArr;
+  let data = await GetUnzippedFileData(uploadedFile);
+  if (uploadedFile.type === "text/plain") {
     lowerCaseChat = RemoveEncryptionAndSubjectMessage(data.toLowerCase());
     linesArray = FormatChat(lowerCaseChat);
     chatObjArr = ConvertEntriesToMessageObjects(linesArray);
   } else if (uploadedFile.type === "application/json") {
-    data = await GetUnzippedFileData(uploadedFile);
     chatObjArr = ConvertJsonToMessageObjects(data.toLowerCase());
     lowerCaseChat = data.toLowerCase().replace(/[\n\r]+/g, "").replace("\n", "").replace("{\n", "").replace("},\n", "").replace("[\n", "").replace("}\n", "").replace("],\n", "").replace(/[{}]/g, "").replace(/['"]+/g, "").replace(/generic/g, "");
-  } else {
-    alert("Oops! Sorry, we only accept .zip, .txt, or .json files");
-    return;
   }
   const chatters = /* @__PURE__ */ new Set();
   for (const element of chatObjArr) {
@@ -10773,6 +10764,72 @@ async function FormatFile(uploadedFile) {
     ArrayOfMessageObjs: chatObjArr,
     Chatters: chattersArray
   };
+}
+async function GenerateChatObjectFromMultipleFiles(uploadedFilesArray) {
+  let lowerCaseChat;
+  const chatObjArr = [];
+  for (const uploadedFile of uploadedFilesArray) {
+    const fileChatObjs = await GetChatObjects(uploadedFile);
+    for (x of fileChatObjs) {
+      chatObjArr.push(x);
+    }
+    lowerCaseChat += await GetChatString(uploadedFile);
+  }
+  chatObjArr.sort((a, b) => {
+    const aDate = ConvertChatObjDateAndTimeToDateTime(a);
+    const bDate = ConvertChatObjDateAndTimeToDateTime(b);
+    return aDate - bDate;
+  });
+  const chatters = /* @__PURE__ */ new Set();
+  for (const element of chatObjArr) {
+    chatters.add(element.Author);
+  }
+  const chattersArray = Array.from(chatters);
+  return {
+    WholeChatString: lowerCaseChat,
+    ArrayOfMessageObjs: chatObjArr,
+    Chatters: chattersArray
+  };
+}
+async function GetChatObjects(uploadedFile) {
+  let lowerCaseChat;
+  const chatObjArr = [];
+  const data = await GetUnzippedFileData(uploadedFile);
+  if (uploadedFile.type === "text/plain") {
+    lowerCaseChat = RemoveEncryptionAndSubjectMessage(data.toLowerCase());
+    const linesArray = FormatChat(lowerCaseChat);
+    const parsedTxtData = ConvertEntriesToMessageObjects(linesArray);
+    parsedTxtData.forEach((x2) => {
+      chatObjArr.push(x2);
+    });
+  } else {
+    const parsedJsonData = ConvertJsonToMessageObjects(data.toLowerCase());
+    parsedJsonData.forEach((x2) => {
+      chatObjArr.push(x2);
+    });
+    lowerCaseChat = data.toLowerCase().replace(/[\n\r]+/g, "").replace("\n", "").replace("{\n", "").replace("},\n", "").replace("[\n", "").replace("}\n", "").replace("],\n", "").replace(/[{}]/g, "").replace(/['"]+/g, "").replace(/generic/g, "");
+  }
+  return chatObjArr;
+}
+async function GetChatString(uploadedFile) {
+  let lowerCaseChat;
+  const data = await GetUnzippedFileData(uploadedFile);
+  if (uploadedFile.type === "text/plain") {
+    lowerCaseChat += RemoveEncryptionAndSubjectMessage(data.toLowerCase());
+  } else {
+    lowerCaseChat += data.toLowerCase().replace(/[\n\r]+/g, "").replace("\n", "").replace("{\n", "").replace("},\n", "").replace("[\n", "").replace("}\n", "").replace("],\n", "").replace(/[{}]/g, "").replace(/['"]+/g, "").replace(/generic/g, "");
+  }
+  return lowerCaseChat;
+}
+function ConvertChatObjDateAndTimeToDateTime(chatObj) {
+  const dateString = chatObj.Date;
+  const timeString = chatObj.Time;
+  const dateStringArray = dateString.split("/");
+  const day = dateStringArray[0];
+  const month = dateStringArray[1];
+  const year = dateStringArray[2];
+  const dateTimeString = `${year}-${month}-${day}T${timeString}:00`;
+  return new Date(dateTimeString);
 }
 function GetClockFormat(linesArray) {
   let i = 0;
@@ -10818,6 +10875,9 @@ function GetDateFromUnix(UNIX_timestamp) {
   var year = a.getFullYear();
   var month = months[a.getMonth()];
   var date = a.getDate();
+  if (date.toString().length == 1) {
+    date = "0" + date.toString();
+  }
   return date + "/" + month + "/" + year;
 }
 function GetDateSeparator(input) {
@@ -10827,10 +10887,10 @@ function GetDateSeparator(input) {
   const numberOfSlashes = input.replace(/[^/]/g, "").length;
   const numberOfHyphens = input.replace(/[^-]/g, "").length;
   const counts = [{ key: ".", value: numberOfFullStops }, { key: "/", value: numberOfSlashes }, { key: "-", value: numberOfHyphens }];
-  counts.forEach((x) => {
-    if (x.value > maxCount) {
-      maxCount = x.value;
-      separator = x.key;
+  counts.forEach((x2) => {
+    if (x2.value > maxCount) {
+      maxCount = x2.value;
+      separator = x2.key;
     }
   });
   return separator;
@@ -10855,14 +10915,6 @@ async function GetUnzippedFileData(uploadedFile) {
   await zipReader.close();
   return data;
 }
-async function GetZippedFileData(uploadedFile) {
-  const zipFileReader = new BlobReader(uploadedFile);
-  const zipReader = new ZipReader(zipFileReader);
-  const entries = await zipReader.getEntries();
-  const data = await entries[0].getData(new TextWriter());
-  await zipReader.close();
-  return data;
-}
 function IsProperLine(lineString) {
   let hyphenCount = (lineString.match(/\//gm) || []).length;
   let dashCount = (lineString.match(/-/gm) || []).length;
@@ -10873,10 +10925,10 @@ function RemoveEncryptionAndSubjectMessage(chatString) {
   const subjectChangeMessage = " changed the subject to ";
   const numberChangeMessage = "changed their phone number";
   let chatSplitArr = chatString.split("\n");
-  for (var x = 0; x < 5; x++) {
-    let currentLine = chatSplitArr[x];
+  for (var x2 = 0; x2 < 5; x2++) {
+    let currentLine = chatSplitArr[x2];
     if (currentLine.includes(whatsappEncryptionMessage) || currentLine.includes(subjectChangeMessage) || currentLine.includes(numberChangeMessage)) {
-      chatSplitArr[x] = "";
+      chatSplitArr[x2] = "";
     }
   }
   return chatSplitArr.join("\n");
@@ -11038,11 +11090,11 @@ function GenerateChatComposition(messageObjectArray) {
   let authorIndex = 0;
   for (const element of messageObjectArray) {
     let chatterInArray = false;
-    for (const x of chatters) {
-      if (x.Name === element.Author) {
+    for (const x2 of chatters) {
+      if (x2.Name === element.Author) {
         chatterInArray = true;
-        x.MessageCount += 1;
-        x.WordCount += element.MessageBody.split(" ").length;
+        x2.MessageCount += 1;
+        x2.WordCount += element.MessageBody.split(" ").length;
       }
     }
     if (!chatterInArray) {
@@ -11085,14 +11137,14 @@ function GenerateFirstEncounter(chatObjArr) {
   let firstMessageTime = firstMessage["Time"];
   let firstMessageAuthor = firstMessage["Author"];
   let firstMessageBody = firstMessage["MessageBody"];
-  let replierIndex = chatObjArr.indexOf(chatObjArr.find((x) => x.Author != firstMessageAuthor));
+  let replierIndex = chatObjArr.indexOf(chatObjArr.find((x2) => x2.Author != firstMessageAuthor));
   let replyMessage = chatObjArr[replierIndex];
   let replyDate = replyMessage["Date"];
   let replyTime = replyMessage["Time"];
   let replyAuthor = replyMessage["Author"];
   let replyMessageBody = replyMessage["MessageBody"];
   let arrFromSecondAuth = chatObjArr.slice(replierIndex, 50);
-  let thirdAuthorIndex = arrFromSecondAuth.indexOf(arrFromSecondAuth.find((x) => x.Author != replyAuthor));
+  let thirdAuthorIndex = arrFromSecondAuth.indexOf(arrFromSecondAuth.find((x2) => x2.Author != replyAuthor));
   firstMessageBody = GetMessageComposite(chatObjArr, replierIndex, firstMessageBody).replace("omitted", "post");
   replyMessageBody = GetMessageComposite(arrFromSecondAuth, thirdAuthorIndex, replyMessageBody).replace("omitted", "post");
   return new FirstEncounter(firstMessageDate, firstMessageTime, firstMessageAuthor, firstMessageBody, replyDate, replyTime, replyAuthor, replyMessageBody);
@@ -11110,13 +11162,13 @@ function GenerateSearchRecord(chatObjArr, searchRecordName, required, width, hei
   }
   if (searchRecordName == "emoji") {
     let unicodeStrings = new Array();
-    searchTermArr.forEach((x) => {
-      let instanceRegEx = new RegExp(x.toLowerCase(), "g");
-      let unicodeString = x.codePointAt(0).toString(16);
-      let counter2 = chatObjArr.filter((x2) => x2.MessageBody.match(instanceRegEx)).length;
+    searchTermArr.forEach((x2) => {
+      let instanceRegEx = new RegExp(x2.toLowerCase(), "g");
+      let unicodeString = x2.codePointAt(0).toString(16);
+      let counter2 = chatObjArr.filter((x3) => x3.MessageBody.match(instanceRegEx)).length;
       if (!unicodeStrings.find((v) => v.uniStr === unicodeString)) {
         unicodeStrings.push({
-          emoji: x,
+          emoji: x2,
           uniStr: unicodeString,
           emojiCount: counter2
         });
@@ -11134,10 +11186,10 @@ function GenerateSearchRecord(chatObjArr, searchRecordName, required, width, hei
       searchLogs.push(searchLog);
     });
   } else {
-    searchTermArr.forEach((x) => {
-      let instanceRegEx = new RegExp(x.toLowerCase(), "g");
-      let counter2 = chatObjArr.filter((x2) => x2.MessageBody.match(instanceRegEx)).length;
-      let searchLog = new SearchLog(x, counter2);
+    searchTermArr.forEach((x2) => {
+      let instanceRegEx = new RegExp(x2.toLowerCase(), "g");
+      let counter2 = chatObjArr.filter((x3) => x3.MessageBody.match(instanceRegEx)).length;
+      let searchLog = new SearchLog(x2, counter2);
       searchLogs.push(searchLog);
     });
   }
@@ -11151,8 +11203,8 @@ function GenerateSearchRecord(chatObjArr, searchRecordName, required, width, hei
       orderedSearchLogs.push(searchLogs[i]);
     }
   } else {
-    searchLogs.forEach((x) => {
-      counter += x.Count;
+    searchLogs.forEach((x2) => {
+      counter += x2.Count;
     });
     orderedSearchLogs = searchLogs;
   }
@@ -11167,8 +11219,8 @@ function GenerateMessageDays(chatObjArr) {
   let dayArray = [{ Day: "Monday", Count: 0, Percent: 0 }, { Day: "Tuesday", Count: 0, Percent: 0 }, { Day: "Wednesday", Count: 0, Percent: 0 }, { Day: "Thursday", Count: 0, Percent: 0 }, { Day: "Friday", Count: 0, Percent: 0 }, { Day: "Saturday", Count: 0, Percent: 0 }, { Day: "Sunday", Count: 0, Percent: 0 }];
   const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   let totalCount = 0;
-  chatObjArr.forEach((x) => {
-    let dateString = x.Date;
+  chatObjArr.forEach((x2) => {
+    let dateString = x2.Date;
     let date = parseInt(dateString.split("/")[0]);
     let month = parseInt(dateString.split("/")[1]);
     let year = parseInt(dateString.split("/")[2]);
@@ -11181,12 +11233,12 @@ function GenerateMessageDays(chatObjArr) {
     totalCount++;
   });
   let percentTotal = 0;
-  dayArray.forEach((x) => {
-    if (dayArray.indexOf(x) == 6) {
-      x.Percent = 100 - percentTotal;
+  dayArray.forEach((x2) => {
+    if (dayArray.indexOf(x2) == 6) {
+      x2.Percent = 100 - percentTotal;
     } else {
-      x.Percent = Math.round(x.Count / totalCount * 100);
-      percentTotal += x.Percent;
+      x2.Percent = Math.round(x2.Count / totalCount * 100);
+      percentTotal += x2.Percent;
     }
   });
   return new MessageDays(dayArray);
@@ -11199,8 +11251,8 @@ function GenerateMessageTimes(chatObjArr) {
   for (let i = 10; i < 24; i++) {
     timeArray.push({ Hour: i.toString(), Count: 0 });
   }
-  chatObjArr.forEach((x) => {
-    let hour = x.Time.split(":")[0];
+  chatObjArr.forEach((x2) => {
+    let hour = x2.Time.split(":")[0];
     timeArray.forEach((y) => {
       if (hour === y.Hour) {
         y.Count++;
@@ -11279,16 +11331,16 @@ async function PopulateProductBuilder(chatMaster, personalWord) {
   const laughSearchRecord = GenerateSearchRecord(ArrayOfMessageObjs, "laugh", false, 2, 1, null);
   const fromDateStr = firstEncounter.FirstMessageDate;
   const toDateStr = ArrayOfMessageObjs[ArrayOfMessageObjs.length - 1].Date;
-  const authors = chatComposition.Chatters.map((x) => x.Name);
+  const authors = chatComposition.Chatters.map((x2) => x2.Name);
   const tWtable = GenerateTopWords(WholeChatString, authors);
-  tWtable.TopWordsTable.forEach((x) => {
-    if (x.Word === personalWord) {
-      x.Count = personalWordSearchRecord.TotalCount;
+  tWtable.TopWordsTable.forEach((x2) => {
+    if (x2.Word === personalWord) {
+      x2.Count = personalWordSearchRecord.TotalCount;
     }
   });
-  tWtable.TopWordsTable.forEach((x) => {
-    if (LaughArray.includes(x.Word)) {
-      laughSearchRecord.TotalCount = Math.round(x.Count * 3.5);
+  tWtable.TopWordsTable.forEach((x2) => {
+    if (LaughArray.includes(x2.Word)) {
+      laughSearchRecord.TotalCount = Math.round(x2.Count * 3.5);
     }
   });
   tWtable.TopWordsTable.sort((a, b) => b.Count - a.Count);
@@ -11367,16 +11419,16 @@ async function ParseProductBuilder(productBuilder) {
   data.ReplierTime = productBuilder.FirstEncounter.ReplyMessageTime;
   data.ReplierMessageBody = productBuilder.FirstEncounter.ReplyMessage;
   data.WordIndexCount = productBuilder.TopWords.TopWordsTable.length;
-  productBuilder.SearchRecordArray.forEach((x) => {
-    if (x.Name == "personal") {
-      data.PersonalWord = x.SearchLogs[0].SearchTerm;
-      data.PersonalWordCount = x.TotalCount;
-    } else if (x.Name == "laugh") {
-      data.LaughCount = x.TotalCount;
-    } else if (x.Name == "emoji") {
-      data.EmojiIndexCount = x.SearchLogs.length;
-      for (let i = 0; i < x.SearchLogs.length; i++) {
-        let searchLog = x.SearchLogs[i];
+  productBuilder.SearchRecordArray.forEach((x2) => {
+    if (x2.Name == "personal") {
+      data.PersonalWord = x2.SearchLogs[0].SearchTerm;
+      data.PersonalWordCount = x2.TotalCount;
+    } else if (x2.Name == "laugh") {
+      data.LaughCount = x2.TotalCount;
+    } else if (x2.Name == "emoji") {
+      data.EmojiIndexCount = x2.SearchLogs.length;
+      for (let i = 0; i < x2.SearchLogs.length; i++) {
+        let searchLog = x2.SearchLogs[i];
         let searchProp = "Emoji" + (i + 1);
         data[searchProp] = searchLog.SearchTerm;
         let countProp = "EmojiCount" + (i + 1);

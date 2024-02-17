@@ -1,44 +1,41 @@
 <!doctype html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>Uppy</title>
-    <link href="https://releases.transloadit.com/uppy/v3.1.1/uppy.min.css" rel="stylesheet">
 </head>
 <body>
-    <div id="drag-drop-area"></div>
-    <script src="mercury.bundle.js"></script>
+    <div class="upload-form-file-upload">
+        <div id="dropzone">
+          <div>
+            <span class="filename"></span>
+          </div>
+          <input type="file" name="chat-file-upload" class="chat-file-upload" accept="text/plain, application/zip, application/x-zip-compressed, application/json" multiple>
+        </div>
+      </div>
+    <script src="mercury.bundle.min.js"></script>
     
     <script type="module">
-        import { Uppy, Dashboard, Tus } from "https://releases.transloadit.com/uppy/v3.1.1/uppy.min.mjs";
-        import { BlobReader, BlobWriter, TextWriter, ZipReader, ZipWriter } from "https://deno.land/x/zipjs/index.js";
+        document.querySelector('.chat-file-upload').addEventListener('change', async function (e) {
+        e.preventDefault();
+        process_upload(e.target.files);
+    });
         
-        
-        var uppy = new Uppy()
-            .use(Dashboard, {
-                inline: true,
-                target: '#drag-drop-area',
-                height: 200
-            })
-            .use(Tus, { endpoint: 'https://tusd.tusdemo.net/files/' });
-
-        uppy.on('complete', async (result) => {
-            const start = Date.now();
-            console.log(1);
-            let uploadedFile = result.successful[0].data;
-            console.log(2);
-            let chatMaster = await FormatFile(uploadedFile);
-            console.log(3);
-            let productBuilder = await PopulateProductBuilder(chatMaster, "lol");
-            console.log(productBuilder.SearchRecordArray[2].TotalCount);
-            console.log(productBuilder.TopWords.TopWordsTable);
-            console.log(4);
-            //let httpReq = await ParseProductBuilder(productBuilder);
-            //console.log(5);j
-            //let response = await SendChatChartRequest(httpReq);
-            const end = Date.now();
-            console.log(`Execution time: ${end - start} ms`);
-        });
+    async function process_upload(uploadedFiles) {
+    try{
+        let chat_object;
+        if(uploadedFiles.length > 1){
+            const uploadedFilesArray = Array.from(uploadedFiles);
+            chat_object = await GenerateChatObjectFromMultipleFiles(uploadedFilesArray);
+        }else{
+            chat_object = await GenerateChatObjectFromSingleFile(uploadedFiles[0]);
+        }
+        console.log("hi");
+        let chat_analysis = await PopulateProductBuilder(chat_object, "");
+        console.log(chat_analysis);  
+    }
+    catch(error){
+        console.log(error);
+    }
+    }
     </script>
 </body>
 </html>
