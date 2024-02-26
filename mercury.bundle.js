@@ -10703,9 +10703,9 @@ function ConvertJsonToMessageObjects(jsonString) {
     let convertedTime = GetTimeFromUnix(currentMessage.timestamp_ms);
     if (currentMessage.content != null && currentMessage.content != void 0) {
       try {
-        currentMessage.content = import_utf8.decode(currentMessage.content);
+        currentMessage.content = import_utf8.utf8.decode(currentMessage.content);
       } catch {
-        currentMessage.content = import_utf8.decode(import_utf8.encode(currentMessage.content));
+        currentMessage.content = import_utf8.utf8.decode(import_utf8.utf8.encode(currentMessage.content));
       }
     }
     const messageModel = {
@@ -11261,7 +11261,7 @@ function GenerateMessageTimes(chatObjArr) {
   });
   return new MessageTimes(timeArray);
 }
-function GenerateTopWords(wholeChatString, namesArray) {
+function GenerateTopWords(wholeChatString, namesArray, personalWord) {
   const topWordsTable = [];
   const punctuationRegEx = /[!?,.:;_)]$/g;
   const numberRegEx = /([0-9])+/g;
@@ -11281,7 +11281,9 @@ function GenerateTopWords(wholeChatString, namesArray) {
     counts.set(word, (counts.get(word) || 0) + 1);
   });
   counts.forEach((count, word) => {
-    topWordsTable.push({ Word: word, Count: count });
+    if (word != personalWord && !LaughArray.includes(word)) {
+      topWordsTable.push({ Word: word, Count: count });
+    }
   });
   topWordsTable.sort((a, b) => b.Count - a.Count);
   topWordsTable.length = Math.min(topWordsTable.length, 15);
@@ -11289,17 +11291,19 @@ function GenerateTopWords(wholeChatString, namesArray) {
 }
 function GetMessageComposite(chatObjArr, replierIndex, message) {
   const returnRegEx = new RegExp(ReturnCarriageRegEx, "g");
-  message = message.replace(returnRegEx, ". ");
+  message = message.trim().replace(returnRegEx, "... ");
   if (replierIndex > 1) {
-    const messageBodies = chatObjArr.slice(1, replierIndex).map((currentMessage) => currentMessage["MessageBody"]);
+    const messageBodies = chatObjArr.slice(1, replierIndex).map((currentMessage) => currentMessage["MessageBody"].trim());
     if (messageBodies.length > 0) {
-      const joinedMessageBodies = messageBodies.join(". ").replace(returnRegEx, ". ");
-      ;
+      messageBodies.forEach((x2) => {
+        x2 = x2.replace(returnRegEx, "").trim();
+      });
+      const joinedMessageBodies = messageBodies.join("... ");
       const puncRegEx = new RegExp(PunctuationRegEx, "g");
       if (message.match(puncRegEx)) {
         message += " " + joinedMessageBodies;
       } else {
-        message += ". " + joinedMessageBodies;
+        message += "... " + joinedMessageBodies;
       }
     }
   }
@@ -11332,7 +11336,7 @@ async function PopulateProductBuilder(chatMaster, personalWord) {
   const fromDateStr = firstEncounter.FirstMessageDate;
   const toDateStr = ArrayOfMessageObjs[ArrayOfMessageObjs.length - 1].Date;
   const authors = chatComposition.Chatters.map((x2) => x2.Name);
-  const tWtable = GenerateTopWords(WholeChatString, authors);
+  const tWtable = GenerateTopWords(WholeChatString, authors, personalWord);
   tWtable.TopWordsTable.forEach((x2) => {
     if (x2.Word === personalWord) {
       x2.Count = personalWordSearchRecord.TotalCount;
@@ -11438,10 +11442,12 @@ async function ParseProductBuilder(productBuilder) {
   });
   for (let i = 0; i < productBuilder.TopWords.TopWordsTable.length; i++) {
     let wordLog = productBuilder.TopWords.TopWordsTable[i];
-    let wordProp = "Word" + (i + 1);
-    data[wordProp] = wordLog.Word;
-    let countProp = "WordCount" + (i + 1);
-    data[countProp] = wordLog.Count;
+    if (wordLog.Word != data.PersonalWord) {
+      let wordProp = "Word" + (i + 1);
+      data[wordProp] = wordLog.Word;
+      let countProp = "WordCount" + (i + 1);
+      data[countProp] = wordLog.Count;
+    }
   }
   return {
     headers: {
