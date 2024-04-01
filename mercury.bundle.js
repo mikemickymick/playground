@@ -10703,9 +10703,9 @@ function ConvertJsonToMessageObjects(jsonString) {
     let convertedTime = GetTimeFromUnix(currentMessage.timestamp_ms);
     if (currentMessage.content != null && currentMessage.content != void 0) {
       try {
-        currentMessage.content = import_utf8.utf8.decode(currentMessage.content);
+        currentMessage.content = import_utf8.decode(currentMessage.content);
       } catch {
-        currentMessage.content = import_utf8.utf8.decode(import_utf8.utf8.encode(currentMessage.content));
+        currentMessage.content = import_utf8.decode(import_utf8.encode(currentMessage.content));
       }
     }
     const messageModel = {
@@ -10729,7 +10729,7 @@ function ConvertJsonToMessageObjects(jsonString) {
     } else if (currentMessage.files != void 0) {
       messageModel.MessageBody = "Sent a file";
     }
-    if (!currentMessage.is_unsent && messageModel.MessageBody != void 0 && !messageModel.MessageBody.includes("connected on messenger")) {
+    if (!currentMessage.is_unsent && messageModel.MessageBody != void 0 && !messageModel.MessageBody.includes("connected on messenger") && messageModel.Author != "meta ai") {
       parsedData.push(messageModel);
     }
   }
@@ -10744,15 +10744,51 @@ function FormatChat(chatString) {
   return linesArray;
 }
 async function GenerateChatObjectFromSingleFile(uploadedFile) {
-  let lowerCaseChat, linesArray, chatObjArr;
-  let data = await GetUnzippedFileData(uploadedFile);
+  let lowerCaseChat2, linesArray, data;
+  let chatObjArr = new Array();
   if (uploadedFile.type === "text/plain") {
-    lowerCaseChat = RemoveEncryptionAndSubjectMessage(data.toLowerCase());
-    linesArray = FormatChat(lowerCaseChat);
+    data = await GetUnzippedFileData(uploadedFile);
+    lowerCaseChat2 = RemoveEncryptionAndSubjectMessage(data.toLowerCase());
+    linesArray = FormatChat(lowerCaseChat2);
     chatObjArr = ConvertEntriesToMessageObjects(linesArray);
   } else if (uploadedFile.type === "application/json") {
+    data = await GetUnzippedFileData(uploadedFile);
     chatObjArr = ConvertJsonToMessageObjects(data.toLowerCase());
-    lowerCaseChat = data.toLowerCase().replace(/[\n\r]+/g, "").replace("\n", "").replace("{\n", "").replace("},\n", "").replace("[\n", "").replace("}\n", "").replace("],\n", "").replace(/[{}]/g, "").replace(/['"]+/g, "").replace(/generic/g, "");
+    lowerCaseChat2 = data.toLowerCase().replace(/[\n\r]+/g, "").replace("\n", "").replace("{\n", "").replace("},\n", "").replace("[\n", "").replace("}\n", "").replace("],\n", "").replace(/[{}]/g, "").replace(/['"]+/g, "").replace(/generic/g, "");
+  } else if (uploadedFile.type === "application/x-zip-compressed" || uploadedFile.type === "application/zip") {
+    let entries = await GetZippedEntries(uploadedFile);
+    if (entries.length == 1) {
+      if (entries[0].filename.includes(".txt")) {
+        data = await entries[0].getData(new TextWriter());
+        lowerCaseChat2 = RemoveEncryptionAndSubjectMessage(data.toLowerCase());
+        linesArray = FormatChat(lowerCaseChat2);
+        chatObjArr = ConvertEntriesToMessageObjects(linesArray);
+      } else if (entries[0].filename.includes(".json")) {
+        data = await entries[0].getData(new TextWriter());
+        chatObjArr = ConvertJsonToMessageObjects(data.toLowerCase());
+        lowerCaseChat2 = data.toLowerCase().replace(/[\n\r]+/g, "").replace("\n", "").replace("{\n", "").replace("},\n", "").replace("[\n", "").replace("}\n", "").replace("],\n", "").replace(/[{}]/g, "").replace(/['"]+/g, "").replace(/generic/g, "");
+      } else {
+        alert("We can only accept zip files with .txt or .json files in them");
+        return;
+      }
+    } else if (entries.length > 1) {
+      for (const entry of entries) {
+        data = await entry.getData(new TextWriter());
+        const fileChatObjs = await GetChatObjectsFromData(data, entry.filename);
+        for (x of fileChatObjs) {
+          chatObjArr.push(x);
+        }
+        lowerCaseChat2 += await GetChatStringFromData(data, entry.filename);
+      }
+      chatObjArr.sort((a, b) => {
+        const aDate = ConvertChatObjDateAndTimeToDateTime(a);
+        const bDate = ConvertChatObjDateAndTimeToDateTime(b);
+        return aDate - bDate;
+      });
+    } else {
+      alert("Your zip file is empty");
+      return;
+    }
   }
   const chatters = /* @__PURE__ */ new Set();
   for (const element of chatObjArr) {
@@ -10760,20 +10796,20 @@ async function GenerateChatObjectFromSingleFile(uploadedFile) {
   }
   const chattersArray = Array.from(chatters);
   return {
-    WholeChatString: lowerCaseChat,
+    WholeChatString: lowerCaseChat2,
     ArrayOfMessageObjs: chatObjArr,
     Chatters: chattersArray
   };
 }
 async function GenerateChatObjectFromMultipleFiles(uploadedFilesArray) {
-  let lowerCaseChat;
+  let lowerCaseChat2;
   const chatObjArr = [];
   for (const uploadedFile of uploadedFilesArray) {
     const fileChatObjs = await GetChatObjects(uploadedFile);
     for (x of fileChatObjs) {
       chatObjArr.push(x);
     }
-    lowerCaseChat += await GetChatString(uploadedFile);
+    lowerCaseChat2 += await GetChatString(uploadedFile);
   }
   chatObjArr.sort((a, b) => {
     const aDate = ConvertChatObjDateAndTimeToDateTime(a);
@@ -10786,16 +10822,34 @@ async function GenerateChatObjectFromMultipleFiles(uploadedFilesArray) {
   }
   const chattersArray = Array.from(chatters);
   return {
-    WholeChatString: lowerCaseChat,
+    WholeChatString: lowerCaseChat2,
     ArrayOfMessageObjs: chatObjArr,
     Chatters: chattersArray
   };
 }
 async function GetChatObjects(uploadedFile) {
-  let lowerCaseChat;
+  let lowerCaseChat2;
   const chatObjArr = [];
   const data = await GetUnzippedFileData(uploadedFile);
   if (uploadedFile.type === "text/plain") {
+    lowerCaseChat2 = RemoveEncryptionAndSubjectMessage(data.toLowerCase());
+    const linesArray = FormatChat(lowerCaseChat2);
+    const parsedTxtData = ConvertEntriesToMessageObjects(linesArray);
+    parsedTxtData.forEach((x2) => {
+      chatObjArr.push(x2);
+    });
+  } else {
+    const parsedJsonData = ConvertJsonToMessageObjects(data.toLowerCase());
+    parsedJsonData.forEach((x2) => {
+      chatObjArr.push(x2);
+    });
+    lowerCaseChat2 = data.toLowerCase().replace(/[\n\r]+/g, "").replace("\n", "").replace("{\n", "").replace("},\n", "").replace("[\n", "").replace("}\n", "").replace("],\n", "").replace(/[{}]/g, "").replace(/['"]+/g, "").replace(/generic/g, "");
+  }
+  return chatObjArr;
+}
+async function GetChatObjectsFromData(data, fileType) {
+  let chatObjArr = new Array();
+  if (fileType.includes(".txt")) {
     lowerCaseChat = RemoveEncryptionAndSubjectMessage(data.toLowerCase());
     const linesArray = FormatChat(lowerCaseChat);
     const parsedTxtData = ConvertEntriesToMessageObjects(linesArray);
@@ -10812,9 +10866,17 @@ async function GetChatObjects(uploadedFile) {
   return chatObjArr;
 }
 async function GetChatString(uploadedFile) {
-  let lowerCaseChat;
+  let lowerCaseChat2;
   const data = await GetUnzippedFileData(uploadedFile);
   if (uploadedFile.type === "text/plain") {
+    lowerCaseChat2 += RemoveEncryptionAndSubjectMessage(data.toLowerCase());
+  } else {
+    lowerCaseChat2 += data.toLowerCase().replace(/[\n\r]+/g, "").replace("\n", "").replace("{\n", "").replace("},\n", "").replace("[\n", "").replace("}\n", "").replace("],\n", "").replace(/[{}]/g, "").replace(/['"]+/g, "").replace(/generic/g, "");
+  }
+  return lowerCaseChat2;
+}
+async function GetChatStringFromData(data, fileType) {
+  if (fileType.includes(".txt")) {
     lowerCaseChat += RemoveEncryptionAndSubjectMessage(data.toLowerCase());
   } else {
     lowerCaseChat += data.toLowerCase().replace(/[\n\r]+/g, "").replace("\n", "").replace("{\n", "").replace("},\n", "").replace("[\n", "").replace("}\n", "").replace("],\n", "").replace(/[{}]/g, "").replace(/['"]+/g, "").replace(/generic/g, "");
@@ -10914,6 +10976,13 @@ async function GetUnzippedFileData(uploadedFile) {
   const data = await entries[0].getData(new TextWriter());
   await zipReader.close();
   return data;
+}
+async function GetZippedEntries(uploadedFile) {
+  const zipFileReader = new BlobReader(uploadedFile);
+  const zipReader = new ZipReader(zipFileReader);
+  const entries = await zipReader.getEntries();
+  await zipReader.close();
+  return entries;
 }
 function IsProperLine(lineString) {
   let hyphenCount = (lineString.match(/\//gm) || []).length;
