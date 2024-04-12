@@ -10662,10 +10662,17 @@ var Constants = class {
   static SkipWordsSwedish = ["image", "\u200Eaudio", "ljud utel\xE4mnat", "image", "the", "i", "to", "a", "du", "och", "d\xE5", "i", "av", "f\xF6r", "min", "det", "p\xE5", "s\xE5", "\xE4r", "mig", "jag", "det", "det", "var", "har", "vi", "med", "men", "bara", "f\xE5", "inte", "din", "om", "vid", "upp", "kan", "ut", "vad", "fick", "\xE4r", "g\xF6r", "som", "om", "alla", "jag", "som", "nu", "jag", "g\xE5r", "det", "hur", "n\xE4r", "fr\xE5n", "en", "tid", "jag", "jag", "g\xE5", "eller", "yh", "varit", "tror", "dag", "ska", "av", "hade", "beh\xF6ver", "se", "vet", "en", "verkligen", "han", "hon", "honom", "henne", "kommer", "tillbaka", "ocks\xE5", "gjorde", "nej", "inte", "n\xE5gra", "det", "det", "skulle", "de", "d\xE4r", "n\xE5gon", "efter", "har", "utel\xE4mnade", "media", "<media", "<media utel\xE4mnade>", "eftersom", "vi", "jag", "\xE5h", "sa", "ok", "ja", "okej", "inte", "dem", "u", "din", "inte", "meddelande", "ah", "vid", "g\xE5", "\xE4ven", "\xE4ven", "varf\xF6r", "hans", "\xE4ven", "kan inte", "kan inte", "\xE4r inte", "\xE4r inte", "men", "du", "du'\xE4r", "gjorde inte", "gjorde inte", "jag", "im", "dess", "?klisterm\xE4rke", "?missade"];
   static SkipWordsSymbols = ["\u200Egif", "gif", "x", "xx", "xxx", "xxxx", "xxxxx", "xxxxxx", "xxxxxxx", "xxxxxxxx", "xxxxxxxxx", "xxxxxxxxxx", "xxxxxxxxxxx", "xxxxxxxxxxxx", "xxxxxxxxxxxxx", "xxxxxxxxxxxxxx", "xxxxxxxxxxxxxxx", "-", "[", "[", "/", "PM", "AM", "am", "pm", "am]", "pm]", "AM]", "PM]", "<", ">", "", "false", "true"];
   static EncryptionAndSubjectMessages = ["messages and calls are end-to-end encrypted", " changed the subject to ", "changed their phone number", "messages et les appels", "changement de l\u2019objet en", "changement de num\xE9ro de t\xE9l\xE9phone", "nachrichten und anrufe", "\xE4nderte den betreff in", "ihre telefonnummer ge\xE4ndert", "messaggi e chiamate", "cambiato l'argomento in", "cambiato il proprio numero di telefono", "berichten en oproepen", "veranderde het onderwerp in", "hun telefoonnummer hebben gewijzigd", "mensajes y llamadas", "cambi\xF3 el tema a", "cambiaron su n\xFAmero de tel\xE9fono", "meddelanden och samtal", " \xE4ndrade \xE4mnet till ", "\xE4ndrat telefonnummer", "beskeder og opkald", " \xE6ndrede emnet til ", "\xE6ndrede deres telefonnummer"];
-  static PunctuationRegEx = /[!?,.:;_)]$/g;
-  static ReturnCarriageRegEx = /[\r\n]+|\.|[\r\n]+$/g;
-  static NumberRegEx = /([0-9])+/g;
-  static StartsWithDateRegEx = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)(\d{2}|\d{4}), ([0-9][0-9]):([0-9][0-9]) -/g;
+  static RegExPatterns = {
+    Dashes: /\//gm,
+    Hyphens: /-/gm,
+    Numbers: /([0-9])+/g,
+    NotSquareBrackets: /[^\[\]]/g,
+    Period: /\./g,
+    Punctuation: /[!?,.:;_)]$/g,
+    ReturnCarriage: /[\r\n]+|\.|[\r\n]+$/g,
+    StartsWithDate: /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)(\d{2}|\d{4}), ([0-9][0-9]):([0-9][0-9]) -/g,
+    Timestamp: /\[(.*?)\]/
+  };
 };
 
 // controllers/datacontroller.js
@@ -10675,7 +10682,7 @@ function ConvertEntriesToMessageObjects(array) {
   for (let i = 0; i < array.length; i++) {
     let message = array[i];
     if (message != "") {
-      let m = message.match(Constants.StartsWithDateRegEx);
+      let m = message.match(Constants.RegExPatterns.StartsWithDate);
       if (m != null) {
         let date = message.substr(0, 10);
         let time = message.substr(12, 5);
@@ -10993,8 +11000,8 @@ async function GetZippedEntries(uploadedFile) {
   return entries;
 }
 function IsProperLine(lineString) {
-  let hyphenCount = (lineString.match(/\//gm) || []).length;
-  let dashCount = (lineString.match(/-/gm) || []).length;
+  let dashCount = (lineString.match(Constants.RegExPatterns.Dashes) || []).length;
+  let hyphenCount = (lineString.match(Constants.RegExPatterns.Hyphens) || []).length;
   return hyphenCount >= 2 || dashCount >= 2;
 }
 function RemoveEncryptionAndSubjectMessage(chatString) {
@@ -11147,10 +11154,10 @@ function StandardiseDateTimeSeparator(input) {
   }
 }
 function StandardiseTimeSeparator(str) {
-  const timestampMatch = str.match(/\[(.*?)\]/);
+  const timestampMatch = str.match(Constants.RegExPatterns.Timestamp);
   if (timestampMatch) {
     const timestamp = timestampMatch[1];
-    const timePart = timestamp.split(" ")[1].replace(/\./g, ":");
+    const timePart = timestamp.split(" ")[1].replace(Constants.RegExPatterns.Period, ":");
     const datePart = timestamp.split(" ")[0];
     const formattedTimestamp = `${datePart} ${timePart}`;
     return str.replace(timestamp, formattedTimestamp);
@@ -11363,7 +11370,7 @@ function GenerateTopWords(wholeChatString, namesArray, personalWord) {
   });
   const wordsArray = wholeChatString.replace(/(’s)/g, "").replace(/('s)/g, "").split(" ");
   wordsArray.forEach((word) => {
-    if (word.length < 10 && !Constants.SkipWordsSymbols.includes(word) && !Constants.SkipWordsGerman.includes(word) && !Constants.SkipWordsEnglish.includes(word) && !Constants.SkipWordsFrench.includes(word) && !Constants.SkipWordsDutch.includes(word) && !Constants.SkipWordsSpanish.includes(word) && !Constants.SkipWordsSwedish.includes(word) && !Constants.SkipWordsDanish.includes(word) && !EmojiArray.includes(word) && !word.match(Constants.PunctuationRegEx) && !word.match(Constants.NumberRegEx) && !newNameSet.has(word)) {
+    if (word.length < 10 && !Constants.SkipWordsSymbols.includes(word) && !Constants.SkipWordsGerman.includes(word) && !Constants.SkipWordsEnglish.includes(word) && !Constants.SkipWordsFrench.includes(word) && !Constants.SkipWordsDutch.includes(word) && !Constants.SkipWordsSpanish.includes(word) && !Constants.SkipWordsSwedish.includes(word) && !Constants.SkipWordsDanish.includes(word) && !EmojiArray.includes(word) && !word.match(Constants.RegExPatterns.Punctuation) && !word.match(Constants.RegExPatterns.Numbers) && !newNameSet.has(word)) {
       filteredArray.push(word);
     }
   });
@@ -11380,7 +11387,7 @@ function GenerateTopWords(wholeChatString, namesArray, personalWord) {
   return new TopWords(topWordsTable);
 }
 function GetMessageComposite(chatObjArr, replierIndex, message) {
-  const returnRegEx = new RegExp(Constants.ReturnCarriageRegEx, "g");
+  const returnRegEx = new RegExp(Constants.RegExPatterns.ReturnCarriage, "g");
   message = message.trim().replace(returnRegEx, "... ");
   if (replierIndex > 1) {
     const messageBodies = chatObjArr.slice(1, replierIndex).map((currentMessage) => currentMessage["MessageBody"].trim());
@@ -11389,7 +11396,7 @@ function GetMessageComposite(chatObjArr, replierIndex, message) {
         x2 = x2.replace(returnRegEx, "").trim();
       });
       const joinedMessageBodies = messageBodies.join("... ");
-      const puncRegEx = new RegExp(Constants.PunctuationRegEx, "g");
+      const puncRegEx = new RegExp(Constants.RegExPatterns.Punctuation, "g");
       if (message.match(puncRegEx)) {
         message += " " + joinedMessageBodies;
       } else {
