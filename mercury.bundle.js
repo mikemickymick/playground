@@ -4040,7 +4040,7 @@ function InfTree() {
   let c;
   let r;
   let u;
-  let x2;
+  let x;
   function huft_build(b, bindex, n, s, d, e2, t, m, hp, hn2, v2) {
     let a;
     let f;
@@ -4095,11 +4095,11 @@ function InfTree() {
       return Z_DATA_ERROR1;
     }
     c[i] += y;
-    x2[1] = j = 0;
+    x[1] = j = 0;
     p = 1;
     xp = 2;
     while (--i !== 0) {
-      x2[xp] = j += c[p];
+      x[xp] = j += c[p];
       xp++;
       p++;
     }
@@ -4107,12 +4107,12 @@ function InfTree() {
     p = 0;
     do {
       if ((j = b[bindex + p]) !== 0) {
-        v2[x2[j]++] = i;
+        v2[x[j]++] = i;
       }
       p++;
     } while (++i < n);
-    n = x2[g];
-    x2[0] = i = 0;
+    n = x[g];
+    x[0] = i = 0;
     p = 0;
     h = -1;
     w = -l;
@@ -4145,7 +4145,7 @@ function InfTree() {
           u[h] = q = hn2[0];
           hn2[0] += z;
           if (h !== 0) {
-            x2[h] = i;
+            x[h] = i;
             r[0] = j;
             r[1] = l;
             j = i >>> w - l;
@@ -4174,7 +4174,7 @@ function InfTree() {
         }
         i ^= j;
         mask = (1 << w) - 1;
-        while ((i & mask) != x2[h]) {
+        while ((i & mask) != x[h]) {
           h--;
           w -= l;
           mask = (1 << w) - 1;
@@ -4191,7 +4191,7 @@ function InfTree() {
       c = new Int32Array(BMAX + 1);
       r = [];
       u = new Int32Array(BMAX);
-      x2 = new Int32Array(BMAX + 1);
+      x = new Int32Array(BMAX + 1);
     }
     if (v.length < vsize) {
       v = [];
@@ -4206,7 +4206,7 @@ function InfTree() {
       r[i] = 0;
     }
     u.set(c.subarray(0, 15), 0);
-    x2.set(c.subarray(0, 15 + 1), 0);
+    x.set(c.subarray(0, 15 + 1), 0);
   }
   that.inflate_trees_bits = function(c2, bb, tb, hp, z) {
     let result;
@@ -7437,8 +7437,8 @@ var bitArray = {
     if (l === 0) {
       return 0;
     }
-    const x2 = a[l - 1];
-    return (l - 1) * 32 + bitArray.getPartial(x2);
+    const x = a[l - 1];
+    return (l - 1) * 32 + bitArray.getPartial(x);
   },
   clamp(a, len) {
     if (a.length * 32 < len) {
@@ -7452,14 +7452,14 @@ var bitArray = {
     }
     return a;
   },
-  partial(len, x2, _end) {
+  partial(len, x, _end) {
     if (len === 32) {
-      return x2;
+      return x;
     }
-    return (_end ? x2 | 0 : x2 << 32 - len) + len * 1099511627776;
+    return (_end ? x | 0 : x << 32 - len) + len * 1099511627776;
   },
-  getPartial(x2) {
-    return Math.round(x2 / 1099511627776) || 32;
+  getPartial(x) {
+    return Math.round(x / 1099511627776) || 32;
   },
   _shiftRight(a, shift, carry, out) {
     if (out === void 0) {
@@ -7598,8 +7598,8 @@ hash.sha1 = class {
       return b ^ c ^ d;
     }
   }
-  _S(n, x2) {
-    return x2 << n | x2 >>> 32 - n;
+  _S(n, x) {
+    return x << n | x >>> 32 - n;
   }
   _block(words) {
     const sha1 = this;
@@ -7702,16 +7702,16 @@ cipher.aes = class {
     for (let i = 0; i < 256; i++) {
       th[(d[i] = i << 1 ^ (i >> 7) * 283) ^ i] = i;
     }
-    for (let x3 = xInv = 0; !sbox[x3]; x3 ^= x2 || 1, xInv = th[xInv] || 1) {
+    for (let x = xInv = 0; !sbox[x]; x ^= x2 || 1, xInv = th[xInv] || 1) {
       let s = xInv ^ xInv << 1 ^ xInv << 2 ^ xInv << 3 ^ xInv << 4;
       s = s >> 8 ^ s & 255 ^ 99;
-      sbox[x3] = s;
-      sboxInv[s] = x3;
-      x8 = d[x4 = d[x2 = d[x3]]];
-      let tDec = x8 * 16843009 ^ x4 * 65537 ^ x2 * 257 ^ x3 * 16843008;
+      sbox[x] = s;
+      sboxInv[s] = x;
+      x8 = d[x4 = d[x2 = d[x]]];
+      let tDec = x8 * 16843009 ^ x4 * 65537 ^ x2 * 257 ^ x * 16843008;
       let tEnc = d[s] * 257 ^ s * 16843008;
       for (let i = 0; i < 4; i++) {
-        encTable[i][x3] = tEnc = tEnc << 24 ^ tEnc >>> 8;
+        encTable[i][x] = tEnc = tEnc << 24 ^ tEnc >>> 8;
         decTable[i][s] = tDec = tDec << 24 ^ tDec >>> 8;
       }
     }
@@ -10662,12 +10662,31 @@ var Constants = class {
   static SkipWordsSwedish = ["image", "\u200Eaudio", "ljud utel\xE4mnat", "image", "the", "i", "to", "a", "du", "och", "d\xE5", "i", "av", "f\xF6r", "min", "det", "p\xE5", "s\xE5", "\xE4r", "mig", "jag", "det", "det", "var", "har", "vi", "med", "men", "bara", "f\xE5", "inte", "din", "om", "vid", "upp", "kan", "ut", "vad", "fick", "\xE4r", "g\xF6r", "som", "om", "alla", "jag", "som", "nu", "jag", "g\xE5r", "det", "hur", "n\xE4r", "fr\xE5n", "en", "tid", "jag", "jag", "g\xE5", "eller", "yh", "varit", "tror", "dag", "ska", "av", "hade", "beh\xF6ver", "se", "vet", "en", "verkligen", "han", "hon", "honom", "henne", "kommer", "tillbaka", "ocks\xE5", "gjorde", "nej", "inte", "n\xE5gra", "det", "det", "skulle", "de", "d\xE4r", "n\xE5gon", "efter", "har", "utel\xE4mnade", "media", "<media", "<media utel\xE4mnade>", "eftersom", "vi", "jag", "\xE5h", "sa", "ok", "ja", "okej", "inte", "dem", "u", "din", "inte", "meddelande", "ah", "vid", "g\xE5", "\xE4ven", "\xE4ven", "varf\xF6r", "hans", "\xE4ven", "kan inte", "kan inte", "\xE4r inte", "\xE4r inte", "men", "du", "du'\xE4r", "gjorde inte", "gjorde inte", "jag", "im", "dess", "?klisterm\xE4rke", "?missade", , "reagerade", "skickade", "gillade"];
   static SkipWordsSymbols = ["\u200Egif", "gif", "x", "xx", "xxx", "xxxx", "xxxxx", "xxxxxx", "xxxxxxx", "xxxxxxxx", "xxxxxxxxx", "xxxxxxxxxx", "xxxxxxxxxxx", "xxxxxxxxxxxx", "xxxxxxxxxxxxx", "xxxxxxxxxxxxxx", "xxxxxxxxxxxxxxx", "-", "[", "[", "/", "PM", "AM", "am", "pm", "am]", "pm]", "AM]", "PM]", "<", ">", "", "false", "true"];
   static EncryptionAndSubjectMessages = ["messages and calls are end-to-end encrypted", " changed the subject to ", "changed their phone number", "messages et les appels", "changement de l\u2019objet en", "changement de num\xE9ro de t\xE9l\xE9phone", "nachrichten und anrufe", "\xE4nderte den betreff in", "ihre telefonnummer ge\xE4ndert", "messaggi e chiamate", "cambiato l'argomento in", "cambiato il proprio numero di telefono", "berichten en oproepen", "veranderde het onderwerp in", "hun telefoonnummer hebben gewijzigd", "mensajes y llamadas", "cambi\xF3 el tema a", "cambiaron su n\xFAmero de tel\xE9fono", "meddelanden och samtal", " \xE4ndrade \xE4mnet till ", "\xE4ndrat telefonnummer", "beskeder og opkald", " \xE6ndrede emnet til ", "\xE6ndrede deres telefonnummer"];
+  static LanguageDateTimeSeperators = [" klo"];
+  static LanguageTimeIndicatorsAM = ["s ochtends", "s middags"];
+  static LanguageTimeIndicatorsPM = ["s avonds", "s nachts"];
+  static LanguageTimeIndicatorsToRemove = ["middernacht"];
+  static FileTypes = {
+    Json: "application/json",
+    Text: "text/plain",
+    Zip: "application/zip",
+    ZipCompressed: "application/x-zip-compressed"
+  };
+  static Platform = {
+    Discord: "DISCORD",
+    Facebook: "FACEBOOK",
+    Instagram: "INSTAGRAM",
+    Telegram: "TELEGRAM",
+    WhatsApp: "WHATSAPP"
+  };
   static RegExPatterns = {
     Dashes: /\//gm,
     Hyphens: /-/gm,
+    LanguageTimeIndicatorsAM: [/s ochtends/gm, /s middags/gm],
+    LanguageTimeIndicatorsPM: [/s avonds/gm, /s nachts/gm],
     Numbers: /([0-9])+/g,
     NotSquareBrackets: /[^\[\]]/g,
-    Period: /\./g,
+    PeriodsNextToIntegers: /(?<![a-zA-Z])\.+(?![a-zA-Z])/g,
     Punctuation: /[!?,.:;_)]$/g,
     ReturnCarriage: /[\r\n]+|\.|[\r\n]+$/g,
     StartsWithDate: /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)(\d{2}|\d{4}), ([0-9][0-9]):([0-9][0-9]) -/g,
@@ -10675,228 +10694,284 @@ var Constants = class {
   };
 };
 
-// controllers/datacontroller.js
+// controllers/converters.js
 var import_utf8 = __toESM(require_utf8());
-function ConvertEntriesToMessageObjects(array) {
-  const parsedData = [];
-  for (let i = 0; i < array.length; i++) {
-    let message = array[i];
-    if (message != "") {
-      let m = message.match(Constants.RegExPatterns.StartsWithDate);
-      if (m != null) {
-        let date = message.substr(0, 10);
-        let time = message.substr(12, 5);
-        let tempSubstr = message.substr(message.indexOf("-") + 2);
-        let authorLength = tempSubstr.indexOf(":");
-        let author = message.substr(message.indexOf("-") + 2, authorLength);
-        let trimmedAuthor = author.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2580-\u27BF]|\uD83E[\uDD10-\uDDFF]/g, "").replace(/[^\x20-\x7E]/g, "").trim();
-        let messageBody = message.substr(message.indexOf("-") + 4 + authorLength);
-        const messageModel = {
-          Date: date,
-          Time: time,
-          Author: trimmedAuthor,
-          MessageBody: messageBody
-        };
-        if (author != "") {
-          parsedData.push(messageModel);
-        }
-      } else {
-        let latestEntry = parsedData[parsedData.length - 1];
-        latestEntry.MessageBody += "\n" + message;
-        parsedData[parsedData.length - 1] = latestEntry;
-      }
-    }
+var Converters = class {
+  static GenerateChatObjectsFromDiscord() {
   }
-  return parsedData;
-}
-function ConvertJsonToMessageObjects(jsonString) {
-  const parsedData = [];
-  var jsObj = JSON.parse(jsonString);
-  for (let i = 0; i < jsObj.messages.length; i++) {
-    let currentMessage = jsObj.messages[i];
-    let convertedDate = GetDateFromUnix(currentMessage.timestamp_ms);
-    let convertedTime = GetTimeFromUnix(currentMessage.timestamp_ms);
-    if (currentMessage.content != null && currentMessage.content != void 0) {
-      try {
-        currentMessage.content = import_utf8.decode(currentMessage.content);
-      } catch {
-        currentMessage.content = import_utf8.decode(import_utf8.encode(currentMessage.content));
-      }
-    }
-    const messageModel = {
-      Date: convertedDate,
-      Time: convertedTime,
-      Author: currentMessage.sender_name,
-      MessageBody: currentMessage.content
-    };
-    if (currentMessage.share != void 0) {
-      messageModel.MessageBody = "Shared a link";
-    } else if (currentMessage.photos != void 0) {
-      messageModel.MessageBody = "Sent a photo";
-    } else if (currentMessage.gifs != void 0) {
-      messageModel.MessageBody = "Sent a GIF";
-    } else if (currentMessage.videos != void 0) {
-      messageModel.MessageBody = "Sent a video";
-    } else if (currentMessage.audio_files != void 0) {
-      messageModel.MessageBody = "Sent an audio file";
-    } else if (currentMessage.sticker != void 0) {
-      messageModel.MessageBody = "Sent a sticker";
-    } else if (currentMessage.files != void 0) {
-      messageModel.MessageBody = "Sent a file";
-    }
-    if (!currentMessage.is_unsent && messageModel.MessageBody != void 0 && !messageModel.MessageBody.includes("connected on messenger") && messageModel.Author != "meta ai") {
-      parsedData.push(messageModel);
-    }
-  }
-  return parsedData.reverse();
-}
-function FormatChat(chatString) {
-  let linesArray = new Array();
-  linesArray = chatString.split("\n");
-  linesArray = StandardiseCharacters(linesArray);
-  linesArray = StandardiseDateFormat(linesArray);
-  linesArray = StandardiseClockFormat(linesArray);
-  return linesArray;
-}
-async function GenerateChatObjectFromSingleFile(uploadedFile) {
-  let lowerCaseChat2, linesArray, data;
-  let chatObjArr = new Array();
-  if (uploadedFile.type === "text/plain") {
-    data = await GetUnzippedFileData(uploadedFile);
-    lowerCaseChat2 = RemoveEncryptionAndSubjectMessage(data.toLowerCase());
-    linesArray = FormatChat(lowerCaseChat2);
-    chatObjArr = ConvertEntriesToMessageObjects(linesArray);
-  } else if (uploadedFile.type === "application/json") {
-    data = await GetUnzippedFileData(uploadedFile);
-    chatObjArr = ConvertJsonToMessageObjects(data.toLowerCase());
-    lowerCaseChat2 = data.toLowerCase().replace(/[\n\r]+/g, "").replace("\n", "").replace("{\n", "").replace("},\n", "").replace("[\n", "").replace("}\n", "").replace("],\n", "").replace(/[{}]/g, "").replace(/['"]+/g, "").replace(/generic/g, "");
-  } else if (uploadedFile.type === "application/x-zip-compressed" || uploadedFile.type === "application/zip") {
-    let entries = await GetZippedEntries(uploadedFile);
-    if (entries.length == 1) {
-      if (entries[0].filename.includes(".txt")) {
-        data = await entries[0].getData(new TextWriter());
-        lowerCaseChat2 = RemoveEncryptionAndSubjectMessage(data.toLowerCase());
-        linesArray = FormatChat(lowerCaseChat2);
-        chatObjArr = ConvertEntriesToMessageObjects(linesArray);
-      } else if (entries[0].filename.includes(".json")) {
-        data = await entries[0].getData(new TextWriter());
-        chatObjArr = ConvertJsonToMessageObjects(data.toLowerCase());
-        lowerCaseChat2 = data.toLowerCase().replace(/[\n\r]+/g, "").replace("\n", "").replace("{\n", "").replace("},\n", "").replace("[\n", "").replace("}\n", "").replace("],\n", "").replace(/[{}]/g, "").replace(/['"]+/g, "").replace(/generic/g, "");
-      } else {
-        alert("We can only accept zip files with .txt or .json files in them");
-        return;
-      }
-    } else if (entries.length > 1) {
-      for (const entry of entries) {
-        data = await entry.getData(new TextWriter());
-        const fileChatObjs = await GetChatObjectsFromData(data, entry.filename);
-        for (x of fileChatObjs) {
-          chatObjArr.push(x);
+  static GenerateChatObjectsFromMeta(jsonString) {
+    const parsedData = [];
+    var jsObj = JSON.parse(jsonString);
+    for (let i = 0; i < jsObj.messages.length; i++) {
+      let currentMessage = jsObj.messages[i];
+      let convertedDate = GetDateFromUnix(currentMessage.timestamp_ms);
+      let convertedTime = GetTimeFromUnix(currentMessage.timestamp_ms);
+      if (currentMessage.content != null && currentMessage.content != void 0) {
+        try {
+          currentMessage.content = import_utf8.decode(currentMessage.content);
+        } catch {
+          currentMessage.content = import_utf8.decode(import_utf8.encode(currentMessage.content));
         }
-        lowerCaseChat2 += await GetChatStringFromData(data, entry.filename);
       }
-      chatObjArr.sort((a, b) => {
-        const aDate = ConvertChatObjDateAndTimeToDateTime(a);
-        const bDate = ConvertChatObjDateAndTimeToDateTime(b);
-        return aDate - bDate;
-      });
+      const messageModel = {
+        Date: convertedDate,
+        Time: convertedTime,
+        Author: currentMessage.sender_name,
+        MessageBody: currentMessage.content
+      };
+      if (currentMessage.share != void 0) {
+        messageModel.MessageBody = "Shared a link";
+      } else if (currentMessage.photos != void 0) {
+        messageModel.MessageBody = "Sent a photo";
+      } else if (currentMessage.gifs != void 0) {
+        messageModel.MessageBody = "Sent a GIF";
+      } else if (currentMessage.videos != void 0) {
+        messageModel.MessageBody = "Sent a video";
+      } else if (currentMessage.audio_files != void 0) {
+        messageModel.MessageBody = "Sent an audio file";
+      } else if (currentMessage.sticker != void 0) {
+        messageModel.MessageBody = "Sent a sticker";
+      } else if (currentMessage.files != void 0) {
+        messageModel.MessageBody = "Sent a file";
+      }
+      if (!currentMessage.is_unsent && messageModel.MessageBody != void 0 && !messageModel.MessageBody.includes("connected on messenger") && messageModel.Author != "meta ai") {
+        parsedData.push(messageModel);
+      }
+    }
+    return parsedData.reverse();
+  }
+  static GenerateChatObjectsFromTelegram(jsonString) {
+    const parsedData = [];
+    var jsObj = JSON.parse(jsonString);
+    for (let i = 0; i < jsObj.messages.length; i++) {
+      let currentMessage = jsObj.messages[i];
+      const unixInMilliseconds = currentMessage.date_unixtime * 1e3;
+      let convertedDate = GetDateFromUnix(unixInMilliseconds);
+      let convertedTime = GetTimeFromUnix(unixInMilliseconds);
+      if (currentMessage.text != null && currentMessage.text != void 0) {
+        try {
+          currentMessage.text = import_utf8.decode(currentMessage.text);
+        } catch {
+          currentMessage.text = import_utf8.decode(import_utf8.encode(currentMessage.text));
+        }
+      }
+      const messageModel = {
+        Date: convertedDate,
+        Time: convertedTime,
+        Author: currentMessage.from,
+        MessageBody: currentMessage.text
+      };
+      if (currentMessage.photo != void 0) {
+        messageModel.MessageBody = "Sent a photo";
+      } else if (currentMessage.animation != void 0) {
+        messageModel.MessageBody = "Sent a GIF";
+      } else if (currentMessage.media_type == "video_file") {
+        messageModel.MessageBody = "Sent a video";
+      } else if (currentMessage.media_type == "audio_file") {
+        messageModel.MessageBody = "Sent an audio file";
+      } else if (currentMessage.media_type == "sticker") {
+        messageModel.MessageBody = "Sent a sticker";
+      } else if (currentMessage.contact_information != void 0) {
+        messageModel.MessageBody = "Sent a contact";
+      } else if (currentMessage.location_information != void 0) {
+        messageModel.MessageBody = "Sent a location";
+      } else if (currentMessage.media_type == "video_message") {
+        messageModel.MessageBody = "Sent a video message";
+      } else if (currentMessage.media_type == "voice_message") {
+        messageModel.MessageBody = "Sent a voice message";
+      } else if (currentMessage.file != void 0) {
+        messageModel.MessageBody = "Sent a file";
+      }
+      if (messageModel.MessageBody != null && messageModel.MessageBody != void 0 && messageModel.Author != null && messageModel.Author != void 0) {
+        parsedData.push(messageModel);
+      }
+    }
+    return parsedData;
+  }
+  static GenerateChatObjectsFromWhatsApp(strippedChatString) {
+    const linesArray = this.GenerateStringArrayFromStrippedChatString(strippedChatString);
+    const parsedData = [];
+    for (let i = 0; i < linesArray.length; i++) {
+      let message = linesArray[i];
+      if (message != "") {
+        let m = message.match(Constants.RegExPatterns.StartsWithDate);
+        if (m != null) {
+          let date = message.substr(0, 10);
+          let time = message.substr(12, 5);
+          let tempSubstr = message.substr(message.indexOf("-") + 2);
+          let authorLength = tempSubstr.indexOf(":");
+          let author = message.substr(message.indexOf("-") + 2, authorLength);
+          let trimmedAuthor = author.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2580-\u27BF]|\uD83E[\uDD10-\uDDFF]/g, "").replace(/[^\x20-\x7E]/g, "").trim();
+          let messageBody = message.substr(message.indexOf("-") + 4 + authorLength);
+          const messageModel = {
+            Date: date,
+            Time: time,
+            Author: trimmedAuthor,
+            MessageBody: messageBody
+          };
+          if (author != "") {
+            parsedData.push(messageModel);
+          }
+        } else {
+          let latestEntry = parsedData[parsedData.length - 1];
+          latestEntry.MessageBody += "\n" + message;
+          parsedData[parsedData.length - 1] = latestEntry;
+        }
+      }
+    }
+    return parsedData;
+  }
+  static GenerateStringArrayFromStrippedChatString(strippedChatString) {
+    let linesArray = new Array();
+    linesArray = strippedChatString.split("\n");
+    linesArray = StandardiseCharacters(linesArray);
+    linesArray = StandardiseDateFormat(linesArray);
+    linesArray = StandardiseClockFormat(linesArray);
+    return linesArray;
+  }
+};
+
+// controllers/datacontroller.js
+async function GenerateChatChartModel(uploadedFiles) {
+  let cumulativeStrippedChatString = "";
+  const allChatObjects = new Array();
+  for (const uploadedFile of uploadedFiles) {
+    let chatObjects = new Array();
+    const fileContent = await GetContentFromFile(uploadedFile);
+    const platform = DeterminePlatform(uploadedFile, fileContent);
+    const strippedChatString = GenerateLowerCaseChat(fileContent, platform);
+    cumulativeStrippedChatString += strippedChatString;
+    if (platform == Constants.Platform.Telegram) {
+      chatObjects = Converters.GenerateChatObjectsFromTelegram(fileContent);
+    } else if (platform == Constants.Platform.Instagram || platform == Constants.Platform.Facebook) {
+      chatObjects = Converters.GenerateChatObjectsFromMeta(fileContent);
+    } else if (platform == Constants.Platform.WhatsApp) {
+      chatObjects = Converters.GenerateChatObjectsFromWhatsApp(strippedChatString);
     } else {
-      alert("Your zip file is empty");
-      return;
+      chatObjects = Converters.GenerateChatObjectsFromDiscord(fileContent);
+    }
+    for (const chatObject of chatObjects) {
+      allChatObjects.push(chatObject);
     }
   }
+  const sortedChatObjects = SortChatObjects(allChatObjects);
+  const chattersArray = GenerateChatters(sortedChatObjects);
+  return {
+    WholeChatString: cumulativeStrippedChatString,
+    ArrayOfMessageObjs: sortedChatObjects,
+    Chatters: chattersArray
+  };
+}
+async function Unpack(input) {
+  const uploadedFiles = Array.from(input);
+  let unpackedFilesAndEntries = new Array();
+  for (const uploadedFile of uploadedFiles) {
+    if (uploadedFile.type == Constants.FileTypes.Zip || uploadedFile.type == Constants.FileTypes.ZipCompressed) {
+      const extractedFiles = await GetZippedEntries(uploadedFile);
+      for (let i = 0; i < extractedFiles.length; i++) {
+        let extractedFile = extractedFiles[i];
+        if (extractedFile.filename.includes(".json") || extractedFile.filename.includes(".txt")) {
+          unpackedFilesAndEntries.push(extractedFile);
+        }
+      }
+    } else {
+      unpackedFilesAndEntries.push(uploadedFile);
+    }
+  }
+  return unpackedFilesAndEntries;
+}
+function RemoveUnwantedJsonCharacters(str) {
+  return str.replace(/[\n\r]+/g, "").replace("\n", "").replace("{\n", "").replace("},\n", "").replace("[\n", "").replace("}\n", "").replace("],\n", "").replace(/[{}]/g, "").replace(/['"]+/g, "").replace(/generic/g, "");
+}
+function GenerateChatters(chatObjArr) {
   const chatters = /* @__PURE__ */ new Set();
   for (const element of chatObjArr) {
     chatters.add(element.Author);
   }
-  const chattersArray = Array.from(chatters);
-  return {
-    WholeChatString: lowerCaseChat2,
-    ArrayOfMessageObjs: chatObjArr,
-    Chatters: chattersArray
-  };
+  return Array.from(chatters);
 }
-async function GenerateChatObjectFromMultipleFiles(uploadedFilesArray) {
-  let lowerCaseChat2;
-  const chatObjArr = [];
-  for (const uploadedFile of uploadedFilesArray) {
-    const fileChatObjs = await GetChatObjects(uploadedFile);
-    for (x of fileChatObjs) {
-      chatObjArr.push(x);
-    }
-    lowerCaseChat2 += await GetChatString(uploadedFile);
+function DeterminePlatform(uploadedFileOrEntry, fileContent) {
+  if (uploadedFileOrEntry.type == Constants.FileTypes.Text || "filename" in uploadedFileOrEntry && uploadedFileOrEntry.filename.includes(".txt")) {
+    return Constants.Platform.WhatsApp;
   }
-  chatObjArr.sort((a, b) => {
+  const beginningSnippet = fileContent.substr(0, 50);
+  if (beginningSnippet.includes("participants")) {
+    return Constants.Platform.Instagram;
+  } else if (beginningSnippet.includes("personal_chat")) {
+    return Constants.Platform.Telegram;
+  } else {
+    return Constants.Platform.Discord;
+  }
+}
+function GenerateLowerCaseChat(fileContent, platform) {
+  if (platform == Constants.Platform.WhatsApp) {
+    return CleanChatString(fileContent.toLowerCase());
+  } else {
+    return RemoveUnwantedJsonCharacters(fileContent.toLowerCase());
+  }
+}
+async function GetZippedEntries(uploadedFile) {
+  const zipFileReader = new BlobReader(uploadedFile);
+  const zipReader = new ZipReader(zipFileReader);
+  const entries = await zipReader.getEntries();
+  await zipReader.close();
+  return entries;
+}
+async function GetContentFromFile(uploadedFile) {
+  const isAnEntry = uploadedFile.filename != void 0;
+  let fileContent;
+  if (isAnEntry) {
+    fileContent = await uploadedFile.getData(new TextWriter());
+  } else {
+    const zipFileWriter = new BlobWriter();
+    const helloWorldReader = new BlobReader(uploadedFile);
+    const zipWriter = new ZipWriter(zipFileWriter);
+    await zipWriter.add("chat-thing.txt", helloWorldReader);
+    await zipWriter.close();
+    const zipFileBlob = await zipFileWriter.getData();
+    const zipFileReader = new BlobReader(zipFileBlob);
+    const zipReader = new ZipReader(zipFileReader);
+    const entries = await zipReader.getEntries();
+    fileContent = await entries[0].getData(new TextWriter());
+    await zipReader.close();
+  }
+  return fileContent;
+}
+function SortChatObjects(chatObjects) {
+  return chatObjects.sort((a, b) => {
     const aDate = ConvertChatObjDateAndTimeToDateTime(a);
     const bDate = ConvertChatObjDateAndTimeToDateTime(b);
     return aDate - bDate;
   });
-  const chatters = /* @__PURE__ */ new Set();
-  for (const element of chatObjArr) {
-    chatters.add(element.Author);
-  }
-  const chattersArray = Array.from(chatters);
-  return {
-    WholeChatString: lowerCaseChat2,
-    ArrayOfMessageObjs: chatObjArr,
-    Chatters: chattersArray
-  };
 }
-async function GetChatObjects(uploadedFile) {
-  let lowerCaseChat2;
-  const chatObjArr = [];
-  const data = await GetUnzippedFileData(uploadedFile);
-  if (uploadedFile.type === "text/plain") {
-    lowerCaseChat2 = RemoveEncryptionAndSubjectMessage(data.toLowerCase());
-    const linesArray = FormatChat(lowerCaseChat2);
-    const parsedTxtData = ConvertEntriesToMessageObjects(linesArray);
-    parsedTxtData.forEach((x2) => {
-      chatObjArr.push(x2);
-    });
-  } else {
-    const parsedJsonData = ConvertJsonToMessageObjects(data.toLowerCase());
-    parsedJsonData.forEach((x2) => {
-      chatObjArr.push(x2);
-    });
-    lowerCaseChat2 = data.toLowerCase().replace(/[\n\r]+/g, "").replace("\n", "").replace("{\n", "").replace("},\n", "").replace("[\n", "").replace("}\n", "").replace("],\n", "").replace(/[{}]/g, "").replace(/['"]+/g, "").replace(/generic/g, "");
+function ReplaceLanguageTimeSeperators(lineString) {
+  let buffer = lineString;
+  for (let seperator of Constants.LanguageTimeIndicatorsAM) {
+    if (lineString.includes(seperator)) {
+      const indexOfReplacement = lineString.indexOf(seperator) - 1;
+      buffer = ReplaceUsingIndexAndInput(buffer, indexOfReplacement, seperator, "am");
+      break;
+    }
   }
-  return chatObjArr;
+  for (let seperator of Constants.LanguageTimeIndicatorsPM) {
+    if (lineString.includes(seperator)) {
+      const indexOfReplacement = lineString.indexOf(seperator) - 1;
+      buffer = ReplaceUsingIndexAndInput(buffer, indexOfReplacement, seperator, "pm");
+      break;
+    }
+  }
+  return buffer;
 }
-async function GetChatObjectsFromData(data, fileType) {
-  let chatObjArr = new Array();
-  if (fileType.includes(".txt")) {
-    lowerCaseChat = RemoveEncryptionAndSubjectMessage(data.toLowerCase());
-    const linesArray = FormatChat(lowerCaseChat);
-    const parsedTxtData = ConvertEntriesToMessageObjects(linesArray);
-    parsedTxtData.forEach((x2) => {
-      chatObjArr.push(x2);
-    });
-  } else {
-    const parsedJsonData = ConvertJsonToMessageObjects(data.toLowerCase());
-    parsedJsonData.forEach((x2) => {
-      chatObjArr.push(x2);
-    });
-    lowerCaseChat = data.toLowerCase().replace(/[\n\r]+/g, "").replace("\n", "").replace("{\n", "").replace("},\n", "").replace("[\n", "").replace("}\n", "").replace("],\n", "").replace(/[{}]/g, "").replace(/['"]+/g, "").replace(/generic/g, "");
-  }
-  return chatObjArr;
+function ReplaceUsingIndexAndInput(input, index, stringToReplace, replacement) {
+  const firstHalf = input.substring(0, index);
+  const secondHalf = input.substring(index + stringToReplace.length + 1);
+  return firstHalf + replacement + secondHalf;
 }
-async function GetChatString(uploadedFile) {
-  let lowerCaseChat2;
-  const data = await GetUnzippedFileData(uploadedFile);
-  if (uploadedFile.type === "text/plain") {
-    lowerCaseChat2 += RemoveEncryptionAndSubjectMessage(data.toLowerCase());
-  } else {
-    lowerCaseChat2 += data.toLowerCase().replace(/[\n\r]+/g, "").replace("\n", "").replace("{\n", "").replace("},\n", "").replace("[\n", "").replace("}\n", "").replace("],\n", "").replace(/[{}]/g, "").replace(/['"]+/g, "").replace(/generic/g, "");
-  }
-  return lowerCaseChat2;
-}
-async function GetChatStringFromData(data, fileType) {
-  if (fileType.includes(".txt")) {
-    lowerCaseChat += RemoveEncryptionAndSubjectMessage(data.toLowerCase());
-  } else {
-    lowerCaseChat += data.toLowerCase().replace(/[\n\r]+/g, "").replace("\n", "").replace("{\n", "").replace("},\n", "").replace("[\n", "").replace("}\n", "").replace("],\n", "").replace(/[{}]/g, "").replace(/['"]+/g, "").replace(/generic/g, "");
-  }
-  return lowerCaseChat;
+function GetTimeFromUnix(UNIX_timestamp) {
+  var a = new Date(UNIX_timestamp);
+  var hour = a.getHours() < 10 ? "0" + a.getHours() : a.getHours();
+  var min = a.getMinutes() < 10 ? "0" + a.getMinutes() : a.getMinutes();
+  return hour + ":" + min;
 }
 function ConvertChatObjDateAndTimeToDateTime(chatObj) {
   const dateString = chatObj.Date;
@@ -10908,6 +10983,11 @@ function ConvertChatObjDateAndTimeToDateTime(chatObj) {
   const dateTimeString = `${year}-${month}-${day}T${timeString}:00`;
   return new Date(dateTimeString);
 }
+function IsProperLine(lineString) {
+  let dashCount = (lineString.match(Constants.RegExPatterns.Dashes) || []).length;
+  let hyphenCount = (lineString.match(Constants.RegExPatterns.Hyphens) || []).length;
+  return hyphenCount >= 2 || dashCount >= 2;
+}
 function GetClockFormat(linesArray) {
   let i = 0;
   while (i < linesArray.length) {
@@ -10916,7 +10996,8 @@ function GetClockFormat(linesArray) {
       if (lineString[0] == String.fromCharCode(8206)) {
         lineString = lineString.substr(1);
       }
-      if (lineString.toLowerCase().includes("am -") || lineString.toLowerCase().includes("pm -") || lineString.toLowerCase().includes("p.m. -") || lineString.toLowerCase().includes("a.m. -")) {
+      lineString = ReplaceLanguageTimeSeperators(lineString);
+      if (lineString.includes("am -") || lineString.includes("pm -") || lineString.includes("p.m. -") || lineString.includes("a.m. -")) {
         return "12";
       } else {
         return "24";
@@ -10964,62 +11045,32 @@ function GetDateSeparator(input) {
   const numberOfSlashes = input.replace(/[^/]/g, "").length;
   const numberOfHyphens = input.replace(/[^-]/g, "").length;
   const counts = [{ key: ".", value: numberOfFullStops }, { key: "/", value: numberOfSlashes }, { key: "-", value: numberOfHyphens }];
-  counts.forEach((x2) => {
-    if (x2.value > maxCount) {
-      maxCount = x2.value;
-      separator = x2.key;
+  counts.forEach((x) => {
+    if (x.value > maxCount) {
+      maxCount = x.value;
+      separator = x.key;
     }
   });
   return separator;
 }
-function GetTimeFromUnix(UNIX_timestamp) {
-  var a = new Date(UNIX_timestamp);
-  var hour = a.getHours() < 10 ? "0" + a.getHours() : a.getHours();
-  var min = a.getMinutes() < 10 ? "0" + a.getMinutes() : a.getMinutes();
-  return hour + ":" + min;
-}
-async function GetUnzippedFileData(uploadedFile) {
-  const zipFileWriter = new BlobWriter();
-  const helloWorldReader = new BlobReader(uploadedFile);
-  const zipWriter = new ZipWriter(zipFileWriter);
-  await zipWriter.add("chat-thing.txt", helloWorldReader);
-  await zipWriter.close();
-  const zipFileBlob = await zipFileWriter.getData();
-  const zipFileReader = new BlobReader(zipFileBlob);
-  const zipReader = new ZipReader(zipFileReader);
-  const entries = await zipReader.getEntries();
-  const data = await entries[0].getData(new TextWriter());
-  await zipReader.close();
-  return data;
-}
-async function GetZippedEntries(uploadedFile) {
-  const zipFileReader = new BlobReader(uploadedFile);
-  const zipReader = new ZipReader(zipFileReader);
-  const entries = await zipReader.getEntries();
-  await zipReader.close();
-  return entries;
-}
-function IsProperLine(lineString) {
-  let dashCount = (lineString.match(Constants.RegExPatterns.Dashes) || []).length;
-  let hyphenCount = (lineString.match(Constants.RegExPatterns.Hyphens) || []).length;
-  return hyphenCount >= 2 || dashCount >= 2;
-}
-function RemoveEncryptionAndSubjectMessage(chatString) {
+function CleanChatString(chatString) {
   let chatSplitArr = chatString.split("\n");
-  for (var x2 = 0; x2 < chatSplitArr.length; x2++) {
-    let currentLine = chatSplitArr[x2];
+  for (var x = 0; x < chatSplitArr.length; x++) {
+    let currentLine = chatSplitArr[x];
     for (let word of Constants.EncryptionAndSubjectMessages) {
       if (currentLine.includes(word)) {
-        chatSplitArr[x2] = "";
+        chatSplitArr[x] = "";
+        break;
+      }
+    }
+    for (let word of Constants.LanguageTimeIndicatorsToRemove) {
+      if (currentLine.includes(word)) {
+        chatSplitArr[x] = "";
         break;
       }
     }
   }
   return chatSplitArr.join("\n");
-}
-async function SendChatChartRequest(httpRequest) {
-  const url = "https://prod-14.uksouth.logic.azure.com:443/workflows/6f40b458f6d447cf931ad42dc778db92/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Xxz51scEThNC4v_zdGkWd0EB2FWl0OOUO5FtUlOpDe8";
-  return await fetch(url, httpRequest);
 }
 function StandardiseCharacters(linesArray) {
   for (var i = 0; i < linesArray.length; i++) {
@@ -11044,6 +11095,13 @@ function StandardiseCharacters(linesArray) {
     linesArray[i] = currentLine;
   }
   return linesArray;
+}
+function StripInvisibleChar(input) {
+  if (input[0] == String.fromCharCode(8206)) {
+    return input.substr(1);
+  } else {
+    return input;
+  }
 }
 function StandardiseClockFormat(linesArray) {
   const hourLookupTable = {
@@ -11146,30 +11204,37 @@ function StandardiseDateTimeMessageSeparator(input) {
   }
 }
 function StandardiseDateTimeSeparator(input) {
+  let buffer = input;
   let dateTime = input.substr(0, 18);
-  if (!dateTime.includes(", ")) {
-    return input.replace(" ", ", ");
-  } else {
-    return input;
+  for (let wordSeperator of Constants.LanguageDateTimeSeperators) {
+    if (dateTime.includes(wordSeperator)) {
+      buffer = input.replace(wordSeperator, ",");
+      dateTime = dateTime.replace(wordSeperator, ",");
+      break;
+    }
   }
+  if (!dateTime.includes(",")) {
+    buffer = input.replace(" ", ", ");
+  }
+  return buffer;
 }
 function StandardiseTimeSeparator(str) {
-  const timestampMatch = str.match(Constants.RegExPatterns.Timestamp);
+  const beginningOfLine = str.substr(0, 18);
+  const timestampMatch = beginningOfLine.match(Constants.RegExPatterns.Timestamp);
   if (timestampMatch) {
     const timestamp = timestampMatch[1];
-    const timePart = timestamp.split(" ")[1].replace(Constants.RegExPatterns.Period, ":");
-    const datePart = timestamp.split(" ")[0];
-    const formattedTimestamp = `${datePart} ${timePart}`;
+    const spaceDelimitedArray = timestamp.split(" ");
+    const datePart = spaceDelimitedArray[0];
+    const timePart = spaceDelimitedArray[1].replace(Constants.RegExPatterns.PeriodsNextToIntegers, ":");
+    let formattedTimestamp;
+    if (spaceDelimitedArray.length > 2) {
+      formattedTimestamp = `${datePart} ${timePart} ${spaceDelimitedArray[2]}`;
+    } else {
+      formattedTimestamp = `${datePart} ${timePart}`;
+    }
     return str.replace(timestamp, formattedTimestamp);
   }
   return str;
-}
-function StripInvisibleChar(input) {
-  if (input[0] == String.fromCharCode(8206)) {
-    return input.substr(1);
-  } else {
-    return input;
-  }
 }
 
 // models/searchlog.js
@@ -11189,11 +11254,11 @@ function GenerateChatComposition(messageObjectArray) {
   let authorIndex = 0;
   for (const element of messageObjectArray) {
     let chatterInArray = false;
-    for (const x2 of chatters) {
-      if (x2.Name === element.Author) {
+    for (const x of chatters) {
+      if (x.Name === element.Author) {
         chatterInArray = true;
-        x2.MessageCount += 1;
-        x2.WordCount += element.MessageBody.split(" ").length;
+        x.MessageCount += 1;
+        x.WordCount += element.MessageBody.split(" ").length;
       }
     }
     if (!chatterInArray) {
@@ -11236,14 +11301,14 @@ function GenerateFirstEncounter(chatObjArr) {
   let firstMessageTime = firstMessage["Time"];
   let firstMessageAuthor = firstMessage["Author"];
   let firstMessageBody = firstMessage["MessageBody"];
-  let replierIndex = chatObjArr.indexOf(chatObjArr.find((x2) => x2.Author != firstMessageAuthor));
+  let replierIndex = chatObjArr.indexOf(chatObjArr.find((x) => x.Author != firstMessageAuthor));
   let replyMessage = chatObjArr[replierIndex];
   let replyDate = replyMessage["Date"];
   let replyTime = replyMessage["Time"];
   let replyAuthor = replyMessage["Author"];
   let replyMessageBody = replyMessage["MessageBody"];
   let arrFromSecondAuth = chatObjArr.slice(replierIndex, 50);
-  let thirdAuthorIndex = arrFromSecondAuth.indexOf(arrFromSecondAuth.find((x2) => x2.Author != replyAuthor));
+  let thirdAuthorIndex = arrFromSecondAuth.indexOf(arrFromSecondAuth.find((x) => x.Author != replyAuthor));
   firstMessageBody = GetMessageComposite(chatObjArr, replierIndex, firstMessageBody).replace("omitted", "post");
   replyMessageBody = GetMessageComposite(arrFromSecondAuth, thirdAuthorIndex, replyMessageBody).replace("omitted", "post");
   return new FirstEncounter(firstMessageDate, firstMessageTime, firstMessageAuthor, firstMessageBody, replyDate, replyTime, replyAuthor, replyMessageBody);
@@ -11261,13 +11326,13 @@ function GenerateSearchRecord(chatObjArr, searchRecordName, required, width, hei
   }
   if (searchRecordName == "emoji") {
     let unicodeStrings = new Array();
-    searchTermArr.forEach((x2) => {
-      let instanceRegEx = new RegExp(x2.toLowerCase(), "g");
-      let unicodeString = x2.codePointAt(0).toString(16);
-      let counter2 = chatObjArr.filter((x3) => x3.MessageBody.match(instanceRegEx)).length;
+    searchTermArr.forEach((x) => {
+      let instanceRegEx = new RegExp(x.toLowerCase(), "g");
+      let unicodeString = x.codePointAt(0).toString(16);
+      let counter2 = chatObjArr.filter((x2) => x2.MessageBody.match(instanceRegEx)).length;
       if (!unicodeStrings.find((v) => v.uniStr === unicodeString)) {
         unicodeStrings.push({
-          emoji: x2,
+          emoji: x,
           uniStr: unicodeString,
           emojiCount: counter2
         });
@@ -11285,10 +11350,10 @@ function GenerateSearchRecord(chatObjArr, searchRecordName, required, width, hei
       searchLogs.push(searchLog);
     });
   } else {
-    searchTermArr.forEach((x2) => {
-      let instanceRegEx = new RegExp(x2.toLowerCase(), "g");
-      let counter2 = chatObjArr.filter((x3) => x3.MessageBody.match(instanceRegEx)).length;
-      let searchLog = new SearchLog(x2, counter2);
+    searchTermArr.forEach((x) => {
+      let instanceRegEx = new RegExp(x.toLowerCase(), "g");
+      let counter2 = chatObjArr.filter((x2) => x2.MessageBody.match(instanceRegEx)).length;
+      let searchLog = new SearchLog(x, counter2);
       searchLogs.push(searchLog);
     });
   }
@@ -11302,8 +11367,8 @@ function GenerateSearchRecord(chatObjArr, searchRecordName, required, width, hei
       orderedSearchLogs.push(searchLogs[i]);
     }
   } else {
-    searchLogs.forEach((x2) => {
-      counter += x2.Count;
+    searchLogs.forEach((x) => {
+      counter += x.Count;
     });
     orderedSearchLogs = searchLogs;
   }
@@ -11318,8 +11383,8 @@ function GenerateMessageDays(chatObjArr) {
   let dayArray = [{ Day: "Monday", Count: 0, Percent: 0 }, { Day: "Tuesday", Count: 0, Percent: 0 }, { Day: "Wednesday", Count: 0, Percent: 0 }, { Day: "Thursday", Count: 0, Percent: 0 }, { Day: "Friday", Count: 0, Percent: 0 }, { Day: "Saturday", Count: 0, Percent: 0 }, { Day: "Sunday", Count: 0, Percent: 0 }];
   const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   let totalCount = 0;
-  chatObjArr.forEach((x2) => {
-    let dateString = x2.Date;
+  chatObjArr.forEach((x) => {
+    let dateString = x.Date;
     let date = parseInt(dateString.split("/")[0]);
     let month = parseInt(dateString.split("/")[1]);
     let year = parseInt(dateString.split("/")[2]);
@@ -11332,12 +11397,12 @@ function GenerateMessageDays(chatObjArr) {
     totalCount++;
   });
   let percentTotal = 0;
-  dayArray.forEach((x2) => {
-    if (dayArray.indexOf(x2) == 6) {
-      x2.Percent = 100 - percentTotal;
+  dayArray.forEach((x) => {
+    if (dayArray.indexOf(x) == 6) {
+      x.Percent = 100 - percentTotal;
     } else {
-      x2.Percent = Math.round(x2.Count / totalCount * 100);
-      percentTotal += x2.Percent;
+      x.Percent = Math.round(x.Count / totalCount * 100);
+      percentTotal += x.Percent;
     }
   });
   return new MessageDays(dayArray);
@@ -11350,8 +11415,8 @@ function GenerateMessageTimes(chatObjArr) {
   for (let i = 10; i < 24; i++) {
     timeArray.push({ Hour: i.toString(), Count: 0 });
   }
-  chatObjArr.forEach((x2) => {
-    let hour = x2.Time.split(":")[0];
+  chatObjArr.forEach((x) => {
+    let hour = x.Time.split(":")[0];
     timeArray.forEach((y) => {
       if (hour === y.Hour) {
         y.Count++;
@@ -11392,8 +11457,8 @@ function GetMessageComposite(chatObjArr, replierIndex, message) {
   if (replierIndex > 1) {
     const messageBodies = chatObjArr.slice(1, replierIndex).map((currentMessage) => currentMessage["MessageBody"].trim());
     if (messageBodies.length > 0) {
-      messageBodies.forEach((x2) => {
-        x2 = x2.replace(returnRegEx, "").trim();
+      messageBodies.forEach((x) => {
+        x = x.replace(returnRegEx, "").trim();
       });
       const joinedMessageBodies = messageBodies.join("... ");
       const puncRegEx = new RegExp(Constants.RegExPatterns.Punctuation, "g");
@@ -11432,16 +11497,16 @@ async function PopulateProductBuilder(chatMaster, personalWord) {
   const laughSearchRecord = GenerateSearchRecord(ArrayOfMessageObjs, "laugh", false, 2, 1, null);
   const fromDateStr = firstEncounter.FirstMessageDate;
   const toDateStr = ArrayOfMessageObjs[ArrayOfMessageObjs.length - 1].Date;
-  const authors = chatComposition.Chatters.map((x2) => x2.Name);
+  const authors = chatComposition.Chatters.map((x) => x.Name);
   const tWtable = GenerateTopWords(WholeChatString, authors, personalWord);
-  tWtable.TopWordsTable.forEach((x2) => {
-    if (x2.Word === personalWord) {
-      x2.Count = personalWordSearchRecord.TotalCount;
+  tWtable.TopWordsTable.forEach((x) => {
+    if (x.Word === personalWord) {
+      x.Count = personalWordSearchRecord.TotalCount;
     }
   });
-  tWtable.TopWordsTable.forEach((x2) => {
-    if (Constants.LaughArray.includes(x2.Word)) {
-      laughSearchRecord.TotalCount = Math.round(x2.Count * 3.5);
+  tWtable.TopWordsTable.forEach((x) => {
+    if (Constants.LaughArray.includes(x.Word)) {
+      laughSearchRecord.TotalCount = Math.round(x.Count * 3.5);
     }
   });
   tWtable.TopWordsTable.sort((a, b) => b.Count - a.Count);
@@ -11466,95 +11531,6 @@ async function PopulateProductBuilder(chatMaster, personalWord) {
     daysDifference,
     personalWord
   );
-}
-async function ParseProductBuilder(productBuilder) {
-  let data = {};
-  data.DateFrom = productBuilder.FromDate;
-  data.DateTo = productBuilder.ToDate;
-  data.AuthorCount = productBuilder.ChatComposition.Chatters.length;
-  data.AuthorDataList = productBuilder.ChatComposition.Chatters;
-  data.MondayCount = productBuilder.MessageDays.MessageDaysTable[0].Count;
-  data.TuesdayCount = productBuilder.MessageDays.MessageDaysTable[1].Count;
-  data.WednesdayCount = productBuilder.MessageDays.MessageDaysTable[2].Count;
-  data.ThursdayCount = productBuilder.MessageDays.MessageDaysTable[3].Count;
-  data.FridayCount = productBuilder.MessageDays.MessageDaysTable[4].Count;
-  data.SaturdayCount = productBuilder.MessageDays.MessageDaysTable[5].Count;
-  data.SundayCount = productBuilder.MessageDays.MessageDaysTable[6].Count;
-  data.MondayPercent = productBuilder.MessageDays.MessageDaysTable[0].Percent;
-  data.TuesdayPercent = productBuilder.MessageDays.MessageDaysTable[1].Percent;
-  data.WednesdayPercent = productBuilder.MessageDays.MessageDaysTable[2].Percent;
-  data.ThursdayPercent = productBuilder.MessageDays.MessageDaysTable[3].Percent;
-  data.FridayPercent = productBuilder.MessageDays.MessageDaysTable[4].Percent;
-  data.SaturdayPercent = productBuilder.MessageDays.MessageDaysTable[5].Percent;
-  data.SundayPercent = productBuilder.MessageDays.MessageDaysTable[6].Percent;
-  data.Time0 = productBuilder.MessageTimes.MessageTimesTable[0].Count;
-  data.Time1 = productBuilder.MessageTimes.MessageTimesTable[1].Count;
-  data.Time2 = productBuilder.MessageTimes.MessageTimesTable[2].Count;
-  data.Time3 = productBuilder.MessageTimes.MessageTimesTable[3].Count;
-  data.Time4 = productBuilder.MessageTimes.MessageTimesTable[4].Count;
-  data.Time5 = productBuilder.MessageTimes.MessageTimesTable[5].Count;
-  data.Time6 = productBuilder.MessageTimes.MessageTimesTable[6].Count;
-  data.Time7 = productBuilder.MessageTimes.MessageTimesTable[7].Count;
-  data.Time8 = productBuilder.MessageTimes.MessageTimesTable[8].Count;
-  data.Time9 = productBuilder.MessageTimes.MessageTimesTable[9].Count;
-  data.Time10 = productBuilder.MessageTimes.MessageTimesTable[10].Count;
-  data.Time11 = productBuilder.MessageTimes.MessageTimesTable[11].Count;
-  data.Time12 = productBuilder.MessageTimes.MessageTimesTable[12].Count;
-  data.Time13 = productBuilder.MessageTimes.MessageTimesTable[13].Count;
-  data.Time14 = productBuilder.MessageTimes.MessageTimesTable[14].Count;
-  data.Time15 = productBuilder.MessageTimes.MessageTimesTable[15].Count;
-  data.Time16 = productBuilder.MessageTimes.MessageTimesTable[16].Count;
-  data.Time17 = productBuilder.MessageTimes.MessageTimesTable[17].Count;
-  data.Time18 = productBuilder.MessageTimes.MessageTimesTable[18].Count;
-  data.Time19 = productBuilder.MessageTimes.MessageTimesTable[19].Count;
-  data.Time20 = productBuilder.MessageTimes.MessageTimesTable[20].Count;
-  data.Time21 = productBuilder.MessageTimes.MessageTimesTable[21].Count;
-  data.Time22 = productBuilder.MessageTimes.MessageTimesTable[22].Count;
-  data.Time23 = productBuilder.MessageTimes.MessageTimesTable[23].Count;
-  data.FirstMessageSender = productBuilder.FirstEncounter.FirstChatterName;
-  data.FirstMessageDate = productBuilder.FirstEncounter.FirstMessageDate;
-  data.FirstMessageTime = productBuilder.FirstEncounter.FirstMessageTime;
-  data.FirstMessageBody = productBuilder.FirstEncounter.FirstMessageBody;
-  data.Replier = productBuilder.FirstEncounter.ReplyingChatterName;
-  data.ReplierDate = productBuilder.FirstEncounter.ReplyMessageDate;
-  data.ReplierTime = productBuilder.FirstEncounter.ReplyMessageTime;
-  data.ReplierMessageBody = productBuilder.FirstEncounter.ReplyMessage;
-  data.WordIndexCount = productBuilder.TopWords.TopWordsTable.length;
-  productBuilder.SearchRecordArray.forEach((x2) => {
-    if (x2.Name == "personal") {
-      data.PersonalWord = x2.SearchLogs[0].SearchTerm;
-      data.PersonalWordCount = x2.TotalCount;
-    } else if (x2.Name == "laugh") {
-      data.LaughCount = x2.TotalCount;
-    } else if (x2.Name == "emoji") {
-      data.EmojiIndexCount = x2.SearchLogs.length;
-      for (let i = 0; i < x2.SearchLogs.length; i++) {
-        let searchLog = x2.SearchLogs[i];
-        let searchProp = "Emoji" + (i + 1);
-        data[searchProp] = searchLog.SearchTerm;
-        let countProp = "EmojiCount" + (i + 1);
-        data[countProp] = searchLog.Count;
-      }
-    }
-  });
-  for (let i = 0; i < productBuilder.TopWords.TopWordsTable.length; i++) {
-    let wordLog = productBuilder.TopWords.TopWordsTable[i];
-    if (wordLog.Word != data.PersonalWord) {
-      let wordProp = "Word" + (i + 1);
-      data[wordProp] = wordLog.Word;
-      let countProp = "WordCount" + (i + 1);
-      data[countProp] = wordLog.Count;
-    }
-  }
-  return {
-    headers: {
-      "content-type": "application/json; charset=utf-8",
-      "Accept": "application/json",
-      "Host": "prod-14.uksouth.logic.azure.com"
-    },
-    method: "POST",
-    body: JSON.stringify(data)
-  };
 }
 
 // controllers/litecontroller.js

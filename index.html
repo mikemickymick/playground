@@ -21,29 +21,11 @@
         
     async function process_upload(uploadedFiles) {
     try{
-        let chat_object;
-        if(uploadedFiles.length > 1){
-            const uploadedFilesArray = Array.from(uploadedFiles);
-
-            const zipFiles = new Array();
-            uploadedFilesArray.forEach(uploadedFile => {
-                if(uploadedFile.type == "application/x-zip-compressed" || uploadedFile.type == "application/zip"){
-                    zipFiles.push(uploadedFile);
-                }
-            });
-
-            if(zipFiles.length > 1){
-                alert("Sorry, you cannot upload multiple .zip files. Please extract the chat files you need and upload them together. Send us a message if you get stuck.");
-                return;
-            }
-            chat_object = await GenerateChatObjectFromMultipleFiles(uploadedFilesArray);
-        }else{
-            chat_object = await GenerateChatObjectFromSingleFile(uploadedFiles[0]);
-        }
-        console.log("hi");
-        let chat_analysis = await PopulateProductBuilder(chat_object, "tonight");
-        //let req = await ParseProductBuilder(chat_analysis);
-        console.log(chat_analysis);  
+        const unpackedFilesAndEntries = await Unpack(uploadedFiles);
+        const chatChartModel = await GenerateChatChartModel(unpackedFilesAndEntries);
+        console.log(chatChartModel.ArrayOfMessageObjs[525]);
+        let chat_analysis = await PopulateProductBuilder(chatChartModel, "sick");
+        console.log(chat_analysis);
     }
     catch(error){
         console.log(error);
