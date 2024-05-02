@@ -10854,6 +10854,7 @@ async function GenerateChatChartModel(uploadedFiles) {
       allChatObjects.push(chatObject);
     }
   }
+  console.log(allChatObjects);
   const sortedChatObjects = SortChatObjects(allChatObjects);
   const chattersArray = GenerateChatters(sortedChatObjects);
   return {
@@ -10894,7 +10895,7 @@ function DeterminePlatform(uploadedFileOrEntry, fileContent) {
   if (uploadedFileOrEntry.type == Constants.FileTypes.Text || "filename" in uploadedFileOrEntry && uploadedFileOrEntry.filename.includes(".txt")) {
     return Constants.Platform.WhatsApp;
   }
-  const beginningSnippet = fileContent.substr(0, 50);
+  const beginningSnippet = fileContent.substr(0, 100);
   if (beginningSnippet.includes("participants")) {
     return Constants.Platform.Instagram;
   } else if (beginningSnippet.includes("personal_chat")) {
@@ -11140,6 +11141,7 @@ function StandardiseClockFormat(linesArray) {
       }
       const firstHalf = currentLine.substring(0, commaIndex + 2);
       const secondHalf = currentLine.substring(dashIndex);
+      hourString = hourString.length == 1 ? "0" + hourString : hourString;
       const timeFormatted = `${hourString}:${minuteString}`;
       linesArray[i] = firstHalf + timeFormatted + secondHalf;
     }
@@ -11219,7 +11221,7 @@ function StandardiseDateTimeSeparator(input) {
   return buffer;
 }
 function StandardiseTimeSeparator(str) {
-  const beginningOfLine = str.substr(0, 18);
+  const beginningOfLine = str.substr(0, 24);
   const timestampMatch = beginningOfLine.match(Constants.RegExPatterns.Timestamp);
   if (timestampMatch) {
     const timestamp = timestampMatch[1];
