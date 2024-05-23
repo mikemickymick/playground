@@ -21,11 +21,14 @@
         
     async function process_upload(uploadedFiles) {
     try{
+        console.log("LET'S GOOOO!");
         const unpackedFilesAndEntries = await Unpack(uploadedFiles);
         const chatChartModel = await GenerateChatChartModel(unpackedFilesAndEntries);
-        console.log(chatChartModel.ArrayOfMessageObjs[525]);
-        let chat_analysis = await PopulateProductBuilder(chatChartModel, "sick");
-        console.log(chat_analysis);
+        let chat_analysis = await PopulateProductBuilder(chatChartModel, "жаным");
+        chat_analysis.MessageTimes.MessageTimesTable.forEach(element => {
+          console.log(element);
+        });
+        debugger;
     }
     catch(error){
         console.log(error);

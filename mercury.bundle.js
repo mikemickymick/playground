@@ -10658,9 +10658,10 @@ var Constants = class {
   static SkipWordsFrench = ["\u200El'audio", "audio omis", "la", "le", "je", "\xE0", "une", "un", "toi", "et", "alors", "dans", "de", "pour", "ma", "mon", "il", "sur", "donc", "est", "moi", "suis", "ce", "cette", "\xEAtre", "\xE9tait", "avoir", "nous", "avec", "mais", "juste", "obtenir", "pas", "ton", "si", "peut", "dehors", "dehors", "sont", "faire", "comme", "tout", "toute", "maintenant", "j'ai", "c'est", "comment", "quand", "depuis", "une", "un", "temps", "j\u2019ai", "aller", "ou", "ouais", "pense", "jour", "d\xE9sactiv\xE9", "avait", "besoin", "voir", "savoir", "un", "vraiment", "il", "elle", "lui", "son", "volont\xE9", "dos", "aussi", "quelques", "non", "quelques", "c\u2019est", "faire", "serait", "ils", "elles", "l\xE0", "apr\xE8s", "omis", "m\xE9dias", "<m\xE9dias", "<m\xE9dias omis>", "l\xE0", "dit", "dite", "eux", "que", "tu", "votre", "en", "les", "des", "va", "cest", "au", "te", "vous", "oui", "fait", "aussi", "pourquoi", "son", "m\xEAme", "cependant", "?autocollant", "?manqu\xE9e", "?manqu\xE9", "a r\xE9agi", "envoy\xE9", "aim\xE9"];
   static SkipWordsGerman = ["\u200Ebild", "\u200Eaudio", "audio weggelassen", "bild", "die", "ich", "zu", "du", "und", "dann", "von", "f\xFCr", "mein", "es", "an", "ist", "mich", "ich bin", "das", "sei", "war", "haben", "wir", "mit", "aber", "nur", "erhalten", "nicht", "dein", "with", "wenn", "bei", "hoch", "d\xFCrfen", "aus", "bekommen", "sind", "tun", "wie", "um", "alle", "tun", "als", "jetzt", "ich habe", "gehen", "es ist", "wie", "wann", "aus", "eins", "zeit", "gehen", "oder", "arbeiten", "jh", "gewesen", "denken", "hatte", "brauchen", "sehen", "wissen", "ein", "wirklich", "er", "sie", "ihn", "ihr", "wille", "zur\xFCck", "zu", "tat", "manche", "nein", "es ist", "machen", "w\xFCrde", "sie", "dort", "beliebig", "nach", "hat", "weggelassen", "medien", "<medien", "<medien weggelassen>", "da", "er", "sie", "weil", "sagte", "ja", "ihnen", "dein", "gehen", "auch", "warum", "sein", "sogar", "kippen", "obwohl", "?aufkleber", "?verpasst", "reagiert", "gesendet", "geliked"];
   static SkipWordsItalian = ["immagine", "\u200Eaudio", "audio omesso", "immagine", "il", "io", "a", "a", "tu", "e", "poi", "in", "di", "per", "mio", "esso", "su", "cos\xEC", "\xE8", "io", "sono", "questo", "quello", "essere", "era", "avere", "noi", "con", "ma", "solo", "ottenere", "non", "tuo", "se", "a", "su", "pu\xF2", "fuori", "cosa", "ottenuto", "sono", "fare", "come", "circa", "tutti", "sono", "come", "ora", "ho", "andando", "\xE8", "come", "quando", "da", "uno", "tempo", "ho", "io", "andr\xF2", "o", "yh", "stato", "pensa", "giorno", "andr\xF2", "spento", "aveva", "bisogno", "vedere", "sapere", "un", "davvero", "lui", "lei", "lei", "lui", "sar\xE0", "indietro", "troppo", "fatto", "no", "non", "alcuni", "\xE8", "fare", "vorrebbe", "loro", "l\xEC", "qualsiasi", "dopo", "ha", "omesso", "media", "<media", "<media omessi>", "perch\xE9", "siamo", "io", "oh", "detto", "ok", "s\xEC", "va bene", "non", "loro", "u", "tuo", "non", "messaggio", "ah", "a", "andare", "anche", "perch\xE9", "suo", "anche", "non posso", "non posso", "non \xE8", "non \xE8", "per\xF2", "sei", "sei", "non l'ho fatto", "non l'ho fatto", "ho", "im", "suo", "?adesivo", "?mancato", "ha reagito", "inviato", "mi \xE8 piaciuto"];
+  static SkipWordsRussian = ["\u0432", "\u043D\u0435", "\u0438", "\u044F", "\u043D\u0430", "\u0447\u0442\u043E", "\u0441", "\u043A\u0430\u043A", "\u0442\u044B", "\u0443", "\u0430", "\u043D\u043E", "\u043F\u043E", "\u0443\u0436\u0435", "\u044D\u0442\u043E", "\u043D\u0443", "\u0442\u0430\u043A", "\u0442\u0430\u043C", "\u0442\u043E\u043B\u044C\u043A\u043E", "\u0436\u0435", "\u0442\u043E\u0436\u0435", "\u0435\u0441\u043B\u0438", "\u0432\u043E\u0442", "\u043C\u043D\u0435", "\u043A", "\u0434\u043E", "\u0432\u0441\u0435", "\u0442\u043E", "\u043C\u0435\u043D\u044F", "\u0438\u043B\u0438", "\u0437\u0430", "\u0442\u0435\u0431\u044F", "\u0435\u0449\u0435", "\u043C\u044B", "\u0431\u0443\u0434\u0435\u0442", "\u0435\u0449\u0451", "\u043F\u0440\u044F\u043C", "\u043D\u0430\u0434\u043E"];
   static SkipWordsSpanish = ["\u200Eimagen", "\u200Eaudio", "audio omitido", "imagen", "el", "a", "t\xFA", "y", "entonces", "en", "de", "para", "mi", "\xE9l", "en", "entonces", "es", "soy", "este", "eso", "ser", "era", "tener", "nosotros", "con", "pero", "justo", "conseguir", "no", "su", "si", "en", "arriba", "poder", "afuera", "qu\xE9", "consigui\xF3", "son", "hacer", "como", "todo", "ahora", "tengo", "yendo", "es", "c\xF3mo", "cuando", "de", "uno", "tiempo", "ir", "o", "estado", "pensar", "d\xEDa", "apagado", "ten\xEDa", "necesidad", "ver", "saber", "un", "realidad", "\xE9l", "ella", "su", "voluntad", "atr\xE1s", "tambi\xE9n", "hizo", "alguno", "hacer", "har\xEDa", "ellos", "cualquier", "despu\xE9s", "tiene", "omitido", "somos", "vaya", "dicho", "s\xED", "mensaje", "en", "ir", "tambi\xE9n", "su", "incluso", "aunque", "eres", "?pegatina", "?omitido", "reaccion\xF3", "envi\xF3", "me gust\xF3"];
   static SkipWordsSwedish = ["image", "\u200Eaudio", "ljud utel\xE4mnat", "image", "the", "i", "to", "a", "du", "och", "d\xE5", "i", "av", "f\xF6r", "min", "det", "p\xE5", "s\xE5", "\xE4r", "mig", "jag", "det", "det", "var", "har", "vi", "med", "men", "bara", "f\xE5", "inte", "din", "om", "vid", "upp", "kan", "ut", "vad", "fick", "\xE4r", "g\xF6r", "som", "om", "alla", "jag", "som", "nu", "jag", "g\xE5r", "det", "hur", "n\xE4r", "fr\xE5n", "en", "tid", "jag", "jag", "g\xE5", "eller", "yh", "varit", "tror", "dag", "ska", "av", "hade", "beh\xF6ver", "se", "vet", "en", "verkligen", "han", "hon", "honom", "henne", "kommer", "tillbaka", "ocks\xE5", "gjorde", "nej", "inte", "n\xE5gra", "det", "det", "skulle", "de", "d\xE4r", "n\xE5gon", "efter", "har", "utel\xE4mnade", "media", "<media", "<media utel\xE4mnade>", "eftersom", "vi", "jag", "\xE5h", "sa", "ok", "ja", "okej", "inte", "dem", "u", "din", "inte", "meddelande", "ah", "vid", "g\xE5", "\xE4ven", "\xE4ven", "varf\xF6r", "hans", "\xE4ven", "kan inte", "kan inte", "\xE4r inte", "\xE4r inte", "men", "du", "du'\xE4r", "gjorde inte", "gjorde inte", "jag", "im", "dess", "?klisterm\xE4rke", "?missade", , "reagerade", "skickade", "gillade"];
-  static SkipWordsSymbols = ["\u200Egif", "gif", "x", "xx", "xxx", "xxxx", "xxxxx", "xxxxxx", "xxxxxxx", "xxxxxxxx", "xxxxxxxxx", "xxxxxxxxxx", "xxxxxxxxxxx", "xxxxxxxxxxxx", "xxxxxxxxxxxxx", "xxxxxxxxxxxxxx", "xxxxxxxxxxxxxxx", "-", "[", "[", "/", "PM", "AM", "am", "pm", "am]", "pm]", "AM]", "PM]", "<", ">", "", "false", "true"];
+  static SkipWordsSymbols = ["\u200Egif", "gif", "x", "xx", "xxx", "xxxx", "xxxxx", "xxxxxx", "xxxxxxx", "xxxxxxxx", "xxxxxxxxx", "xxxxxxxxxx", "xxxxxxxxxxx", "xxxxxxxxxxxx", "xxxxxxxxxxxxx", "xxxxxxxxxxxxxx", "xxxxxxxxxxxxxxx", "-", "]", "[", "/", "PM", "AM", "am", "pm", "am]", "pm]", "AM]", "PM]", "<", ">", "", "false", "true", "[]", "(file", "exporting", "settings", "data", "change"];
   static EncryptionAndSubjectMessages = ["messages and calls are end-to-end encrypted", " changed the subject to ", "changed their phone number", "messages et les appels", "changement de l\u2019objet en", "changement de num\xE9ro de t\xE9l\xE9phone", "nachrichten und anrufe", "\xE4nderte den betreff in", "ihre telefonnummer ge\xE4ndert", "messaggi e chiamate", "cambiato l'argomento in", "cambiato il proprio numero di telefono", "berichten en oproepen", "veranderde het onderwerp in", "hun telefoonnummer hebben gewijzigd", "mensajes y llamadas", "cambi\xF3 el tema a", "cambiaron su n\xFAmero de tel\xE9fono", "meddelanden och samtal", " \xE4ndrade \xE4mnet till ", "\xE4ndrat telefonnummer", "beskeder og opkald", " \xE6ndrede emnet til ", "\xE6ndrede deres telefonnummer"];
   static LanguageDateTimeSeperators = [" klo"];
   static LanguageTimeIndicatorsAM = ["s ochtends", "s middags"];
@@ -10690,7 +10691,8 @@ var Constants = class {
     Punctuation: /[!?,.:;_)]$/g,
     ReturnCarriage: /[\r\n]+|\.|[\r\n]+$/g,
     StartsWithDate: /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)(\d{2}|\d{4}), ([0-9][0-9]):([0-9][0-9]) -/g,
-    Timestamp: /\[(.*?)\]/
+    Timestamp1: /\[(.*?)\]/,
+    Timestamp2: /\d{2}\/\d{2}\/\d{4}, \d{2}.\d{2}/
   };
 };
 
@@ -10748,6 +10750,9 @@ var Converters = class {
       const unixInMilliseconds = currentMessage.date_unixtime * 1e3;
       let convertedDate = GetDateFromUnix(unixInMilliseconds);
       let convertedTime = GetTimeFromUnix(unixInMilliseconds);
+      if (Array.isArray(currentMessage.text)) {
+        currentMessage.text = currentMessage.text[0];
+      }
       if (currentMessage.text != null && currentMessage.text != void 0) {
         try {
           currentMessage.text = import_utf8.decode(currentMessage.text);
@@ -10854,7 +10859,6 @@ async function GenerateChatChartModel(uploadedFiles) {
       allChatObjects.push(chatObject);
     }
   }
-  console.log(allChatObjects);
   const sortedChatObjects = SortChatObjects(allChatObjects);
   const chattersArray = GenerateChatters(sortedChatObjects);
   return {
@@ -10895,7 +10899,7 @@ function DeterminePlatform(uploadedFileOrEntry, fileContent) {
   if (uploadedFileOrEntry.type == Constants.FileTypes.Text || "filename" in uploadedFileOrEntry && uploadedFileOrEntry.filename.includes(".txt")) {
     return Constants.Platform.WhatsApp;
   }
-  const beginningSnippet = fileContent.substr(0, 100);
+  const beginningSnippet = fileContent.substr(0, 50);
   if (beginningSnippet.includes("participants")) {
     return Constants.Platform.Instagram;
   } else if (beginningSnippet.includes("personal_chat")) {
@@ -11123,6 +11127,7 @@ function StandardiseClockFormat(linesArray) {
   while (i < linesArray.length) {
     let currentLine = linesArray[i];
     if (currentLine.length > 0 && currentLine.includes(":") && currentLine.indexOf("/") == 2) {
+      currentLine = ReplaceLanguageTimeSeperators(currentLine);
       const commaIndex = currentLine.indexOf(", ");
       const colonIndex = currentLine.indexOf(":");
       const dashIndex = currentLine.indexOf(" - ");
@@ -11222,9 +11227,10 @@ function StandardiseDateTimeSeparator(input) {
 }
 function StandardiseTimeSeparator(str) {
   const beginningOfLine = str.substr(0, 24);
-  const timestampMatch = beginningOfLine.match(Constants.RegExPatterns.Timestamp);
-  if (timestampMatch) {
-    const timestamp = timestampMatch[1];
+  const timestamp1Match = beginningOfLine.match(Constants.RegExPatterns.Timestamp1);
+  const timestamp2Match = beginningOfLine.match(Constants.RegExPatterns.Timestamp2);
+  if (timestamp1Match) {
+    const timestamp = timestamp1Match[1];
     const spaceDelimitedArray = timestamp.split(" ");
     const datePart = spaceDelimitedArray[0];
     const timePart = spaceDelimitedArray[1].replace(Constants.RegExPatterns.PeriodsNextToIntegers, ":");
@@ -11235,8 +11241,21 @@ function StandardiseTimeSeparator(str) {
       formattedTimestamp = `${datePart} ${timePart}`;
     }
     return str.replace(timestamp, formattedTimestamp);
+  } else if (timestamp2Match) {
+    const timestamp = timestamp2Match[0];
+    const spaceDelimitedArray = timestamp.split(" ");
+    const datePart = spaceDelimitedArray[0];
+    const timePart = spaceDelimitedArray[1].replace(Constants.RegExPatterns.PeriodsNextToIntegers, ":");
+    let formattedTimestamp;
+    if (spaceDelimitedArray.length > 2) {
+      formattedTimestamp = `${datePart} ${timePart} ${spaceDelimitedArray[2]}`;
+    } else {
+      formattedTimestamp = `${datePart} ${timePart}`;
+    }
+    return str.replace(timestamp, formattedTimestamp);
+  } else {
+    return str;
   }
-  return str;
 }
 
 // models/searchlog.js
@@ -11437,7 +11456,7 @@ function GenerateTopWords(wholeChatString, namesArray, personalWord) {
   });
   const wordsArray = wholeChatString.replace(/(’s)/g, "").replace(/('s)/g, "").split(" ");
   wordsArray.forEach((word) => {
-    if (word.length < 10 && !Constants.SkipWordsSymbols.includes(word) && !Constants.SkipWordsGerman.includes(word) && !Constants.SkipWordsEnglish.includes(word) && !Constants.SkipWordsFrench.includes(word) && !Constants.SkipWordsDutch.includes(word) && !Constants.SkipWordsSpanish.includes(word) && !Constants.SkipWordsSwedish.includes(word) && !Constants.SkipWordsDanish.includes(word) && !EmojiArray.includes(word) && !word.match(Constants.RegExPatterns.Punctuation) && !word.match(Constants.RegExPatterns.Numbers) && !newNameSet.has(word)) {
+    if (word.length < 10 && !Constants.SkipWordsSymbols.includes(word) && !Constants.SkipWordsGerman.includes(word) && !Constants.SkipWordsEnglish.includes(word) && !Constants.SkipWordsFrench.includes(word) && !Constants.SkipWordsDutch.includes(word) && !Constants.SkipWordsSpanish.includes(word) && !Constants.SkipWordsSwedish.includes(word) && !Constants.SkipWordsDanish.includes(word) && !Constants.SkipWordsItalian.includes(word) && !Constants.SkipWordsRussian.includes(word) && !EmojiArray.includes(word) && !word.match(Constants.RegExPatterns.Punctuation) && !word.match(Constants.RegExPatterns.Numbers) && !newNameSet.has(word)) {
       filteredArray.push(word);
     }
   });
