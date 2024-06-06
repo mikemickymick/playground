@@ -1,3 +1,4 @@
+
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -10662,7 +10663,7 @@ var Constants = class {
   static SkipWordsSpanish = ["\u200Eimagen", "\u200Eaudio", "audio omitido", "imagen", "el", "a", "t\xFA", "y", "entonces", "en", "de", "para", "mi", "\xE9l", "en", "entonces", "es", "soy", "este", "eso", "ser", "era", "tener", "nosotros", "con", "pero", "justo", "conseguir", "no", "su", "si", "en", "arriba", "poder", "afuera", "qu\xE9", "consigui\xF3", "son", "hacer", "como", "todo", "ahora", "tengo", "yendo", "es", "c\xF3mo", "cuando", "de", "uno", "tiempo", "ir", "o", "estado", "pensar", "d\xEDa", "apagado", "ten\xEDa", "necesidad", "ver", "saber", "un", "realidad", "\xE9l", "ella", "su", "voluntad", "atr\xE1s", "tambi\xE9n", "hizo", "alguno", "hacer", "har\xEDa", "ellos", "cualquier", "despu\xE9s", "tiene", "omitido", "somos", "vaya", "dicho", "s\xED", "mensaje", "en", "ir", "tambi\xE9n", "su", "incluso", "aunque", "eres", "?pegatina", "?omitido", "reaccion\xF3", "envi\xF3", "me gust\xF3"];
   static SkipWordsSwedish = ["image", "\u200Eaudio", "ljud utel\xE4mnat", "image", "the", "i", "to", "a", "du", "och", "d\xE5", "i", "av", "f\xF6r", "min", "det", "p\xE5", "s\xE5", "\xE4r", "mig", "jag", "det", "det", "var", "har", "vi", "med", "men", "bara", "f\xE5", "inte", "din", "om", "vid", "upp", "kan", "ut", "vad", "fick", "\xE4r", "g\xF6r", "som", "om", "alla", "jag", "som", "nu", "jag", "g\xE5r", "det", "hur", "n\xE4r", "fr\xE5n", "en", "tid", "jag", "jag", "g\xE5", "eller", "yh", "varit", "tror", "dag", "ska", "av", "hade", "beh\xF6ver", "se", "vet", "en", "verkligen", "han", "hon", "honom", "henne", "kommer", "tillbaka", "ocks\xE5", "gjorde", "nej", "inte", "n\xE5gra", "det", "det", "skulle", "de", "d\xE4r", "n\xE5gon", "efter", "har", "utel\xE4mnade", "media", "<media", "<media utel\xE4mnade>", "eftersom", "vi", "jag", "\xE5h", "sa", "ok", "ja", "okej", "inte", "dem", "u", "din", "inte", "meddelande", "ah", "vid", "g\xE5", "\xE4ven", "\xE4ven", "varf\xF6r", "hans", "\xE4ven", "kan inte", "kan inte", "\xE4r inte", "\xE4r inte", "men", "du", "du'\xE4r", "gjorde inte", "gjorde inte", "jag", "im", "dess", "?klisterm\xE4rke", "?missade", , "reagerade", "skickade", "gillade"];
   static SkipWordsSymbols = ["\u200Egif", "gif", "x", "xx", "xxx", "xxxx", "xxxxx", "xxxxxx", "xxxxxxx", "xxxxxxxx", "xxxxxxxxx", "xxxxxxxxxx", "xxxxxxxxxxx", "xxxxxxxxxxxx", "xxxxxxxxxxxxx", "xxxxxxxxxxxxxx", "xxxxxxxxxxxxxxx", "-", "]", "[", "/", "PM", "AM", "am", "pm", "am]", "pm]", "AM]", "PM]", "<", ">", "", "false", "true", "[]", "(file", "exporting", "settings", "data", "change"];
-  static EncryptionAndSubjectMessages = ["messages and calls are end-to-end encrypted", " changed the subject to ", "changed their phone number", "messages et les appels", "changement de l\u2019objet en", "changement de num\xE9ro de t\xE9l\xE9phone", "nachrichten und anrufe", "\xE4nderte den betreff in", "ihre telefonnummer ge\xE4ndert", "messaggi e chiamate", "cambiato l'argomento in", "cambiato il proprio numero di telefono", "berichten en oproepen", "veranderde het onderwerp in", "hun telefoonnummer hebben gewijzigd", "mensajes y llamadas", "cambi\xF3 el tema a", "cambiaron su n\xFAmero de tel\xE9fono", "meddelanden och samtal", " \xE4ndrade \xE4mnet till ", "\xE4ndrat telefonnummer", "beskeder og opkald", " \xE6ndrede emnet til ", "\xE6ndrede deres telefonnummer"];
+  static EncryptionAndSubjectMessages = ["messages and calls are end-to-end encrypted", " changed the subject to ", "changed their phone number", "messages et les appels", "changement", "nachrichten und anrufe", "\xE4nderte den betreff in", "ihre telefonnummer ge\xE4ndert", "messaggi e chiamate", "cambiato l'argomento in", "cambiato il proprio numero di telefono", "berichten en oproepen", "veranderde het onderwerp in", "hun telefoonnummer hebben gewijzigd", "mensajes y llamadas", "cambi\xF3 el tema a", "cambiaron su n\xFAmero de tel\xE9fono", "meddelanden och samtal", " \xE4ndrade \xE4mnet till ", "\xE4ndrat telefonnummer", "beskeder og opkald", " \xE6ndrede emnet til ", "\xE6ndrede deres telefonnummer", "extremo a extremo", "fuera de este chat", "end-to-end"];
   static LanguageDateTimeSeperators = [" klo"];
   static LanguageTimeIndicatorsAM = ["s ochtends", "s middags"];
   static LanguageTimeIndicatorsPM = ["s avonds", "s nachts"];
@@ -10699,15 +10700,38 @@ var Constants = class {
 // controllers/converters.js
 var import_utf8 = __toESM(require_utf8());
 var Converters = class {
-  static GenerateChatObjectsFromDiscord() {
+  static GenerateChatObjectsFromDiscord(jsonString) {
+    const parsedData = [];
+    var jsObj = JSON.parse(jsonString);
+    for (let i = 0; i < jsObj.length; i++) {
+      let currentMessage = jsObj[i];
+      let convertedDate = GetDateFromTimestamp(currentMessage.timestamp);
+      let convertedTime = GetTimeFromTimestamp(currentMessage.timestamp);
+      if (currentMessage.type != 0 && currentMessage.content != "" && currentMessage.content != null) {
+        continue;
+      }
+      try {
+        currentMessage.content = import_utf8.decode(currentMessage.content);
+      } catch {
+        currentMessage.content = import_utf8.decode(import_utf8.encode(currentMessage.content));
+      }
+      const messageModel = {
+        Date: convertedDate,
+        Time: convertedTime,
+        Author: currentMessage.author.global_name,
+        MessageBody: currentMessage.content
+      };
+      parsedData.push(messageModel);
+    }
+    return parsedData.reverse();
   }
   static GenerateChatObjectsFromMeta(jsonString) {
     const parsedData = [];
     var jsObj = JSON.parse(jsonString);
     for (let i = 0; i < jsObj.messages.length; i++) {
       let currentMessage = jsObj.messages[i];
-      let convertedDate = GetDateFromUnix(currentMessage.timestamp_ms);
-      let convertedTime = GetTimeFromUnix(currentMessage.timestamp_ms);
+      let convertedDate = GetDateFromTimestamp(currentMessage.timestamp_ms);
+      let convertedTime = GetTimeFromTimestamp(currentMessage.timestamp_ms);
       if (currentMessage.content != null && currentMessage.content != void 0) {
         try {
           currentMessage.content = import_utf8.decode(currentMessage.content);
@@ -10748,8 +10772,8 @@ var Converters = class {
     for (let i = 0; i < jsObj.messages.length; i++) {
       let currentMessage = jsObj.messages[i];
       const unixInMilliseconds = currentMessage.date_unixtime * 1e3;
-      let convertedDate = GetDateFromUnix(unixInMilliseconds);
-      let convertedTime = GetTimeFromUnix(unixInMilliseconds);
+      let convertedDate = GetDateFromTimestamp(unixInMilliseconds);
+      let convertedTime = GetTimeFromTimestamp(unixInMilliseconds);
       if (Array.isArray(currentMessage.text)) {
         currentMessage.text = currentMessage.text[0];
       }
@@ -10972,11 +10996,11 @@ function ReplaceUsingIndexAndInput(input, index, stringToReplace, replacement) {
   const secondHalf = input.substring(index + stringToReplace.length + 1);
   return firstHalf + replacement + secondHalf;
 }
-function GetTimeFromUnix(UNIX_timestamp) {
-  var a = new Date(UNIX_timestamp);
-  var hour = a.getHours() < 10 ? "0" + a.getHours() : a.getHours();
-  var min = a.getMinutes() < 10 ? "0" + a.getMinutes() : a.getMinutes();
-  return hour + ":" + min;
+function GetTimeFromTimestamp(timestamp) {
+  const date = new Date(timestamp);
+  const hours = String(date.getUTCHours()).padStart(2, "0");
+  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+  return `${hours}:${minutes}`;
 }
 function ConvertChatObjDateAndTimeToDateTime(chatObj) {
   const dateString = chatObj.Date;
@@ -11032,16 +11056,12 @@ function GetDateFormat(linesArray) {
     i++;
   }
 }
-function GetDateFromUnix(UNIX_timestamp) {
-  var a = new Date(UNIX_timestamp);
-  var months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
-  var year = a.getFullYear();
-  var month = months[a.getMonth()];
-  var date = a.getDate();
-  if (date.toString().length == 1) {
-    date = "0" + date.toString();
-  }
-  return date + "/" + month + "/" + year;
+function GetDateFromTimestamp(timestamp) {
+  const date = new Date(timestamp);
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const year = date.getUTCFullYear();
+  return `${day}/${month}/${year}`;
 }
 function GetDateSeparator(input) {
   let maxCount = 0;
