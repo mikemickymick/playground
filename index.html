@@ -26,6 +26,8 @@
         const chatChartModel = await GenerateChatChartModel(unpackedFilesAndEntries);
         let chat_analysis = await PopulateProductBuilder(chatChartModel, "Daddy");
         console.log(chat_analysis.ChatComposition.Chatters);
+        console.log(chat_analysis.ChatTitle);
+        console.log(chat_analysis.FirstEncounter);
         debugger;
     }
     catch(error){
