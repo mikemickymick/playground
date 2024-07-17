@@ -1,4 +1,3 @@
-
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -216,13 +215,6 @@ var FirstEncounter = class extends MetricModule {
     this.ReplyMessageTime = replyMessageTime;
     this.ReplyingChatterName = replyingChatterName;
     this.ReplyMessage = replyMessage;
-  }
-};
-var SearchRecord = class extends MetricModule {
-  constructor(name, required, width, height, searchLogs, totalCount) {
-    super(name, required, width, height);
-    this.SearchLogs = searchLogs;
-    this.TotalCount = totalCount;
   }
 };
 var MessageDays = class extends MetricModule {
@@ -11093,6 +11085,7 @@ function GetDateSeparator(input) {
 }
 function StandardiseCharacters(linesArray) {
   for (var i = 0; i < linesArray.length; i++) {
+    console.log(i);
     let currentLine = StripInvisibleChar(linesArray[i]);
     if (currentLine.length == 0) {
       linesArray[i] = "";
