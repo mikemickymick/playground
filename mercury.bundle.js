@@ -1,3 +1,4 @@
+
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -11085,7 +11086,6 @@ function GetDateSeparator(input) {
 }
 function StandardiseCharacters(linesArray) {
   for (var i = 0; i < linesArray.length; i++) {
-    console.log(i);
     let currentLine = StripInvisibleChar(linesArray[i]);
     if (currentLine.length == 0) {
       linesArray[i] = "";
@@ -11399,7 +11399,7 @@ function GetPersonalWordCount(chatString, personalWord) {
   if (personalWord.length === 0) {
     return 0;
   }
-  let regex = new RegExp(`\\b${personalWord}\\b`, "g");
+  let regex = new RegExp(`\\b${personalWord}\\b`, "gi");
   let matches = chatString.match(regex);
   return matches ? matches.length : 0;
 }
