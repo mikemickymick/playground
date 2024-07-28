@@ -25,7 +25,7 @@
         const unpackedFilesAndEntries = await Unpack(uploadedFiles);
         const chatChartModel = await GenerateChatChartModel(unpackedFilesAndEntries);
         let chat_analysis = await PopulateProductBuilder(chatChartModel, "love you");
-        console.log(chat_analysis.TopEmojis);
+        console.log(chat_analysis.ChatComposition);
         debugger;
     }
     catch(error){
