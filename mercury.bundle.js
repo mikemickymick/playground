@@ -1,3 +1,4 @@
+
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -10736,9 +10737,9 @@ var Converters = class {
       let convertedTime = GetTimeFromTimestamp2(currentMessage.timestamp_ms);
       if (currentMessage.content != null && currentMessage.content != void 0) {
         try {
-          currentMessage.content = import_utf82.decode(currentMessage.content);
+          currentMessage.content = import_utf82.utf8.decode(currentMessage.content);
         } catch {
-          currentMessage.content = import_utf82.decode(import_utf82.encode(currentMessage.content));
+          currentMessage.content = import_utf82.utf8.decode(import_utf82.utf8.encode(currentMessage.content));
         }
       }
       const messageModel = {
@@ -10781,9 +10782,9 @@ var Converters = class {
       }
       if (currentMessage.text != null && currentMessage.text != void 0) {
         try {
-          currentMessage.text = import_utf82.decode(currentMessage.text);
+          currentMessage.text = import_utf82.utf8.decode(currentMessage.text);
         } catch {
-          currentMessage.text = import_utf82.decode(import_utf82.encode(currentMessage.text));
+          currentMessage.text = import_utf82.utf8.decode(import_utf82.utf8.encode(currentMessage.text));
         }
       }
       const messageModel = {
@@ -11489,7 +11490,7 @@ function GenerateTopWords(wholeChatString, namesArray, personalWord) {
     counts.set(word, (counts.get(word) || 0) + 1);
   });
   counts.forEach((count, word) => {
-    if (word != personalWord && !Constants.LaughArray.includes(word)) {
+    if (word.toLowerCase() != personalWord.toLowerCase() && !Constants.LaughArray.includes(word.toLowerCase())) {
       topWordsTable.push({ Word: word, Count: count });
     }
   });
@@ -11547,12 +11548,12 @@ async function PopulateProductBuilder(chatMaster, personalWord) {
   const authors = chatComposition.Chatters.map((x) => x.Name);
   const tWtable = GenerateTopWords(WholeChatString, authors, personalWord);
   tWtable.TopWordsTable.forEach((x) => {
-    if (x.Word === personalWord) {
+    if (x.Word.toLowerCase() === personalWord.toLowerCase()) {
       x.Count = personalWordCount;
     }
   });
   tWtable.TopWordsTable.forEach((x) => {
-    if (Constants.LaughArray.includes(x.Word)) {
+    if (Constants.LaughArray.includes(x.Word.toLowerCase())) {
       laughCount = Math.round(x.Count * 3.5);
     }
   });
