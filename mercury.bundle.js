@@ -1,4 +1,3 @@
-
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -10737,9 +10736,9 @@ var Converters = class {
       let convertedTime = GetTimeFromTimestamp2(currentMessage.timestamp_ms);
       if (currentMessage.content != null && currentMessage.content != void 0) {
         try {
-          currentMessage.content = import_utf82.utf8.decode(currentMessage.content);
+          currentMessage.content = import_utf82.decode(currentMessage.content);
         } catch {
-          currentMessage.content = import_utf82.utf8.decode(import_utf82.utf8.encode(currentMessage.content));
+          currentMessage.content = import_utf82.decode(import_utf82.encode(currentMessage.content));
         }
       }
       const messageModel = {
@@ -10782,9 +10781,9 @@ var Converters = class {
       }
       if (currentMessage.text != null && currentMessage.text != void 0) {
         try {
-          currentMessage.text = import_utf82.utf8.decode(currentMessage.text);
+          currentMessage.text = import_utf82.decode(currentMessage.text);
         } catch {
-          currentMessage.text = import_utf82.utf8.decode(import_utf82.utf8.encode(currentMessage.text));
+          currentMessage.text = import_utf82.decode(import_utf82.encode(currentMessage.text));
         }
       }
       const messageModel = {
@@ -11321,8 +11320,45 @@ function GenerateChatComposition(messageObjectArray) {
     y.MinutesSpentMessaging = CalculateMinutesSpentMessaging(y.WordCount);
     y.AverageMessageLength = (y.WordCount / y.MessageCount).toFixed(2);
   }
+  CapMessagePercentage(chatters);
   GenerateTimeSpentMessagingStrings(chatters);
   return new ChatComposition(chatters);
+}
+function CapMessagePercentage(chatters) {
+  let percentDifference;
+  let totalMessages;
+  let authorNumber;
+  for (const y of chatters) {
+    if (y.MessagePercent > 64) {
+      percentDifference = y.MessagePercent - 64;
+      y.MessagePercent = 64;
+      totalMessages = Math.round(y.MessageCount / 0.64);
+      authorNumber = y.AuthorNumber;
+    }
+  }
+  if (!percentDifference > 0) {
+    return;
+  }
+  const percentageSplit = Math.round(percentDifference / (chatters.length - 1));
+  let newPercentageTotal = 0;
+  for (const y of chatters) {
+    if (y.AuthorNumber != authorNumber) {
+      y.MessagePercent += percentageSplit;
+      y.MessageCount = Math.round(totalMessages * (y.MessagePercent / 100));
+      newPercentageTotal += y.MessagePercent;
+    } else {
+      newPercentageTotal += y.MessagePercent;
+    }
+  }
+  if (newPercentageTotal != 100) {
+    const percentageDifference = 100 - newPercentageTotal;
+    for (const y of chatters) {
+      if (y.AuthorNumber != authorNumber) {
+        y.MessagePercent += percentageDifference;
+        break;
+      }
+    }
+  }
 }
 function CalculateMinutesSpentMessaging(wordCount) {
   return wordCount / 37;
