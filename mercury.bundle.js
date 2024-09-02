@@ -10657,7 +10657,7 @@ var Constants = class {
   static SkipWordsDutch = ["\u200Eafbeelding", "\u200Egeluid", "audio weggelaten", "afbeelding", "de", "naar", "jij", "en", "dan", "van", "voor", "mijn", "het", "op", "dus", "mij", "dit", "dat", "zijn", "hebben", "wij", "met", "maar", "zojuist", "krijgen", "niet", "jouw", "als", "bij", "omhoog", "kan", "uit", "wat", "gekregen", "zijn", "doen", "over", "alle", "als", "nu", "gaan", "hoe", "wanneer", "van", "een", "tijd", "gaan", "of", "geweest", "denken", "dag", "ga", "uit", "behoefte", "zien", "weten", "een", "echt", "hij", "zij", "hem", "haar", "zullen", "rug", "te", "deed", "sommige", "nee", "maken", "zou", "zij", "daar", "elk", "na", "heeft", "overgeslagen", "<media overgeslagen>", "daar", "omdat", "gezegd", "ja", "ok\xE9", "hen", "bericht", "bij", "gaan", "doen", "ook", "waarom", "zijn", "zelfs", "hoewel", "?gemist", "reageerde", "verzonden", "geliked"];
   static SkipWordsEnglish = ["\u200Eimage", "\u200Eaudio", "audio omitted", "image", "the", "i", "to", "a", "you", "and", "then", "in", "of", "for", "my", "it", "on", "so", "is", "me", "i\u2019m", "this", "that", "be", "was", "have", "we", "with", "but", "just", "get", "not", "your", "if", "at", "up", "can", "out", "what", "got", "are", "do", "like", "about", "all", "i'm", "as", "now", "i've", "going", "it\u2019s", "how", "when", "from", "one", "time", "i\u2019ve", "i\u2019ll", "go", "or", "yh", "been", "think", "day", "gonna", "off", "had", "need", "see", "know", "an", "really", "he", "she", "him", "her", "will", "back", "too", "did", "no", "don\u2019t", "some", "it's", "make", "would", "they", "there", "any", "after", "has", "omitted", "media", "<media", "<media omitted>", "because", "we're", "i'll", "oh", "said", "ok", "yeah", "okay", "don't", "them", "u", "ur", "dont", "message", "ah", "at", "go", "also", "why", "his", "even", "can't", "can\u2019t", "isn't", "isn\u2019t", "though", "you're", "you\u2019re", "didn't", "didn\u2019t", "i've", "im", "its", "?sticker", "?missed", "reacted", "sent", "liked", "ill", "coz", "cuz", "bc", "bcuz", "bcz", "&"];
   static SkipWordsFrench = ["\u200El'audio", "audio omis", "la", "le", "je", "\xE0", "une", "un", "toi", "et", "alors", "dans", "de", "pour", "ma", "mon", "il", "sur", "donc", "est", "moi", "suis", "ce", "cette", "\xEAtre", "\xE9tait", "avoir", "nous", "avec", "mais", "juste", "obtenir", "pas", "ton", "si", "peut", "dehors", "dehors", "sont", "faire", "comme", "tout", "toute", "maintenant", "j'ai", "c'est", "comment", "quand", "depuis", "une", "un", "temps", "j\u2019ai", "aller", "ou", "ouais", "pense", "jour", "d\xE9sactiv\xE9", "avait", "besoin", "voir", "savoir", "un", "vraiment", "il", "elle", "lui", "son", "volont\xE9", "dos", "aussi", "quelques", "non", "quelques", "c\u2019est", "faire", "serait", "ils", "elles", "l\xE0", "apr\xE8s", "omis", "m\xE9dias", "<m\xE9dias", "<m\xE9dias omis>", "l\xE0", "dit", "dite", "eux", "que", "tu", "votre", "en", "les", "des", "va", "cest", "au", "te", "vous", "oui", "fait", "aussi", "pourquoi", "son", "m\xEAme", "cependant", "?autocollant", "?manqu\xE9e", "?manqu\xE9", "a r\xE9agi", "envoy\xE9", "aim\xE9"];
-  static SkipWordsGerman = ["\u200Ebild", "\u200Eaudio", "audio weggelassen", "bild", "die", "ich", "zu", "du", "und", "dann", "von", "f\xFCr", "mein", "es", "an", "ist", "mich", "ich bin", "das", "sei", "war", "haben", "wir", "mit", "aber", "nur", "erhalten", "nicht", "dein", "with", "wenn", "bei", "hoch", "d\xFCrfen", "aus", "bekommen", "sind", "tun", "wie", "um", "alle", "tun", "als", "jetzt", "ich habe", "gehen", "es ist", "wie", "wann", "aus", "eins", "zeit", "gehen", "oder", "arbeiten", "jh", "gewesen", "denken", "hatte", "brauchen", "sehen", "wissen", "ein", "wirklich", "er", "sie", "ihn", "ihr", "wille", "zur\xFCck", "zu", "tat", "manche", "nein", "es ist", "machen", "w\xFCrde", "sie", "dort", "beliebig", "nach", "hat", "weggelassen", "medien", "<medien", "<medien weggelassen>", "da", "er", "sie", "weil", "sagte", "ja", "ihnen", "dein", "gehen", "auch", "warum", "sein", "sogar", "kippen", "obwohl", "?aufkleber", "?verpasst", "reagiert", "gesendet", "geliked"];
+  static SkipWordsGerman = ["dich", "noch", "auf", "schon", "bin", "dass", "\u200Ebild", "\u200Eaudio", "audio weggelassen", "bild", "die", "ich", "zu", "du", "und", "dann", "von", "f\xFCr", "mein", "es", "an", "ist", "mich", "ich bin", "das", "sei", "war", "haben", "wir", "mit", "aber", "nur", "erhalten", "nicht", "dein", "with", "wenn", "bei", "hoch", "d\xFCrfen", "aus", "bekommen", "sind", "tun", "wie", "um", "alle", "tun", "als", "jetzt", "ich habe", "gehen", "es ist", "wie", "wann", "aus", "eins", "zeit", "gehen", "oder", "arbeiten", "jh", "gewesen", "denken", "hatte", "brauchen", "sehen", "wissen", "ein", "wirklich", "er", "sie", "ihn", "ihr", "wille", "zur\xFCck", "zu", "tat", "manche", "nein", "es ist", "machen", "w\xFCrde", "sie", "dort", "beliebig", "nach", "hat", "weggelassen", "medien", "<medien", "<medien weggelassen>", "da", "er", "sie", "weil", "sagte", "ja", "ihnen", "dein", "gehen", "auch", "warum", "sein", "sogar", "kippen", "obwohl", "?aufkleber", "?verpasst", "reagiert", "gesendet", "geliked"];
   static SkipWordsItalian = ["immagine", "\u200Eaudio", "audio omesso", "immagine", "il", "io", "a", "a", "tu", "e", "poi", "in", "di", "per", "mio", "esso", "su", "cos\xEC", "\xE8", "io", "sono", "questo", "quello", "essere", "era", "avere", "noi", "con", "ma", "solo", "ottenere", "non", "tuo", "se", "a", "su", "pu\xF2", "fuori", "cosa", "ottenuto", "sono", "fare", "come", "circa", "tutti", "sono", "come", "ora", "ho", "andando", "\xE8", "come", "quando", "da", "uno", "tempo", "ho", "io", "andr\xF2", "o", "yh", "stato", "pensa", "giorno", "andr\xF2", "spento", "aveva", "bisogno", "vedere", "sapere", "un", "davvero", "lui", "lei", "lei", "lui", "sar\xE0", "indietro", "troppo", "fatto", "no", "non", "alcuni", "\xE8", "fare", "vorrebbe", "loro", "l\xEC", "qualsiasi", "dopo", "ha", "omesso", "media", "<media", "<media omessi>", "perch\xE9", "siamo", "io", "oh", "detto", "ok", "s\xEC", "va bene", "non", "loro", "u", "tuo", "non", "messaggio", "ah", "a", "andare", "anche", "perch\xE9", "suo", "anche", "non posso", "non posso", "non \xE8", "non \xE8", "per\xF2", "sei", "sei", "non l'ho fatto", "non l'ho fatto", "ho", "im", "suo", "?adesivo", "?mancato", "ha reagito", "inviato", "mi \xE8 piaciuto"];
   static SkipWordsRussian = ["\u0432", "\u043D\u0435", "\u0438", "\u044F", "\u043D\u0430", "\u0447\u0442\u043E", "\u0441", "\u043A\u0430\u043A", "\u0442\u044B", "\u0443", "\u0430", "\u043D\u043E", "\u043F\u043E", "\u0443\u0436\u0435", "\u044D\u0442\u043E", "\u043D\u0443", "\u0442\u0430\u043A", "\u0442\u0430\u043C", "\u0442\u043E\u043B\u044C\u043A\u043E", "\u0436\u0435", "\u0442\u043E\u0436\u0435", "\u0435\u0441\u043B\u0438", "\u0432\u043E\u0442", "\u043C\u043D\u0435", "\u043A", "\u0434\u043E", "\u0432\u0441\u0435", "\u0442\u043E", "\u043C\u0435\u043D\u044F", "\u0438\u043B\u0438", "\u0437\u0430", "\u0442\u0435\u0431\u044F", "\u0435\u0449\u0435", "\u043C\u044B", "\u0431\u0443\u0434\u0435\u0442", "\u0435\u0449\u0451", "\u043F\u0440\u044F\u043C", "\u043D\u0430\u0434\u043E"];
   static SkipWordsSpanish = ["\u200Eimagen", "\u200Eaudio", "audio omitido", "imagen", "el", "a", "t\xFA", "y", "entonces", "en", "de", "para", "mi", "\xE9l", "en", "entonces", "es", "soy", "este", "eso", "ser", "era", "tener", "nosotros", "con", "pero", "justo", "conseguir", "no", "su", "si", "en", "arriba", "poder", "afuera", "qu\xE9", "consigui\xF3", "son", "hacer", "como", "todo", "ahora", "tengo", "yendo", "es", "c\xF3mo", "cuando", "de", "uno", "tiempo", "ir", "o", "estado", "pensar", "d\xEDa", "apagado", "ten\xEDa", "necesidad", "ver", "saber", "un", "realidad", "\xE9l", "ella", "su", "voluntad", "atr\xE1s", "tambi\xE9n", "hizo", "alguno", "hacer", "har\xEDa", "ellos", "cualquier", "despu\xE9s", "tiene", "omitido", "somos", "vaya", "dicho", "s\xED", "mensaje", "en", "ir", "tambi\xE9n", "su", "incluso", "aunque", "eres", "?pegatina", "?omitido", "reaccion\xF3", "envi\xF3", "me gust\xF3"];
@@ -10677,9 +10677,8 @@ var Constants = class {
     ZipCompressed: "application/x-zip-compressed"
   };
   static Platform = {
-    Discord: "DISCORD",
-    Facebook: "FACEBOOK",
-    Instagram: "INSTAGRAM",
+    IMessage: "IMESSAGE",
+    Meta: "META",
     Telegram: "TELEGRAM",
     WhatsApp: "WHATSAPP"
   };
@@ -10702,6 +10701,26 @@ var Constants = class {
 // controllers/converters.js
 var import_utf82 = __toESM(require_utf8());
 var Converters = class {
+  static GenerateChatObjectsFromIMessage(strippedChatString) {
+    const messages = strippedChatString.split("----------------------------------------------------").filter(Boolean);
+    const parsedMessages = messages.map((message) => {
+      const lines = message.trim().split("\n").filter(Boolean);
+      const authorLine = lines[0];
+      const dateTimeLine = lines[1];
+      const contentLines = lines.slice(2).join("\n").trim();
+      const [date, time, direction] = dateTimeLine.split(" ");
+      const [year, month, day] = date.split("-");
+      const formattedDate = `${day}/${month}/${year}`;
+      const author = direction === "to" ? "Enter Your Name Here" : authorLine;
+      return {
+        Author: author,
+        Date: formattedDate,
+        Time: time,
+        MessageBody: contentLines
+      };
+    });
+    return parsedMessages;
+  }
   static GenerateChatObjectsFromDiscord(jsonString) {
     const parsedData = [];
     var jsObj = JSON.parse(jsonString);
@@ -10874,12 +10893,12 @@ async function GenerateChatChartModel(uploadedFiles) {
     cumulativeStrippedChatString += strippedChatString;
     if (platform == Constants.Platform.Telegram) {
       chatObjects = Converters.GenerateChatObjectsFromTelegram(fileContent);
-    } else if (platform == Constants.Platform.Instagram || platform == Constants.Platform.Facebook) {
+    } else if (platform == Constants.Platform.Meta) {
       chatObjects = Converters.GenerateChatObjectsFromMeta(fileContent);
     } else if (platform == Constants.Platform.WhatsApp) {
       chatObjects = Converters.GenerateChatObjectsFromWhatsApp(strippedChatString);
     } else {
-      chatObjects = Converters.GenerateChatObjectsFromDiscord(fileContent);
+      chatObjects = Converters.GenerateChatObjectsFromIMessage(strippedChatString);
     }
     for (const chatObject of chatObjects) {
       allChatObjects.push(chatObject);
@@ -10924,20 +10943,21 @@ function GenerateChatters(chatObjArr) {
   return Array.from(chatters);
 }
 function DeterminePlatform(uploadedFileOrEntry, fileContent) {
+  const beginningSnippet = fileContent.substr(0, 50);
+  if (beginningSnippet.includes("------------------------")) {
+    return Constants.Platform.IMessage;
+  }
   if (uploadedFileOrEntry.type == Constants.FileTypes.Text || "filename" in uploadedFileOrEntry && uploadedFileOrEntry.filename.includes(".txt")) {
     return Constants.Platform.WhatsApp;
   }
-  const beginningSnippet = fileContent.substr(0, 50);
   if (beginningSnippet.includes("participants")) {
-    return Constants.Platform.Instagram;
-  } else if (beginningSnippet.includes("personal_chat")) {
-    return Constants.Platform.Telegram;
+    return Constants.Platform.Meta;
   } else {
-    return Constants.Platform.Discord;
+    return Constants.Platform.Telegram;
   }
 }
 function GenerateLowerCaseChat(fileContent, platform) {
-  if (platform == Constants.Platform.WhatsApp) {
+  if (platform == Constants.Platform.WhatsApp || platform == Constants.Platform.IMessage) {
     return fileContent.toLowerCase();
   } else {
     return RemoveUnwantedJsonCharacters(fileContent.toLowerCase());
