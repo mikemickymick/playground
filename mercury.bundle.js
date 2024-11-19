@@ -10702,7 +10702,7 @@ var Constants = class {
 var import_utf82 = __toESM(require_utf8());
 var Converters = class {
   static GenerateChatObjectsFromIMessage(strippedChatString) {
-    const messages = strippedChatString.split("----------------------------------------------------").filter(Boolean);
+    const messages = strippedChatString.split("\r\n\r\n----------------------------------------------------\r").filter(Boolean);
     const parsedMessages = messages.map((message) => {
       const lines = message.trim().split("\n").filter(Boolean);
       const authorLine = lines[0];
@@ -11104,6 +11104,7 @@ function GetDateSeparator(input) {
 }
 function StandardiseCharacters(linesArray) {
   for (var i = 0; i < linesArray.length; i++) {
+    console.log(i);
     let currentLine = StripInvisibleChar(linesArray[i]);
     if (currentLine.length == 0) {
       linesArray[i] = "";
