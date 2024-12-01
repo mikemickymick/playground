@@ -24,8 +24,8 @@
         console.log("LET'S GOOOO!");
         const unpackedFilesAndEntries = await Unpack(uploadedFiles);
         const chatChartModel = await GenerateChatChartModel(unpackedFilesAndEntries);
-        let chat_analysis = await PopulateProductBuilder(chatChartModel, "Dude");
-        console.log(chat_analysis);
+        let chat_analysis = await PopulateProductBuilder(chatChartModel, "dude");
+        console.log(chat_analysis.TopWords.TopWordsTable);
         debugger;
     }
     catch(error){
