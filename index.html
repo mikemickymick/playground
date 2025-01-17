@@ -23,9 +23,10 @@
     try{
         console.log("LET'S GOOOO!");
         const unpackedFilesAndEntries = await Unpack(uploadedFiles);
-        const chatChartModel = await GenerateChatChartModel(unpackedFilesAndEntries);
-        let chat_analysis = await PopulateProductBuilder(chatChartModel, "hi");
-        console.log(chat_analysis.TopWords.TopWordsTable);
+        const chatData = await StandardiseChatFiles(unpackedFilesAndEntries);
+        const metricModules = ["ChatComposition", "FirstEncounter", "LaughCount", "MessageDays", "MessageTimes", "FromDate", "ToDate", "TopWords", "TopEmojis"];
+        let chatChartData = await BuildProduct(chatData, "Chat Chart", metricModules, "mate");
+        console.log(chatChartData);
         debugger;
     }
     catch(error){
