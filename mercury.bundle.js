@@ -11429,7 +11429,7 @@ function GenerateLaughCount(chatString) {
 }
 function GeneratePersonalWordCount(chatString, personalWord) {
   if (personalWord.length === 0) {
-    return 0;
+    return new MetricModule("Personal Word Count", 0);
   }
   let regex = new RegExp(`\\b${personalWord}\\b`, "gi");
   let matches = chatString.match(regex);
