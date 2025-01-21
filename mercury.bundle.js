@@ -11577,7 +11577,7 @@ async function BuildProduct(chatData, productName, metricModules, personalWord =
     metricModulesToParse.push(GenerateFirstEncounter(ArrayOfMessageObjs));
   }
   if (metricModules.includes("LaughCount")) {
-    laughCount = GenerateLaughCount(WholeChatString);
+    metricModulesToParse.push(GenerateLaughCount(WholeChatString));
   }
   if (metricModules.includes("MessageDays")) {
     metricModulesToParse.push(GenerateMessageDays(ArrayOfMessageObjs));
@@ -11597,21 +11597,22 @@ async function BuildProduct(chatData, productName, metricModules, personalWord =
       chatComposition = GenerateChatComposition(ArrayOfMessageObjs);
     }
     const authors = chatComposition.Data.map((x) => x.Name);
-    const tWtable = GenerateTopWords(WholeChatString, authors, personalWord);
+    const tWMetricModule = GenerateTopWords(WholeChatString, authors, personalWord);
     if (personalWordCount !== 0) {
-      tWtable.Data.forEach((x) => {
+      tWMetricModule.Data.forEach((x) => {
         if (x.Word.toLowerCase() === personalWord.toLowerCase()) {
           x.Count = personalWordCount;
         }
       });
     }
     if (laughCount !== 0) {
-      tWtable.Data.forEach((x) => {
+      tWMetricModule.Data.forEach((x) => {
         if (Constants.LaughArray.includes(x.Word.toLowerCase())) {
           laughCount = Math.round(x.Count * 3.5);
         }
       });
     }
+    metricModulesToParse.push(tWMetricModule);
   }
   if (metricModules.includes("FromDate")) {
     metricModulesToParse.push(new MetricModule("From Date", ArrayOfMessageObjs[0].Date));
