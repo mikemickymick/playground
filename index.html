@@ -26,7 +26,7 @@
         const chatData = await StandardiseChatFiles(unpackedFilesAndEntries);
         const metricModules = ["ChatComposition", "FirstEncounter", "LaughCount", "MessageDays", "MessageTimes", "FromDate", "ToDate", "TopWords", "TopEmojis"];
         let chatChartData = await BuildProduct(chatData, "Chat Chart", metricModules, "mate");
-        console.log(chatChartData);
+        console.log(chatChartData.MetricModules[4].Data);
         debugger;
     }
     catch(error){

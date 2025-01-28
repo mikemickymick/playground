@@ -10639,7 +10639,11 @@ var Constants = class {
 var import_utf82 = __toESM(require_utf8());
 var Converters = class {
   static GenerateChatObjectsFromIMessage(strippedChatString) {
-    const messages = strippedChatString.split("\r\n\r\n----------------------------------------------------\r").filter(Boolean);
+    let delimiter = "----------------------------------------------------\n";
+    if(strippedChatString.substr(0,100).includes("\r\n\r\n----------------------------------------------------\r")){
+      delimiter = "\r\n\r\n----------------------------------------------------\r";
+    }
+    const messages = strippedChatString.split(delimiter).filter(Boolean);
     const parsedMessages = messages.map((message) => {
       const lines = message.trim().split("\n").filter(Boolean);
       const authorLine = lines[0];
