@@ -11,7 +11,7 @@
           <input type="file" name="chat-file-upload" class="chat-file-upload" accept="text/plain, application/zip, application/x-zip-compressed, application/json" multiple>
         </div>
       </div>
-    <script src="./mercury.bundle.js"></script>
+    <script src="./mercury.bundle.min.js"></script>
     
     <script type="module">
         document.querySelector('.chat-file-upload').addEventListener('change', async function (e) {
@@ -26,7 +26,7 @@
         const chatData = await StandardiseChatFiles(unpackedFilesAndEntries);
         const metricModules = ["ChatComposition", "FirstEncounter", "LaughCount", "MessageDays", "MessageTimes", "FromDate", "ToDate", "TopWords", "TopEmojis"];
         let chatChartData = await BuildProduct(chatData, "Chat Chart", metricModules, "mate");
-        console.log(chatChartData.MetricModules[4].Data);
+        console.log(chatChartData.MetricModules[1].Data);
         debugger;
     }
     catch(error){
