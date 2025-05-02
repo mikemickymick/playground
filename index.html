@@ -25,8 +25,8 @@
         const unpackedFilesAndEntries = await Unpack(uploadedFiles);
         const chatData = await StandardiseChatFiles(unpackedFilesAndEntries);
         const metricModules = ["ChatComposition", "FirstEncounter", "LaughCount", "MessageDays", "MessageTimes", "FromDate", "ToDate", "TopWords", "TopEmojis"];
-        let chatChartData = await BuildProduct(chatData, "Chat Chart", metricModules, "mate");
-        console.log(chatChartData.MetricModules[1].Data);
+        let chatChartData = await BuildProduct(chatData, "Chat Chart", metricModules, "‎yea ");
+        console.log(chatChartData.MetricModules[7].Data);
         debugger;
     }
     catch(error){

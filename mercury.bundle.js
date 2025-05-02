@@ -1,3 +1,4 @@
+
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -10588,6 +10589,7 @@ var Constants = class {
   static LanguageDateTimeSeperators = [" klo"];
   static LanguageTimeIndicatorsAM = ["s ochtends", "s middags"];
   static LanguageTimeIndicatorsPM = ["s avonds", "s nachts"];
+  static SystemMessages = ["changed this", "created group", "end-to-end encrypted", "changed the subject to", "changed their phone number", "messages et les appels", "changement", "nachrichten und anrufe", "\xE4nderte den betreff in", "ihre telefonnummer ge\xE4ndert", "messaggi e chiamate", "cambiato l'argomento in", "cambiato il proprio numero di telefono", "berichten en oproepen", "veranderde het onderwerp in", "hun telefoonnummer hebben gewijzigd", "mensajes y llamadas", "cambi\xF3 el tema a", "cambiaron su n\xFAmero de tel\xE9fono", "meddelanden och samtal", " \xE4ndrade \xE4mnet till ", "\xE4ndrat telefonnummer", "beskeder og opkald", " \xE6ndrede emnet til ", "\xE6ndrede deres telefonnummer", "extremo a extremo", "fuera de este chat", "end-to-end", "added you", "blocked", "unblocked", "is a contact", "this message was edited", "encryption"];
   static SkipWordsDanish = ["billede", "\u200Eaudio", "lyd udeladt", "billede", "den", "jeg", "til", "a", "du", "og", "s\xE5", "i", "af", "for", "min", "det", "p\xE5", "s\xE5", "er", "mig", "jeg", "dette", "det", "v\xE6re", "var", "har", "vi", "med", "men", "bare", "f\xE5", "ikke", "din", "hvis", "ved", "op", "kan", "ud", "hvad", "fik", "er", "g\xF8r", "som", "om", "alle", "jeg", "som", "nu", "jeg har", "g\xE5r", "det er", "hvordan", "hvorn\xE5r", "fra", "en", "tid", "jeg har", "jeg", "g\xE5", "eller", "yh", "v\xE6ret", "t\xE6nke", "dag", "g\xE5 til", "slukket", "havde", "behov", "se", "ved", "en", "virkelig", "han", "hun", "ham", "hende", "vil", "tilbage", "ogs\xE5", "gjorde", "nej", "ikke", "nogle", "det er", "g\xF8r", "ville", "de", "der", "nogen", "efter", "har", "udeladt", "medier", "<medier", "<medier udeladt>", "fordi", "vi er", "jeg", "\xE5h", "sagde", "ok", "ja", "okay", "ikke", "dem", "u", "din", "ikke", "besked", "ah", "at", "g\xE5", "ogs\xE5", "hvorfor", "hans", "endda", "kan ikke", "kan ikke", "er ikke", "er ikke", "selvom", "du er", "du er", "gjorde ikke", "gjorde ikke", "jeg har", "im", "dens", "?klisterm\xE6rke", "?savnet", "reagerede", "sendte", "syntes godt om", "kunne", "godt", "var", "hvor", "stadig", "hvem"];
   static SkipWordsDutch = ["\u200Eafbeelding", "\u200Egeluid", "audio weggelaten", "afbeelding", "de", "naar", "jij", "en", "dan", "van", "voor", "mijn", "het", "op", "dus", "mij", "dit", "dat", "zijn", "hebben", "wij", "met", "maar", "zojuist", "krijgen", "niet", "jouw", "als", "bij", "omhoog", "kan", "uit", "wat", "gekregen", "zijn", "doen", "over", "alle", "als", "nu", "gaan", "hoe", "wanneer", "van", "een", "tijd", "gaan", "of", "geweest", "denken", "dag", "ga", "uit", "behoefte", "zien", "weten", "een", "echt", "hij", "zij", "hem", "haar", "zullen", "rug", "te", "deed", "sommige", "nee", "maken", "zou", "zij", "daar", "elk", "na", "heeft", "overgeslagen", "<media overgeslagen>", "daar", "omdat", "gezegd", "ja", "ok\xE9", "hen", "bericht", "bij", "gaan", "doen", "ook", "waarom", "zijn", "zelfs", "hoewel", "?gemist", "reageerde", "verzonden", "geliked", "doch", "ne", "kon", "goed", "waren", "waar", "nog steeds", "wie"];
   static SkipWordsEnglish = ["sticker", "\u200Esticker", "\u200Eimage", "\u200Eaudio", "audio omitted", "image", "the", "i", "to", "a", "you", "and", "then", "in", "of", "for", "my", "it", "on", "so", "is", "me", "i\u2019m", "this", "that", "be", "was", "have", "we", "with", "but", "just", "get", "not", "your", "if", "at", "up", "can", "out", "what", "got", "are", "do", "like", "about", "all", "i'm", "as", "now", "i've", "going", "it\u2019s", "how", "when", "from", "one", "time", "i\u2019ve", "i\u2019ll", "go", "or", "yh", "been", "think", "day", "gonna", "off", "had", "need", "see", "know", "an", "really", "he", "she", "him", "her", "will", "back", "too", "did", "no", "don\u2019t", "some", "it's", "make", "would", "they", "there", "any", "after", "has", "omitted", "media", "<media", "<media omitted>", "because", "we're", "i'll", "oh", "said", "ok", "yeah", "okay", "don't", "them", "u", "ur", "dont", "message", "ah", "at", "go", "also", "why", "his", "even", "can't", "can\u2019t", "isn't", "isn\u2019t", "though", "you're", "you\u2019re", "didn't", "didn\u2019t", "i've", "im", "its", "?sticker", "?missed", "reacted", "sent", "liked", "ill", "coz", "cuz", "bc", "bcuz", "bcz", "&", "content", "could", "well", "were", "where", "still", "who"];
@@ -10605,7 +10607,6 @@ var Constants = class {
   static SwearWordsSpanish = ["joder", "mierda", "maldito", "co\xF1o", "follar", "joder", "tonter\xEDas"];
   static SwearWordsSwedish = ["knulla", "skit", "blodig", "skita", "fitta"];
   static SwearWordsCollection = [this.SwearWordsEnglish, this.SwearWordsFrench, this.SwearWordsGerman, this.SwearWordsItalian, this.SwearWordsItalian, this.SwearWordsSpanish, this.SwearWordsSwedish];
-  static SystemMessages = ["changed this", "created group", "end-to-end encrypted", "changed the subject to", "changed their phone number", "messages et les appels", "changement", "nachrichten und anrufe", "\xE4nderte den betreff in", "ihre telefonnummer ge\xE4ndert", "messaggi e chiamate", "cambiato l'argomento in", "cambiato il proprio numero di telefono", "berichten en oproepen", "veranderde het onderwerp in", "hun telefoonnummer hebben gewijzigd", "mensajes y llamadas", "cambi\xF3 el tema a", "cambiaron su n\xFAmero de tel\xE9fono", "meddelanden och samtal", " \xE4ndrade \xE4mnet till ", "\xE4ndrat telefonnummer", "beskeder og opkald", " \xE6ndrede emnet til ", "\xE6ndrede deres telefonnummer", "extremo a extremo", "fuera de este chat", "end-to-end", "added you", "blocked", "unblocked", "is a contact", "this message was edited", "encryption"];
   static FileTypes = {
     Json: "application/json",
     Text: "text/plain",
@@ -10621,6 +10622,7 @@ var Constants = class {
   static RegExPatterns = {
     Dashes: /\//gm,
     Hyphens: /-/gm,
+    InvisibleCharacters: /[\u0000-\u001F\u007F\u200B-\u200F\u202A-\u202E\u2060-\u206F\uFEFF]/g,
     LanguageTimeIndicatorsAM: [/s ochtends/gm, /s middags/gm],
     LanguageTimeIndicatorsPM: [/s avonds/gm, /s nachts/gm],
     Numbers: /([0-9])+/g,
@@ -10633,13 +10635,11 @@ var Constants = class {
     Timestamp2: /\d{2}\/\d{2}\/\d{4}, \d{2}.\d{2}/
   };
   static ReplacementWordsDictionary = {
-    "audio omitted" : "Sent an audio file",
-    "image omitted" : "Sent an image",
-    "media omitted" : "Sent media",
-    "video omitted" : "Sent a video"
-  }
-
-
+    "audio omitted": "Sent an audio file",
+    "image omitted": "Sent an image",
+    "media omitted": "Sent media",
+    "video omitted": "Sent a video"
+  };
 };
 
 // controllers/converters.js
@@ -11400,15 +11400,13 @@ function GenerateFirstEncounter(chatObjArrUntrimmed) {
   );
 }
 function RemoveSystemMessages(chatObjArr) {
-  return chatObjArr.filter(chatObj => 
-    !Constants.SystemMessages.some(word => chatObj.MessageBody.includes(word))
-  ).map(chatObj => {
+  return chatObjArr.filter(
+    (chatObj) => !Constants.SystemMessages.some((word) => chatObj.MessageBody.includes(word))
+  ).map((chatObj) => {
     let updatedMessage = chatObj.MessageBody;
-    
     for (const [key, value] of Object.entries(Constants.ReplacementWordsDictionary)) {
-        updatedMessage = updatedMessage.replace(new RegExp(key, 'g'), value);
+      updatedMessage = updatedMessage.replace(new RegExp(key, "g"), value);
     }
-    
     return { ...chatObj, MessageBody: updatedMessage };
   });
 }
@@ -11518,7 +11516,7 @@ function GenerateTopWords(wholeChatString, namesArray, personalWord) {
   });
   counts.forEach((count, word) => {
     if (personalWord != null) {
-      if (word.trim().toLowerCase() != personalWord.trim().toLowerCase() && !Constants.LaughArray.includes(word.toLowerCase())) {
+      if (CleanString(word) != CleanString(personalWord) && !Constants.LaughArray.includes(word.toLowerCase())) {
         topWordsTable.push({ Word: word, Count: count });
       }
     } else {
@@ -11553,6 +11551,9 @@ function GetMessageComposite(chatObjArr, replierIndex, message) {
     message = message.substring(0, message.length - 2);
   }
   return message;
+}
+function CleanString(str) {
+  return str.replace(Constants.RegExPatterns.InvisibleCharacters, "").trim();
 }
 
 // controllers/productcontroller.js
