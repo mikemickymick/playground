@@ -25,11 +25,11 @@
         console.log("LET'S GOOOO!");
         const unpackedFilesAndEntries = await Unpack(uploadedFiles);
         const chatData = await StandardiseChatFiles(unpackedFilesAndEntries);
-        const metricModules = ["ChatComposition", "FirstEncounter", "LaughCount", "MessageDays", "MessageTimes", "FromDate", "ToDate", "TopWords", "TopEmojis"];
+        const metricModules = ["ChatComposition", "FirstEncounter", "LaughCount", "MessageDays", "MessageTimes", "FromDate", "ToDate", "TopWords", "TopEmojis", "EmojiIndexes"];
         const personalWord = document.getElementById("personal-word").value;
         console.log("Personal word: ", personalWord);
         let chatChartData = await BuildProduct(chatData, "Chat Chart", metricModules, personalWord);
-        console.log(chatChartData.MetricModules[7].Data);
+        console.log(chatChartData.MetricModules);
         debugger;
     }
     catch(error){
