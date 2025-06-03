@@ -11451,6 +11451,28 @@
     }
     return message;
   }
+  function GenerateEmojiIndexes(firstEncounterData) {
+    const emojiIndexes = [];
+    for (const match of firstEncounterData.FirstMessageBody.matchAll(EmojiRegex)) {
+      emojiIndexes.push(
+        {
+          MessageName: "FirstMessage",
+          EmojiIndex: match.index,
+          EmojiLength: [...match[0]].length
+        }
+      );
+    }
+    for (const match of firstEncounterData.ReplyMessage.matchAll(EmojiRegex)) {
+      emojiIndexes.push(
+        {
+          MessageName: "ReplyMessage",
+          EmojiIndex: match.index,
+          EmojiLength: [...match[0]].length
+        }
+      );
+    }
+    return new MetricModule("Emoji Indexes", emojiIndexes);
+  }
   function CleanString(str) {
     return str.replace(Constants.RegExPatterns.InvisibleCharacters, "").trim();
   }
@@ -11466,12 +11488,14 @@
     let laughCount = 0;
     let personalWordCount = 0;
     let chatComposition = null;
+    let firstEncounter = null;
     if (metricModules.includes("ChatComposition")) {
       chatComposition = GenerateChatComposition(ArrayOfMessageObjs);
       metricModulesToParse.push(chatComposition);
     }
     if (metricModules.includes("FirstEncounter")) {
-      metricModulesToParse.push(GenerateFirstEncounter(ArrayOfMessageObjs));
+      firstEncounter = GenerateFirstEncounter(ArrayOfMessageObjs);
+      metricModulesToParse.push(firstEncounter);
     }
     if (metricModules.includes("LaughCount")) {
       metricModulesToParse.push(GenerateLaughCount(WholeChatString));
@@ -11519,6 +11543,12 @@
     }
     if (metricModules.includes("ChatTitle")) {
       metricModulesToParse.push(new MetricModule("Chat Title", ChatTitle));
+    }
+    if (metricModules.includes("EmojiIndexes")) {
+      if (firstEncounter === null) {
+        firstEncounter = GenerateFirstEncounter(ArrayOfMessageObjs);
+      }
+      metricModulesToParse.push(new MetricModule("Emoji Indexes", GenerateEmojiIndexes(firstEncounter.Data)));
     }
     return new Product(productName, metricModulesToParse);
   }
