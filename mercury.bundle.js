@@ -10487,7 +10487,10 @@
   var Constants = class {
     static AudioArray = ["audio omitted"];
     static ImageArray = ["image omitted"];
-    static LaughArray = ["haha", "hahaha", "hahahaha", "hahah", "lol", "lmao", "lmfao", "hehe", "\u{1F606}", "\u{1F605}", "\u{1F602}", "\u{1F923}"];
+    static LaughEmojis = ["\u{1F606}", "\u{1F605}", "\u{1F602}", "\u{1F923}"];
+    static LaughWordsEnglish = ["haha", "hahaha", "hahahaha", "hahah", "lol", "lmao", "lmfao", "hehe"];
+    static LaughWordsPortuguese = ["kkk", "kkkk", "kkkkk", "kkkkkk", "kkkkkkk", "kkkkkkkk"];
+    static LaughWordsCollection = [this.LaughEmojis, this.LaughWordsEnglish, this.LaughWordsPortuguese];
     static LanguageDateTimeSeperators = [" klo"];
     static LanguageTimeIndicatorsAM = ["s ochtends", "s middags"];
     static LanguageTimeIndicatorsPM = ["s avonds", "s nachts"];
@@ -11168,18 +11171,34 @@
   // controllers/metricmodulecontroller.js
   var emojiRegex = require_emoji_regex_xs();
   var EmojiRegex = emojiRegex();
-  function CountSwearWords(text) {
-    let totalOccurrences = 0;
-    Constants.SwearWordsCollection.forEach((arr) => {
-      arr.forEach((term) => {
-        const regex = new RegExp(term, "gi");
-        const matches = text.match(regex);
-        if (matches) {
-          totalOccurrences += matches.length;
-        }
-      });
-    });
-    return totalOccurrences;
+  function CountLaughs(messageBody, laughWordsCollection) {
+    if (!messageBody)
+      return 0;
+    const flatLaughs = laughWordsCollection.flat();
+    const lowerMessage = messageBody.toLowerCase();
+    let count = 0;
+    for (const laugh of flatLaughs) {
+      const regex = new RegExp(`\\b${laugh}\\b`, "gi");
+      count += (lowerMessage.match(regex) || []).length;
+    }
+    return count;
+  }
+  function GenerateBigDay(chatObjArr) {
+    const dateCounts = chatObjArr.reduce((acc, {
+      Date: Date2
+    }) => {
+      acc[Date2] = (acc[Date2] || 0) + 1;
+      return acc;
+    }, {});
+    let mostMessagesDate = null;
+    let maxCount = 0;
+    for (const [date, count] of Object.entries(dateCounts)) {
+      if (count > maxCount) {
+        maxCount = count;
+        mostMessagesDate = date;
+      }
+    }
+    return new MetricModule("Big Day", mostMessagesDate);
   }
   function GenerateChatComposition(messageObjectArray) {
     let chatters = [];
@@ -11192,7 +11211,7 @@
           x.MessageCount += 1;
           x.WordCount += element.MessageBody.split(" ").length;
           x.EmojiCount += ((element.MessageBody || "").match(EmojiRegex) || []).length;
-          x.SwearCount += CountSwearWords(element.MessageBody);
+          x.LaughCount += CountLaughs(element.MessageBody, Constants.LaughWordsCollection);
         }
       }
       if (!chatterInArray) {
@@ -11284,42 +11303,41 @@
     let thirdAuthorIndex = arrFromSecondAuth.indexOf(arrFromSecondAuth.find((x) => x.Author != replyAuthor));
     firstMessageBody = GetMessageComposite(chatObjArr, replierIndex, firstMessageBody).replace("omitted", "post");
     replyMessageBody = GetMessageComposite(arrFromSecondAuth, thirdAuthorIndex, replyMessageBody).replace("omitted", "post");
-    return new MetricModule(
-      "First Encounter",
-      {
-        FirstMessageDate: firstMessageDate,
-        FirstMessageTime: firstMessageTime,
-        FirstChatterName: firstMessageAuthor,
-        FirstMessageBody: firstMessageBody,
-        ReplyMessageDate: replyDate,
-        ReplyMessageTime: replyTime,
-        ReplyingChatterName: replyAuthor,
-        ReplyMessage: replyMessageBody
-      }
-    );
+    return new MetricModule("First Encounter", {
+      FirstMessageDate: firstMessageDate,
+      FirstMessageTime: firstMessageTime,
+      FirstChatterName: firstMessageAuthor,
+      FirstMessageBody: firstMessageBody,
+      ReplyMessageDate: replyDate,
+      ReplyMessageTime: replyTime,
+      ReplyingChatterName: replyAuthor,
+      ReplyMessage: replyMessageBody
+    });
   }
   function RemoveSystemMessages(chatObjArr) {
-    return chatObjArr.filter(
-      (chatObj) => !Constants.SystemMessages.some((word) => chatObj.MessageBody.includes(word))
-    ).map((chatObj) => {
+    return chatObjArr.filter((chatObj) => !Constants.SystemMessages.some((word) => chatObj.MessageBody.includes(word))).map((chatObj) => {
       let updatedMessage = chatObj.MessageBody;
       for (const [key, value] of Object.entries(Constants.ReplacementWordsDictionary)) {
         updatedMessage = updatedMessage.replace(new RegExp(key, "g"), value);
       }
-      return { ...chatObj, MessageBody: updatedMessage };
+      return {
+        ...chatObj,
+        MessageBody: updatedMessage
+      };
     });
   }
   function GenerateLaughCount(chatString) {
-    const stringsToCount = Constants.LaughArray;
-    let totalCount = 0;
-    stringsToCount.forEach((str) => {
-      const regex = new RegExp(str, "g");
-      const matches = chatString.match(regex);
-      if (matches) {
-        totalCount += matches.length;
-      }
+    let totalOccurrences = 0;
+    Constants.LaughWordsCollection.forEach((arr) => {
+      arr.forEach((term) => {
+        const regex = new RegExp(term, "gi");
+        const matches = chatString.match(regex);
+        if (matches) {
+          totalOccurrences += matches.length;
+        }
+      });
     });
-    return new MetricModule("Laugh Count", totalCount);
+    return new MetricModule("Laugh Count", totalOccurrences);
   }
   function GeneratePersonalWordCount(chatString, personalWord) {
     if (personalWord.length === 0) {
@@ -11344,14 +11362,65 @@
       return acc;
     }, {});
     const result = Object.keys(emojiCounts).map((emoji) => {
-      return { Emoji: emoji, Count: emojiCounts[emoji] };
+      return {
+        Emoji: emoji,
+        Count: emojiCounts[emoji]
+      };
     });
     result.sort((a, b) => b.Count - a.Count);
     let topEmojis = result.slice(0, 15);
     return new MetricModule("Top Emojis", topEmojis);
   }
+  function ParseDate(dateStr) {
+    const [day, month, year] = dateStr.split("/").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  function GenerateAverageMessages(chatObjArr) {
+    const dateFrom = ParseDate(chatObjArr[0].Date);
+    const dateTo = ParseDate(chatObjArr[chatObjArr.length - 1].Date);
+    const msPerDay = 1e3 * 60 * 60 * 24;
+    const diffInMs = Math.abs(dateTo - dateFrom);
+    const daysMessaging = Math.floor(diffInMs / msPerDay);
+    return new MetricModule("Average Messages Per Day", Math.round(chatObjArr.length / daysMessaging));
+  }
   function GenerateMessageDays(chatObjArr) {
-    let dayArray = [{ Day: "Monday", Count: 0, Percent: 0 }, { Day: "Tuesday", Count: 0, Percent: 0 }, { Day: "Wednesday", Count: 0, Percent: 0 }, { Day: "Thursday", Count: 0, Percent: 0 }, { Day: "Friday", Count: 0, Percent: 0 }, { Day: "Saturday", Count: 0, Percent: 0 }, { Day: "Sunday", Count: 0, Percent: 0 }];
+    let dayArray = [
+      {
+        Day: "Monday",
+        Count: 0,
+        Percent: 0
+      },
+      {
+        Day: "Tuesday",
+        Count: 0,
+        Percent: 0
+      },
+      {
+        Day: "Wednesday",
+        Count: 0,
+        Percent: 0
+      },
+      {
+        Day: "Thursday",
+        Count: 0,
+        Percent: 0
+      },
+      {
+        Day: "Friday",
+        Count: 0,
+        Percent: 0
+      },
+      {
+        Day: "Saturday",
+        Count: 0,
+        Percent: 0
+      },
+      {
+        Day: "Sunday",
+        Count: 0,
+        Percent: 0
+      }
+    ];
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     let totalCount = 0;
     chatObjArr.forEach((x) => {
@@ -11381,10 +11450,16 @@
   function GenerateMessageTimes(chatObjArr) {
     let timeArray = [];
     for (let i = 0; i < 10; i++) {
-      timeArray.push({ Hour: "0" + i.toString(), Count: 0 });
+      timeArray.push({
+        Hour: "0" + i.toString(),
+        Count: 0
+      });
     }
     for (let i = 10; i < 24; i++) {
-      timeArray.push({ Hour: i.toString(), Count: 0 });
+      timeArray.push({
+        Hour: i.toString(),
+        Count: 0
+      });
     }
     chatObjArr.forEach((x) => {
       let hour = x.Time.split(":")[0];
@@ -11413,15 +11488,20 @@
     filteredArray.forEach((word) => {
       counts.set(word, (counts.get(word) || 0) + 1);
     });
+    const laughWordSet = new Set(
+      Constants.LaughWordsCollection.flat().map((w) => w.toLowerCase())
+    );
     counts.forEach((count, word) => {
-      if (personalWord != null) {
-        if (CleanString(word) != CleanString(personalWord) && !Constants.LaughArray.includes(word.toLowerCase())) {
-          topWordsTable.push({ Word: word, Count: count });
-        }
-      } else {
-        if (!Constants.LaughArray.includes(word.toLowerCase())) {
-          topWordsTable.push({ Word: word, Count: count });
-        }
+      const cleanedWord = CleanString(word);
+      const lowerWord = word.toLowerCase();
+      const isLaughWord = laughWordSet.has(lowerWord);
+      const isPersonalWord = personalWord != null;
+      const isSameAsPersonal = isPersonalWord && CleanString(personalWord) === cleanedWord;
+      if (!isLaughWord && (!isPersonalWord || !isSameAsPersonal)) {
+        topWordsTable.push({
+          Word: word,
+          Count: count
+        });
       }
     });
     topWordsTable.sort((a, b) => b.Count - a.Count);
@@ -11454,22 +11534,18 @@
   function GenerateEmojiIndexes(firstEncounterData) {
     const emojiIndexes = [];
     for (const match of firstEncounterData.FirstMessageBody.matchAll(EmojiRegex)) {
-      emojiIndexes.push(
-        {
-          MessageName: "FirstMessage",
-          EmojiIndex: match.index,
-          EmojiLength: [...match[0]].length
-        }
-      );
+      emojiIndexes.push({
+        MessageName: "FirstMessage",
+        EmojiIndex: match.index,
+        EmojiLength: [...match[0]].length
+      });
     }
     for (const match of firstEncounterData.ReplyMessage.matchAll(EmojiRegex)) {
-      emojiIndexes.push(
-        {
-          MessageName: "ReplyMessage",
-          EmojiIndex: match.index,
-          EmojiLength: [...match[0]].length
-        }
-      );
+      emojiIndexes.push({
+        MessageName: "ReplyMessage",
+        EmojiIndex: match.index,
+        EmojiLength: [...match[0]].length
+      });
     }
     return new MetricModule("Emoji Indexes", emojiIndexes);
   }
@@ -11527,11 +11603,13 @@
         });
       }
       if (laughCount !== 0) {
-        tWMetricModule.Data.forEach((x) => {
-          if (Constants.LaughArray.includes(x.Word.toLowerCase())) {
+        const laughWordSet = new Set(Constants.LaughWordsCollection.flat().map((w) => w.toLowerCase()));
+        for (const x of tWMetricModule.Data) {
+          if (laughWordSet.has(x.Word.toLowerCase())) {
             laughCount = Math.round(x.Count * 3.5);
+            break;
           }
-        });
+        }
       }
       metricModulesToParse.push(tWMetricModule);
     }
@@ -11549,6 +11627,12 @@
         firstEncounter = GenerateFirstEncounter(ArrayOfMessageObjs);
       }
       metricModulesToParse.push(new MetricModule("Emoji Indexes", GenerateEmojiIndexes(firstEncounter.Data)));
+    }
+    if (metricModules.includes("AverageMessages")) {
+      metricModulesToParse.push(GenerateAverageMessages(ArrayOfMessageObjs));
+    }
+    if (metricModules.includes("BigDay")) {
+      metricModulesToParse.push(GenerateBigDay(ArrayOfMessageObjs));
     }
     return new Product(productName, metricModulesToParse);
   }

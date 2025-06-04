@@ -25,7 +25,8 @@
         console.log("LET'S GOOOO!");
         const unpackedFilesAndEntries = await Unpack(uploadedFiles);
         const chatData = await StandardiseChatFiles(unpackedFilesAndEntries);
-        const metricModules = ["ChatComposition", "FirstEncounter", "LaughCount", "MessageDays", "MessageTimes", "FromDate", "ToDate", "TopWords", "TopEmojis", "EmojiIndexes"];
+        const metricModules = ["ChatComposition", "FirstEncounter", "LaughCount", "MessageDays", "MessageTimes",
+        "FromDate", "ToDate", "TopWords", "TopEmojis", "EmojiIndexes", "AverageMessages", "BigDay"];
         const personalWord = document.getElementById("personal-word").value;
         console.log("Personal word: ", personalWord);
         let chatChartData = await BuildProduct(chatData, "Chat Chart", metricModules, personalWord);
