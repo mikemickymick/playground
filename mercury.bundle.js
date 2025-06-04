@@ -11547,7 +11547,7 @@
         EmojiLength: [...match[0]].length
       });
     }
-    return new MetricModule("Emoji Indexes", emojiIndexes);
+    return emojiIndexes;
   }
   function CleanString(str) {
     return str.replace(Constants.RegExPatterns.InvisibleCharacters, "").trim();
