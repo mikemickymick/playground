@@ -11533,18 +11533,31 @@
   }
   function GenerateEmojiIndexes(firstEncounterData) {
     const emojiIndexes = [];
-    for (const match of firstEncounterData.FirstMessageBody.matchAll(EmojiRegex)) {
-      emojiIndexes.push({
-        MessageName: "FirstMessage",
-        EmojiIndex: match.index,
-        EmojiLength: [...match[0]].length
-      });
+    emojiIndexes.push(
+      ...ExtractEmojiIndexes(firstEncounterData.FirstMessageBody, "FirstMessage")
+    );
+    emojiIndexes.push(
+      ...ExtractEmojiIndexes(firstEncounterData.ReplyMessage, "ReplyMessage")
+    );
+    return emojiIndexes;
+  }
+  function ExtractEmojiIndexes(message, messageName) {
+    const emojiIndexes = [];
+    const codePoints = [...message];
+    const codeUnitToCodePointMap = [];
+    let codeUnitIndex = 0;
+    for (let i = 0; i < codePoints.length; i++) {
+      codeUnitToCodePointMap[codeUnitIndex] = i;
+      codeUnitIndex += codePoints[i].length;
     }
-    for (const match of firstEncounterData.ReplyMessage.matchAll(EmojiRegex)) {
+    for (const match of message.matchAll(EmojiRegex)) {
+      const emoji = match[0];
+      const emojiUTF16Index = match.index;
+      const emojiVisualIndex = codeUnitToCodePointMap[emojiUTF16Index];
       emojiIndexes.push({
-        MessageName: "ReplyMessage",
-        EmojiIndex: match.index,
-        EmojiLength: [...match[0]].length
+        MessageName: messageName,
+        EmojiIndex: emojiVisualIndex,
+        EmojiLength: [...emoji].length
       });
     }
     return emojiIndexes;
