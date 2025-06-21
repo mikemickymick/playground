@@ -223,7 +223,7 @@
 
   // models/chatter.js
   var Chatter = class {
-    constructor(authorNumber, name, messageCount, messagePercent, wordCount, minutesSpentMessaging, timesSpentMessagingString, emojiCount, swearCount, averageMessageLength) {
+    constructor(authorNumber, name, messageCount, messagePercent, wordCount, minutesSpentMessaging, timesSpentMessagingString, emojiCount, swearCount, averageMessageLength, laughCount, longestMessageLength) {
       this.AuthorNumber = authorNumber;
       this.Name = name;
       this.MessageCount = messageCount;
@@ -234,6 +234,8 @@
       this.EmojiCount = emojiCount;
       this.SwearCount = swearCount;
       this.AverageMessageLength = averageMessageLength;
+      this.LaughCount = laughCount;
+      this.LongestMessageLength = longestMessageLength;
     }
   };
 
@@ -10761,14 +10763,12 @@
         allChatObjects.push(chatObject);
       }
     }
-    const chatTitle = allChatObjects[0].Author;
     const sortedChatObjects = SortChatObjects(allChatObjects);
     const chattersArray = GenerateChatters(sortedChatObjects);
     return {
       WholeChatString: cumulativeStrippedChatString,
       ArrayOfMessageObjs: sortedChatObjects,
-      Chatters: chattersArray,
-      ChatTitle: chatTitle
+      Chatters: chattersArray
     };
   }
   async function Unpack(input) {
@@ -11212,11 +11212,12 @@
           x.WordCount += element.MessageBody.split(" ").length;
           x.EmojiCount += ((element.MessageBody || "").match(EmojiRegex) || []).length;
           x.LaughCount += CountLaughs(element.MessageBody, Constants.LaughWordsCollection);
+          x.LongestMessageLength = GetLongestMessageLength(x.LongestMessageLength, element.MessageBody);
         }
       }
       if (!chatterInArray) {
         authorIndex++;
-        let chatter = new Chatter(authorIndex, element.Author, 1, 0, 0, 0, "0 mins", 0, 0, 0);
+        let chatter = new Chatter(authorIndex, element.Author, 1, 0, 0, 0, "0 mins", 0, 0, 0, 0, 0);
         chatters.push(chatter);
       }
     }
@@ -11231,6 +11232,7 @@
     }
     CapMessagePercentage(chatters);
     GenerateTimeSpentMessagingStrings(chatters);
+    chatters.sort((a, b) => b.MessageCount - a.MessageCount);
     return new MetricModule("Chat Composition", chatters);
   }
   function CapMessagePercentage(chatters) {
@@ -11565,13 +11567,25 @@
   function CleanString(str) {
     return str.replace(Constants.RegExPatterns.InvisibleCharacters, "").trim();
   }
+  function GetChatterWithLargestX(chatters, keyName) {
+    return chatters.reduce(
+      (maxUser, currentUser) => currentUser[keyName] > maxUser[keyName] ? currentUser : maxUser
+    ).Name;
+  }
+  function GenerateTableForMostTimeSpentMessaging(chatters) {
+    return chatters.slice().sort((a, b) => b.MinutesSpentMessaging - a.MinutesSpentMessaging);
+  }
+  function GetLongestMessageLength(currentLongest, messageBody) {
+    if (typeof messageBody !== "string" || messageBody.length === 0) {
+      return currentLongest;
+    }
+  }
 
   // controllers/productcontroller.js
-  async function BuildProduct(chatData, productName, metricModules, personalWord = null) {
+  async function BuildProduct(chatData, productName, metricModules, personalWord = null, chatTitle = null) {
     const {
       ArrayOfMessageObjs,
-      WholeChatString,
-      ChatTitle
+      WholeChatString
     } = chatData;
     let metricModulesToParse = new Array();
     let laughCount = 0;
@@ -11633,7 +11647,7 @@
       metricModulesToParse.push(new MetricModule("To Date", ArrayOfMessageObjs[ArrayOfMessageObjs.length - 1].Date));
     }
     if (metricModules.includes("ChatTitle")) {
-      metricModulesToParse.push(new MetricModule("Chat Title", ChatTitle));
+      metricModulesToParse.push(new MetricModule("Chat Title", chatTitle));
     }
     if (metricModules.includes("EmojiIndexes")) {
       if (firstEncounter === null) {
@@ -11646,6 +11660,30 @@
     }
     if (metricModules.includes("BigDay")) {
       metricModulesToParse.push(GenerateBigDay(ArrayOfMessageObjs));
+    }
+    if (metricModules.includes("ChatterWithMostEmojis")) {
+      if (chatComposition === null) {
+        chatComposition = GenerateChatComposition(ArrayOfMessageObjs);
+      }
+      metricModulesToParse.push(new MetricModule("Chatter With Most Emojis", GetChatterWithLargestX(chatComposition.Data, "EmojiCount")));
+    }
+    if (metricModules.includes("ChatterWithMostLaughs")) {
+      if (chatComposition === null) {
+        chatComposition = GenerateChatComposition(ArrayOfMessageObjs);
+      }
+      metricModulesToParse.push(new MetricModule("Chatter With Most Laughs", GetChatterWithLargestX(chatComposition.Data, "LaughCount")));
+    }
+    if (metricModules.includes("ChatterWithLongestMessage")) {
+      if (chatComposition === null) {
+        chatComposition = GenerateChatComposition(ArrayOfMessageObjs);
+      }
+      metricModulesToParse.push(new MetricModule("Chatter With Longest Message", GetChatterWithLargestX(chatComposition.Data, "LongestMessageLength")));
+    }
+    if (metricModules.includes("MostTimeSpentMessagingTable")) {
+      if (chatComposition === null) {
+        chatComposition = GenerateChatComposition(ArrayOfMessageObjs);
+      }
+      metricModulesToParse.push(new MetricModule("Sorted Table of Most Time Spent Messaging", GenerateTableForMostTimeSpentMessaging(chatComposition.Data)));
     }
     return new Product(productName, metricModulesToParse);
   }

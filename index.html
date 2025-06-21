@@ -11,7 +11,11 @@
           <input type="file" name="chat-file-upload" class="chat-file-upload" accept="text/plain, application/zip, application/x-zip-compressed, application/json" multiple>
         </div>
       </div>
+      <h3>Enter a personal word to track:</h3>
       <input type="text" id="personal-word"></input>
+      <br>
+      <h3>Chat Title:</h3>
+      <input type="text" id="chat-title"></input>
     <script src="./mercury.bundle.min.js"></script>
     
     <script type="module">
@@ -26,10 +30,13 @@
         const unpackedFilesAndEntries = await Unpack(uploadedFiles);
         const chatData = await StandardiseChatFiles(unpackedFilesAndEntries);
         const metricModules = ["ChatComposition", "FirstEncounter", "LaughCount", "MessageDays", "MessageTimes",
-        "FromDate", "ToDate", "TopWords", "TopEmojis", "EmojiIndexes", "AverageMessages", "BigDay"];
+                                "FromDate", "ToDate", "TopWords", "TopEmojis", "EmojiIndexes", "AverageMessages", "BigDay", "ChatTitle",
+                                "ChatterWithMostEmojis", "ChatterWithMostLaughs", "ChatterWithLongestMessage", "MostTimeSpentMessagingTable"];
         const personalWord = document.getElementById("personal-word").value;
+        const chatTitle = document.getElementById("chat-title").value;
         console.log("Personal word: ", personalWord);
-        let chatChartData = await BuildProduct(chatData, "Chat Chart", metricModules, personalWord);
+        console.log("Chat Title: ", chatTitle);
+        let chatChartData = await BuildProduct(chatData, "Chat Chart", metricModules, personalWord, chatTitle);
         console.log(chatChartData.MetricModules);
         debugger;
     }
