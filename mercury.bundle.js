@@ -11567,14 +11567,6 @@
   function CleanString(str) {
     return str.replace(Constants.RegExPatterns.InvisibleCharacters, "").trim();
   }
-  function GetChatterWithLargestX(chatters, keyName) {
-    return chatters.reduce(
-      (maxUser, currentUser) => currentUser[keyName] > maxUser[keyName] ? currentUser : maxUser
-    ).Name;
-  }
-  function GenerateTableForMostTimeSpentMessaging(chatters) {
-    return chatters.slice().sort((a, b) => b.MinutesSpentMessaging - a.MinutesSpentMessaging);
-  }
   function GetLongestMessageLength(currentLongest, messageBody) {
     if (typeof messageBody !== "string" || messageBody.length === 0) {
       return currentLongest;
@@ -11665,25 +11657,25 @@
       if (chatComposition === null) {
         chatComposition = GenerateChatComposition(ArrayOfMessageObjs);
       }
-      metricModulesToParse.push(new MetricModule("Chatter With Most Emojis", GetChatterWithLargestX(chatComposition.Data, "EmojiCount")));
+      metricModulesToParse.push(new MetricModule("Chatter With Most Emojis", null));
     }
     if (metricModules.includes("ChatterWithMostLaughs")) {
       if (chatComposition === null) {
         chatComposition = GenerateChatComposition(ArrayOfMessageObjs);
       }
-      metricModulesToParse.push(new MetricModule("Chatter With Most Laughs", GetChatterWithLargestX(chatComposition.Data, "LaughCount")));
+      metricModulesToParse.push(new MetricModule("Chatter With Most Laughs", null));
     }
     if (metricModules.includes("ChatterWithLongestMessage")) {
       if (chatComposition === null) {
         chatComposition = GenerateChatComposition(ArrayOfMessageObjs);
       }
-      metricModulesToParse.push(new MetricModule("Chatter With Longest Message", GetChatterWithLargestX(chatComposition.Data, "LongestMessageLength")));
+      metricModulesToParse.push(new MetricModule("Chatter With Longest Message", null));
     }
     if (metricModules.includes("MostTimeSpentMessagingTable")) {
       if (chatComposition === null) {
         chatComposition = GenerateChatComposition(ArrayOfMessageObjs);
       }
-      metricModulesToParse.push(new MetricModule("Sorted Table of Most Time Spent Messaging", GenerateTableForMostTimeSpentMessaging(chatComposition.Data)));
+      metricModulesToParse.push(new MetricModule("Sorted Table of Most Time Spent Messaging", null));
     }
     return new Product(productName, metricModulesToParse);
   }
