@@ -11483,7 +11483,7 @@
     });
     const wordsArray = wholeChatString.replace(/(’s)/g, "").replace(/('s)/g, "").split(" ");
     wordsArray.forEach((word) => {
-      if (word.length < 10 && word.length > 1 && !Constants.SkipWordsSymbols.includes(word) && !Constants.SkipWordsGerman.includes(word) && !Constants.SkipWordsEnglish.includes(word) && !Constants.SkipWordsFrench.includes(word) && !Constants.SkipWordsDutch.includes(word) && !Constants.SkipWordsSpanish.includes(word) && !Constants.SkipWordsSwedish.includes(word) && !Constants.SkipWordsDanish.includes(word) && !Constants.SkipWordsItalian.includes(word) && !Constants.SkipWordsRussian.includes(word) && !word.match(Constants.RegExPatterns.Punctuation) && !word.match(Constants.RegExPatterns.Numbers) && !word.match(EmojiRegex) && !newNameSet.has(word)) {
+      if (word.length < 10 && word.length > 1 && !Constants.SkipWordsSymbols.includes(word) && !Constants.SkipWordsGerman.includes(word) && !Constants.SkipWordsEnglish.includes(word) && !Constants.SkipWordsFrench.includes(word) && !Constants.SkipWordsDutch.includes(word) && !Constants.SkipWordsSpanish.includes(word) && !Constants.SkipWordsSwedish.includes(word) && !Constants.SkipWordsDanish.includes(word) && !Constants.SkipWordsItalian.includes(word) && !Constants.SkipWordsRussian.includes(word) && !word.match(Constants.RegExPatterns.InvisibleCharacters) && !word.match(Constants.RegExPatterns.Punctuation) && !word.match(Constants.RegExPatterns.Numbers) && !word.match(EmojiRegex) && !newNameSet.has(word)) {
         filteredArray.push(word);
       }
     });
