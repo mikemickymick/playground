@@ -29,6 +29,8 @@
         console.log("LET'S GOOOO!");
         const unpackedFilesAndEntries = await Unpack(uploadedFiles);
         const chatData = await StandardiseChatFiles(unpackedFilesAndEntries);
+        removeLowVolumeEarlyAuthors(chatData.ArrayOfMessageObjs);
+
         const metricModules = ["ChatComposition", "FirstEncounter", "LaughCount", "MessageDays", "MessageTimes",
                                 "FromDate", "ToDate", "TopWords", "TopEmojis", "EmojiIndexes", "AverageMessages", "BigDay", "ChatTitle",
                                 "ChatterWithMostEmojis", "ChatterWithMostLaughs", "ChatterWithLongestMessage"];
@@ -44,6 +46,32 @@
         console.log(error);
     }
     }
+
+
+
+    function removeLowVolumeEarlyAuthors(messages) {
+    // Step 1: Collect the authors of the first 5 messages
+    const firstFive = messages.slice(0, 5);
+    const earlyAuthors = new Set(firstFive.map(msg => msg.Author));
+
+    // Step 2: Count total appearances for all authors
+    const authorCounts = {};
+    for (const msg of messages) {
+        authorCounts[msg.Author] = (authorCounts[msg.Author] || 0) + 1;
+    }
+
+    // Step 3: Identify early authors with fewer than 10 total messages
+    const authorsToRemove = new Set();
+    for (const author of earlyAuthors) {
+        if (authorCounts[author] < 10) {
+            authorsToRemove.add(author);
+        }
+    }
+
+    // Step 4: Filter messages
+    return messages.filter(msg => !authorsToRemove.has(msg.Author));
+}
+
     </script>
 </body>
 </html>
